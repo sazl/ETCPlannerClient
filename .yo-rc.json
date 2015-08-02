@@ -1,0 +1,8 @@
+{
+  "generator-react-webpack": {
+    "app-name": "reactWebpack",
+    "architecture": "alt",
+    "styles-language": "sass",
+    "component-suffix": "jsx"
+  }
+}
