@@ -28,7 +28,6 @@ class LoginStore {
   }
 
   isLoggedIn() {
-    console.log(this._user);
     return !!this._user;
   }
 }

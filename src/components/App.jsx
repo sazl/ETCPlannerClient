@@ -14,7 +14,8 @@ import {
   NavItem,
   DropdownButton,
   MenuItem,
-  Panel
+  Panel,
+  Glyphicon
 } from 'react-bootstrap';
 
 import authenticatedComponent from './AuthenticatedComponent';
@@ -41,7 +42,9 @@ export default class App extends React.Component {
             </NavItem>
           </Nav>
           <Nav right>
-            <DropdownButton title="Account" bsStyle="danger">
+            <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>}>
+            </DropdownButton>
+            <DropdownButton title={<span><Glyphicon glyph="user"/> Account</span>}>
             </DropdownButton>
           </Nav>
         </Navbar>
@@ -51,9 +54,7 @@ export default class App extends React.Component {
               <Sidebar/>
             </Col>
             <Col xs={6} md={10}>
-              <Panel>
-                <RouteHandler/>
-              </Panel>
+              <RouteHandler/>
             </Col>
           </Row>
         </Grid>

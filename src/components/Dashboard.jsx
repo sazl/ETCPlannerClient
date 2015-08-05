@@ -4,12 +4,8 @@ import React from 'react/addons';
 import Router from 'react-router';
 
 import {
-  Button,
-  Navbar,
-  Nav,
-  NavItem,
-  DropdownButton,
-  MenuItem
+  Row,
+  Col
 } from 'react-bootstrap';
 
 var RouteHandler = Router.RouteHandler;
@@ -17,7 +13,14 @@ var RouteHandler = Router.RouteHandler;
 export default class Dashboard extends React.Component {
   render() {
     return (
-      <h1>Dashboard</h1>
+      <Row>
+        <Col xs={12} md={4}>
+          <ul>
+
+          </ul>
+        </Col>
+        <Col xs={12} md={4}>2</Col>
+      </Row>
     );
   }
 }

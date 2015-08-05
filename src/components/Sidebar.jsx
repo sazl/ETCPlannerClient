@@ -1,10 +1,14 @@
 'use strict';
 
 import React from 'react/addons';
+import Router from 'react-router';
+
+let Link = Router.Link;
 
 import {
   ListGroup,
-  ListGroupItem
+  ListGroupItem,
+  Well
 } from 'react-bootstrap';
 
 import '../styles/Sidebar.scss';
@@ -14,10 +18,14 @@ export default class Sidebar extends React.Component {
     return (
       <ListGroup>
         <ListGroupItem>
-          <span>Dashboard</span>
+          <span>
+            <Link to="dashboard">Dashboard</Link>
+          </span>
         </ListGroupItem>
         <ListGroupItem>
-          <span>Planning</span>
+          <span>
+            <Link to="planning">Planning</Link>
+          </span>
         </ListGroupItem>
         <ListGroupItem>
           <span>Staff</span>
