@@ -5,7 +5,7 @@ import AuthenticatedApp from './AuthenticatedApp';
 import App from './App';
 import Login from './Login';
 import Dashboard from './Dashboard';
-import Planning from './Planning';
+import Planning from './planning/Planning';
 
 let Route = Router.Route;
 let DefaultRoute = Router.DefaultRoute;

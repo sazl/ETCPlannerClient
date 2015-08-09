@@ -1,10 +1,11 @@
-import React from 'react';
+import React from 'react/addons';
 
 import {
   Row,
   Col,
   Grid,
   Button,
+  ButtonInput,
   ButtonGroup,
   ButtonToolbar,
   DropdownButton,
@@ -34,6 +35,9 @@ export default class Toolbar extends React.Component {
               Test
             </MenuItem>
           </DropdownButton>
+        </ButtonGroup>
+        <ButtonGroup>
+          <Input type="text" placeholder="Search"/>
         </ButtonGroup>
         <ButtonGroup className="pull-right">
           <Button bsStyle="success">

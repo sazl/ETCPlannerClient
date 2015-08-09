@@ -1,8 +1,4 @@
-'use strict';
-
 import React from 'react/addons';
-import Router from 'react-router';
-import TreeView from 'react-treeview';
 let update = React.addons.update;
 
 import {
@@ -16,57 +12,13 @@ import {
   Collapse
 } from 'react-bootstrap';
 
-import BaseComponent from './BaseComponent';
-import CollapseButton from './CollapseButton';
-import PlanningToolbar from './PlanningToolbar';
-import StaffAssignmentTable from './StaffAssignmentTable';
-import MissionRoleTable from './MissionRoleTable';
-import MissionTable from './MissionTable';
+import BaseComponent from '../BaseComponent';
+import CollapseButton from '../CollapseButton';
 
+export default class PlanningTable extends BaseComponent {
 
-// CSS
-import '../styles/Planning.scss';
-
-
-let RouteHandler = Router.RouteHandler;
-
-let data = [{
-  mission: 'NP',
-  missionRoles: [{
-    name: 'Coordinator',
-    startDate: '2014-05-06',
-    endDate: '2014-05-09',
-    staffAssignments: [{
-      staff: {
-        name: 'Michael Dirksen'
-      },
-      startDate: '2014-05-07',
-      endDate: '2014-05-08'
-    }]
-  }, {
-    name: 'Assessment',
-    startDate: '2014-02-23',
-    endDate: '2014-11-25',
-    staffAssignments: [{
-      staff: {
-        name: 'Oz'
-      },
-      startDate: '2014-03-06',
-      endDate: '2014-05-07'
-    }, {
-      staff: {
-        name: 'Aleks'
-      },
-      startDate: '2014-05-08',
-      endDate: '2014-05-22'
-    }]
-  }]
-}];
-
-export default class Planning extends BaseComponent {
-
-  constructor() {
-    super();
+  constructor(...props) {
+    super(...props);
     this.state = {
       missionCollapse: {},
       missionRoleCollapse: {}
@@ -99,9 +51,6 @@ export default class Planning extends BaseComponent {
         <td>{staffAssignment.endDate}</td>
         <td></td>
         <td className="text-center">
-          <Button bsSize="xs" bsStyle="success">
-            <Glyphicon glyph="plus"/>
-          </Button>
         </td>
       </tr>
     );
@@ -151,14 +100,13 @@ export default class Planning extends BaseComponent {
     );
   }
 
-  renderPlanningTable(missions) {
+  renderRows() {
     var rows = [];
-    missions.forEach((mission, i) => {
+    this.props.missions.forEach((mission, i) => {
       rows.push(this.renderMission(mission, i));
       if (!this.state.missionCollapse[i]) {
         mission.missionRoles.forEach((missionRole, j) => {
           rows.push(this.renderMissionRole(missionRole, j));
-          console.log(this.state.missionRoleCollapse[j]);
           if (!this.state.missionRoleCollapse[j]) {
             missionRole.staffAssignments.forEach((staffAssignment, k) => {
               rows.push(this.renderStaffAssignment(staffAssignment, k));
@@ -167,8 +115,11 @@ export default class Planning extends BaseComponent {
         });
       }
     });
+    return rows;
+  }
 
-
+  render() {
+    var rows = this.renderRows();
     return (
       <Table bordered striped hover condensed>
         <thead>
@@ -187,18 +138,8 @@ export default class Planning extends BaseComponent {
       </Table>
     );
   }
-
-  render() {
-    return (
-      <div>
-        <Panel>
-          <PlanningToolbar />
-
-          <hr></hr>
-
-          {this.renderPlanningTable(data)}
-        </Panel>
-      </div>
-    );
-  }
 }
+
+PlanningTable.propTypes = {
+  missions: React.PropTypes.array.isRequired
+};
