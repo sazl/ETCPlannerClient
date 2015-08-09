@@ -8,6 +8,7 @@ let Link = Router.Link;
 import {
   ListGroup,
   ListGroupItem,
+  Glyphicon,
   Well
 } from 'react-bootstrap';
 
@@ -19,7 +20,10 @@ export default class Sidebar extends React.Component {
       <ListGroup>
         <ListGroupItem>
           <span>
-            <Link to="dashboard">Dashboard</Link>
+            <Link to="dashboard">
+            <Glyphicon glyph="th" style={{paddingRight: 10}}/>
+            Dashboard
+            </Link>
           </span>
         </ListGroupItem>
         <ListGroupItem>
@@ -28,7 +32,7 @@ export default class Sidebar extends React.Component {
           </span>
         </ListGroupItem>
         <ListGroupItem>
-          <span>Staff</span>
+          <span>Requirements</span>
         </ListGroupItem>
       </ListGroup>
     );

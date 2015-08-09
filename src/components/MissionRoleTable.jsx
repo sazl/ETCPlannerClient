@@ -5,30 +5,26 @@ class MissionRoleTable extends React.Component {
   render() {
     let missionRoles = this.props.missionRoles;
     return (
-      <Table striped bordered condensed hover>
-        <thead>
-        </thead>
-        <tbody>
-          {missionRoles.map((missionRole, i) => {
-            return (
+      <div>
+      {missionRoles.map((missionRole, i) => {
+        return (
 
-              <tr key={missionRole.name + '|' + i} className="warning">
-              <td className="col-md-1 text-center">
+          <tr key={missionRole.name + '|' + i} className="warning">
+            <td className="col-md-1 text-center">
               <OverlayTrigger trigger='focus' placement='bottom'
-              overlay={<Popover title='Popover bottom'><strong>Holy guacamole!</strong> Check info.</Popover>}>
+                              overlay={<Popover title='Popover bottom'><strong>Holy guacamole!</strong> Check info.</Popover>}>
                 <Button bsSize="xs">
                   <Glyphicon glyph="menu-down" />
                 </Button>
               </OverlayTrigger>
-              </td>
-                <td>{missionRole.name}</td>
-                <td>{missionRole.start}</td>
-                <td>{missionRole.end}</td>
-              </tr>
-            );
-           })}
-        </tbody>
-      </Table>
+            </td>
+            <td>{missionRole.name}</td>
+            <td>{missionRole.start}</td>
+            <td>{missionRole.end}</td>
+          </tr>
+        );
+       })}
+      </div>
     );
   }
 }

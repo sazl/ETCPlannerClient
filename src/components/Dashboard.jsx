@@ -5,7 +5,8 @@ import Router from 'react-router';
 
 import {
   Row,
-  Col
+  Col,
+  Panel
 } from 'react-bootstrap';
 
 var RouteHandler = Router.RouteHandler;
@@ -15,11 +16,17 @@ export default class Dashboard extends React.Component {
     return (
       <Row>
         <Col xs={12} md={4}>
-          <ul>
-
-          </ul>
+        <Panel>
+        </Panel>
         </Col>
-        <Col xs={12} md={4}>2</Col>
+        <Col xs={12} md={4}>
+        <Panel>
+        </Panel>
+        </Col>
+        <Col xs={12} md={4}>
+        <Panel>
+        </Panel>
+        </Col>
       </Row>
     );
   }

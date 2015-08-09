@@ -43,4 +43,4 @@ export default class AuthenticatedApp extends BaseComponent {
     AuthService.logout();
   }
 
-};
+}

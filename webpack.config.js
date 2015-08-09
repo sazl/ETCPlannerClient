@@ -35,6 +35,7 @@ module.exports = {
       'components': __dirname + '/src/components/'
     }
   },
+
   module: {
     preLoaders: [{
       test: /\.(js|jsx)$/,
@@ -44,7 +45,7 @@ module.exports = {
     loaders: [{
       test: /\.(js|jsx)$/,
       exclude: /node_modules/,
-      loader: 'react-hot!babel-loader'
+      loaders: ['react-hot', 'babel-loader?stage=1']
     }, {
       test: /\.sass/,
       loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded&indentedSyntax'
@@ -55,8 +56,11 @@ module.exports = {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
     }, {
-      test: /\.(png|jpg|woff|woff2)$/,
+      test: /\.(png|gif|jpg)$/,
       loader: 'url-loader?limit=8192'
+    }, {
+      test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
+      loader: "url-loader?mimetype=application/font-woff"
     }, {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
       loader: "file-loader"

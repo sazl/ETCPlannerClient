@@ -39,6 +39,6 @@ export default class Login extends BaseComponent {
     </div>
     );
   }
-};
+}
 
 reactMixin(Login.prototype, React.addons.LinkedStateMixin);

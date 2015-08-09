@@ -42,10 +42,8 @@ export default class App extends React.Component {
             </NavItem>
           </Nav>
           <Nav right>
-            <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>}>
-            </DropdownButton>
-            <DropdownButton title={<span><Glyphicon glyph="user"/> Account</span>}>
-            </DropdownButton>
+            <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>} />
+            <DropdownButton title={<span><Glyphicon glyph="user"/> Account</span>} />
           </Nav>
         </Navbar>
         <Grid fluid>
