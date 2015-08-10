@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react/addons';
 
 export default class BaseComponent extends React.Component {
   _bind(...methods) {

@@ -12,28 +12,34 @@ import {
   Well
 } from 'react-bootstrap';
 
+import {
+  ListGroupItemLink
+} from 'react-router-bootstrap';
+
 import '../styles/Sidebar.scss';
 
 export default class Sidebar extends React.Component {
   render() {
     return (
-      <ListGroup>
-        <ListGroupItem>
+      <ListGroup fill>
+        <ListGroupItemLink to="dashboard">
           <span>
-            <Link to="dashboard">
-            <Glyphicon glyph="th" style={{paddingRight: 10}}/>
+            <Glyphicon glyph="home" style={{paddingRight: 10}}/>
             Dashboard
-            </Link>
           </span>
-        </ListGroupItem>
-        <ListGroupItem>
+        </ListGroupItemLink>
+        <ListGroupItemLink to="planning">
           <span>
-            <Link to="planning">Planning</Link>
+            <Glyphicon glyph="time" style={{paddingRight: 10}}/>
+            Planning
           </span>
-        </ListGroupItem>
-        <ListGroupItem>
-          <span>Requirements</span>
-        </ListGroupItem>
+        </ListGroupItemLink>
+        <ListGroupItemLink to="requirement">
+          <span>
+            <Glyphicon glyph="check" style={{paddingRight: 10}}/>
+            Requirements
+          </span>
+        </ListGroupItemLink>
       </ListGroup>
     );
   }

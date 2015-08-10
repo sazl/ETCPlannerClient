@@ -18,6 +18,8 @@ import {
   Glyphicon
 } from 'react-bootstrap';
 
+import { NavItemLink } from 'react-router-bootstrap';
+
 import authenticatedComponent from './AuthenticatedComponent';
 import Sidebar from './Sidebar';
 
@@ -34,9 +36,9 @@ export default class App extends React.Component {
       <div>
         <Navbar brand="ETC Planner" fluid>
           <Nav>
-            <NavItem>
+            <NavItemLink to="planner">
               <span>Planner</span>
-            </NavItem>
+            </NavItemLink>
             <NavItem>
               <span>ETC</span>
             </NavItem>

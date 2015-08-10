@@ -62,7 +62,10 @@ module.exports = {
       test: /\.scss$/,
       loader: 'style!css!sass'
     }, {
-      test: /\.(png|jpg|woff|woff2)$/,
+      test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
+      loader: "url-loader?mimetype=application/font-woff"
+    }, {
+      test: /\.(png|gif|jpg)$/,
       loader: 'url-loader?limit=8192'
     }, {
       test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,

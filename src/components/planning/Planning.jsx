@@ -54,13 +54,11 @@ export default class Planning extends BaseComponent {
 
   render() {
     return (
-      <div>
-        <Panel>
+        <Panel collapsible defaultExpanded header="Planning">
           <PlanningToolbar />
           <hr></hr>
           <PlanningTable missions={data}/>
         </Panel>
-      </div>
     );
   }
 }
