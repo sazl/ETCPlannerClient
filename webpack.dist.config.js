@@ -7,8 +7,10 @@
 'use strict';
 
 var webpack = require('webpack');
+var merge = require('webpack-merge');
+var common = require('./webpack.common');
 
-module.exports = {
+module.exports = merge(common, {
 
   output: {
     publicPath: '/assets/',
@@ -31,45 +33,5 @@ module.exports = {
     new webpack.optimize.OccurenceOrderPlugin(),
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.NoErrorsPlugin()
-  ],
-
-  resolve: {
-    extensions: ['', '.js', '.jsx'],
-    alias: {
-      'styles': __dirname + '/src/styles',
-      'mixins': __dirname + '/src/mixins',
-      'components': __dirname + '/src/components/'
-    }
-  },
-
-  module: {
-    preLoaders: [{
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      loader: 'eslint-loader'
-    }],
-    loaders: [{
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader?stage=1'
-    }, {
-      test: /\.css$/,
-      loader: 'style-loader!css-loader'
-    }, {
-      test: /\.sass/,
-      loader: 'style-loader!css-loader!sass-loader?outputStyle=expanded&indentedSyntax'
-    }, {
-      test: /\.scss$/,
-      loader: 'style!css!sass'
-    }, {
-      test: /\.woff(2)?(\?v=[0-9].[0-9].[0-9])?$/,
-      loader: "url-loader?mimetype=application/font-woff"
-    }, {
-      test: /\.(png|gif|jpg)$/,
-      loader: 'url-loader?limit=8192'
-    }, {
-      test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-      loader: "file-loader"
-    }]
-  }
-};
+  ]
+});
