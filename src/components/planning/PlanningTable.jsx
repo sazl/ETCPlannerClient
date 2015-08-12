@@ -12,8 +12,8 @@ import {
   Collapse
 } from 'react-bootstrap';
 
-import BaseComponent from '../BaseComponent';
-import CollapseButton from '../CollapseButton';
+import BaseComponent from 'components/BaseComponent';
+import CollapseButton from 'components/CollapseButton';
 
 export default class PlanningTable extends BaseComponent {
 

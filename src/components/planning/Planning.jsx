@@ -7,12 +7,12 @@ import {
   Panel
 } from 'react-bootstrap';
 
-import BaseComponent from '../BaseComponent';
-import PlanningToolbar from './PlanningToolbar';
-import PlanningTable from './PlanningTable';
+import BaseComponent from 'components/BaseComponent';
+import PlanningToolbar from 'components/planning/PlanningToolbar';
+import PlanningTable from 'components/planning/PlanningTable';
 
 // CSS
-import '../../styles/Planning.scss';
+import 'styles/Planning.scss';
 
 
 let RouteHandler = Router.RouteHandler;
