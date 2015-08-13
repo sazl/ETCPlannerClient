@@ -10,6 +10,7 @@ var common = {
     alias: {
       'styles': path.resolve(ROOT_PATH, 'src/styles'),
       'mixins': path.resolve(ROOT_PATH, 'src/mixins'),
+      'actions': path.resolve(ROOT_PATH, 'src/actions'),
       'components': path.resolve(ROOT_PATH, 'src/components/'),
       'constants': path.resolve(ROOT_PATH, 'src/constants/'),
       'stores':  path.resolve(ROOT_PATH, 'src/stores/'),

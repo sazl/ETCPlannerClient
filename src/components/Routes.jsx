@@ -4,8 +4,11 @@ import Router from 'react-router';
 import AuthenticatedApp from 'components/AuthenticatedApp';
 import App from 'components/App';
 import Login from 'components/Login';
+
 import Dashboard from 'components/dashboard/Dashboard';
 import StaffBreakInService from 'components/dashboard/StaffBreakInService';
+import StaffAvailable from 'components/dashboard/StaffAvailable';
+
 import Planning from 'components/planning/Planning';
 import Requirement from 'components/requirement/Requirement';
 
@@ -18,6 +21,7 @@ let Routes = (
     <Route path="/" name="planner" handler={App}>
       <Route name="dashboard" path="/" handler={Dashboard}/>
       <Route name="break-in-service" path="/break-in-service" handler={StaffBreakInService}/>
+      <Route name="available" path="/available" handler={StaffAvailable} />
       <Route name="planning" path="/planning" handler={Planning} />
       <Route name="requirement" path="/requirement" handler={Requirement} />
     </Route>

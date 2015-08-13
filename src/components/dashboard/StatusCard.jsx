@@ -12,11 +12,12 @@ class StatusCard extends React.Component {
             <div className="col-xs-12">
               <div className="text-center">
                 <div className="huge">{this.props.heading}</div>
-                <div>{this.props.subheading}</div>
+                <div className="large"><strong>{this.props.subheading}</strong></div>
               </div>
             </div>
           </div>
         </div>
+        {this.props.link &&
         <Link to={this.props.link}>
           <div className="panel-footer">
             <span className="pull-left">View Details</span>
@@ -26,6 +27,7 @@ class StatusCard extends React.Component {
             <div className="clearfix"></div>
           </div>
         </Link>
+        }
       </div>
     );
   }
@@ -35,7 +37,7 @@ StatusCard.propTypes = {
   bsStyle: React.PropTypes.string.isRequired,
   heading: React.PropTypes.string.isRequired,
   subheading: React.PropTypes.string.isRequired,
-  link: React.PropTypes.string.isRequired
+  link: React.PropTypes.string
 };
 
 module.exports = StatusCard;

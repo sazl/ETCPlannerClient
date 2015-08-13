@@ -1,24 +1,27 @@
 import request from 'reqwest';
 import when from 'when';
 
-let requestService = null;
+import { API_URL } from 'constants/APIConstants';
 
 class RequestService {
   constructor() {
-    super();
     this.request = request;
     this.token = 'g3moM57ZbUCXsCNfNxkSClqutUywrI'; //debug token
   }
 
   get(url, data) {
+    data = data || {};
     return this.request({
-      url: url,
-      method: 'get',
+      url: API_URL + url,
+      method: 'GET',
       data: data,
+      type: 'json',
       crossOrigin: true,
       headers: {
-        'Authorization', 'Bearer ' + this.token
+        'Authorization': 'Bearer ' + this.token
       }
     });
   }
 }
+
+export default new RequestService();

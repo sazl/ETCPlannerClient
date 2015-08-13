@@ -42,5 +42,4 @@ export default class AuthenticatedApp extends BaseComponent {
     e.preventDefault();
     AuthService.logout();
   }
-
 }

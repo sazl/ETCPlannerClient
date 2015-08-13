@@ -58,6 +58,7 @@ export default class Planning extends BaseComponent {
           <PlanningToolbar />
           <hr></hr>
           <PlanningTable missions={data}/>
+          <hr></hr>
         </Panel>
     );
   }

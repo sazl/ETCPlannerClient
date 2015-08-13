@@ -5,7 +5,7 @@ import StaffStore from 'stores/StaffStore';
 import StaffStatus from 'components/dashboard/StaffStatus';
 
 @connectToStores
-export default class StaffBreakInService extends React.Component {
+export default class StaffAvailable extends React.Component {
   static getStores() {
     return [StaffStore];
   }
@@ -16,14 +16,13 @@ export default class StaffBreakInService extends React.Component {
 
   componentWillMount() {
     StaffActions.fetchAvailable();
-    StaffActions.fetchNotAvailable();
   }
 
   render() {
     return (
-      <StaffStatus staffList={this.props.breakInService}
-                   heading="Break In Service"
-                   bsStyle="info"/>
+      <StaffStatus staffList={this.props.available}
+                   heading="Available"
+                   bsStyle="success"/>
     );
   }
 }

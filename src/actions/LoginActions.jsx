@@ -1,6 +1,6 @@
 import alt from '../alt';
-import {LOGIN_USER, LOGOUT_USER} from '../constants/LoginConstants';
-import RouterContainer from '../services/RouterContainer';
+import {LOGIN_USER, LOGOUT_USER} from 'constants/LoginConstants';
+import RouterContainer from 'services/RouterContainer';
 
 class LoginActions {
 
