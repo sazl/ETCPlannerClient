@@ -9,18 +9,28 @@ var webpack = require('webpack');
 var merge = require('webpack-merge');
 var common = require('./webpack.common');
 
-module.exports = merge(common, {
+var development = {
   output: {
     filename: 'main.js',
     publicPath: '/assets/'
   },
 
+  devServer: {
+    colors: true,
+    historyApiFallback: true,
+    hot: true,
+    inline: true,
+    progress: true
+  },
+
+  hotComponents: true,
   cache: true,
   debug: true,
   devtool: 'sourcemap',
   entry: [
-      'webpack/hot/only-dev-server',
-      './src/components/main.jsx'
+    'webpack-dev-server/client?http://localhost:8000/assets/',
+    'webpack/hot/only-dev-server',
+    './src/components/main.jsx'
   ],
 
   stats: {
@@ -31,4 +41,6 @@ module.exports = merge(common, {
   plugins: [
     new webpack.HotModuleReplacementPlugin()
   ]
-});
+};
+
+module.exports = merge(common, development);
