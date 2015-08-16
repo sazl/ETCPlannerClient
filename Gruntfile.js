@@ -29,9 +29,6 @@ module.exports = function (grunt) {
         hot: true,
         port: 8000,
         colors: true,
-        inline: true,
-        progress: true,
-        historyApiFallback: true,
         webpack: webpackDevConfig,
         publicPath: '/assets/',
         contentBase: './<%= pkg.src %>/'

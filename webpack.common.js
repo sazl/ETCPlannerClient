@@ -25,10 +25,6 @@ var common = {
       loader: 'eslint-loader'
     }],
     loaders: [{
-      test: /\.(js|jsx)$/,
-      exclude: /node_modules/,
-      loader: 'babel-loader?stage=1'
-    }, {
       test: /\.css$/,
       loader: 'style-loader!css-loader'
     }, {

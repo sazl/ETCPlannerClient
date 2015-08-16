@@ -9,11 +9,13 @@ import {
   Button,
   ButtonGroup,
   Glyphicon,
-  Collapse
+  Collapse,
+  Modal
 } from 'react-bootstrap';
 
 import BaseComponent from 'components/BaseComponent';
 import CollapseButton from 'components/CollapseButton';
+import MissionForm from 'components/forms/MissionForm';
 
 export default class PlanningTable extends BaseComponent {
 
@@ -21,9 +23,15 @@ export default class PlanningTable extends BaseComponent {
     super(...props);
     this.state = {
       missionCollapse: {},
-      missionRoleCollapse: {}
+      missionRoleCollapse: {},
+      showMissionForm: false
     };
-    this._bind('collapseMission', 'collapseMissionRole');
+    this._bind(
+      'collapseMission',
+      'collapseMissionRole',
+      'showMissionForm',
+      'closeMissionForm'
+    );
   }
 
   collapseMission(missionId) {
@@ -70,9 +78,14 @@ export default class PlanningTable extends BaseComponent {
         <td>{missionRole.endDate}</td>
         <td></td>
         <td className="text-center">
-          <Button bsSize="xs" bsStyle="success">
-            <Glyphicon glyph="plus"/>
-          </Button>
+          <ButtonGroup>
+            <Button bsSize="xs" bsStyle="default">
+              <Glyphicon glyph="edit"/>
+            </Button>
+            <Button bsSize="xs" bsStyle="success">
+              <Glyphicon glyph="plus"/>
+            </Button>
+          </ButtonGroup>
         </td>
       </tr>
     );
@@ -92,9 +105,14 @@ export default class PlanningTable extends BaseComponent {
         <td></td>
         <td></td>
         <td className="text-center">
-          <Button bsSize="xs" bsStyle="success">
-            <Glyphicon glyph="plus"/>
-          </Button>
+          <ButtonGroup>
+            <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionForm(mission); }}>
+              <Glyphicon glyph="edit"/>
+            </Button>
+            <Button bsSize="xs" bsStyle="success">
+              <Glyphicon glyph="plus"/>
+            </Button>
+          </ButtonGroup>
         </td>
       </tr>
     );
@@ -118,24 +136,55 @@ export default class PlanningTable extends BaseComponent {
     return rows;
   }
 
+  showMissionForm(mission) {
+    this.setState({
+      showMissionForm: true
+    });
+  }
+
+  closeMissionForm() {
+    this.setState({
+      showMissionForm: false
+    });
+  }
+
   render() {
     var rows = this.renderRows();
+    console.log(this.state.showMissionForm);
     return (
-      <Table bordered striped hover condensed>
-        <thead>
-          <tr>
-            <th></th>
-            <th>Name</th>
-            <th>Planned Start Date</th>
-            <th>Planned Finish Date</th>
-            <th>Planned Duration</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {rows}
-        </tbody>
-      </Table>
+      <div>
+        <Table bordered striped hover condensed>
+          <thead>
+            <tr>
+              <th></th>
+              <th>Name</th>
+              <th>Planned Start Date</th>
+              <th>Planned Finish Date</th>
+              <th>Planned Duration</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {rows}
+          </tbody>
+        </Table>
+
+        <Modal bsSize="small"
+               show={this.state.showMissionForm}
+               onHide={this.closeMissionForm}
+               backdrop={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Modal title</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <MissionForm />
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.closeMissionForm}>Close</Button>
+            <Button bsStyle='primary'>Save changes</Button>
+          </Modal.Footer>
+        </Modal>
+      </div>
     );
   }
 }

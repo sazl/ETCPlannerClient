@@ -13,6 +13,14 @@
     font-size: 64px;
 }
 
+.griddle-filter {
+  margin-bottom: 20px;
+
+  .form-control {
+    width: 50%;
+  }
+}
+
 /* transitions */
 
 .fade-enter {

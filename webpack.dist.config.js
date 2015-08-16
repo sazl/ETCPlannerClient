@@ -27,6 +27,14 @@ module.exports = merge(common, {
     reasons: false
   },
 
+  module: {
+    loaders: [{
+      test: /\.(js|jsx)$/,
+      exclude: /node_modules/,
+      loader: 'babel-loader?stage=1'
+    }]
+  },
+
   plugins: [
     new webpack.optimize.DedupePlugin(),
     new webpack.optimize.UglifyJsPlugin(),

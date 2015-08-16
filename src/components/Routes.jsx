@@ -8,6 +8,7 @@ import Login from 'components/Login';
 import Dashboard from 'components/dashboard/Dashboard';
 import StaffBreakInService from 'components/dashboard/StaffBreakInService';
 import StaffAvailable from 'components/dashboard/StaffAvailable';
+import StaffNotAvailable from 'components/dashboard/StaffNotAvailable';
 
 import Planning from 'components/planning/Planning';
 import Requirement from 'components/requirement/Requirement';
@@ -22,6 +23,7 @@ let Routes = (
       <Route name="dashboard" path="/" handler={Dashboard}/>
       <Route name="break-in-service" path="/break-in-service" handler={StaffBreakInService}/>
       <Route name="available" path="/available" handler={StaffAvailable} />
+      <Route name="not-available" path="/not-available" handler={StaffNotAvailable} />
       <Route name="planning" path="/planning" handler={Planning} />
       <Route name="requirement" path="/requirement" handler={Requirement} />
     </Route>

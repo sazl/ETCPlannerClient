@@ -16,10 +16,12 @@ import StatusCard from 'components/dashboard/StatusCard';
 export default class DashboardView extends React.Component {
 
   render() {
-    let availableStaffCount = this.props.availableStaff.length.toString(),
-        notAvailableStaffCount = this.props.notAvailableStaff.length.toString(),
-        totalStaffCount = availableStaffCount + notAvailableStaffCount,
+    let availableStaffCount = this.props.availableStaff.length,
+        breakInServiceStaffCount = this.props.breakInServiceStaff.length,
+        notAvailableStaffCount = this.props.notAvailableStaff.length,
+        totalStaffCount = availableStaffCount + notAvailableStaffCount + breakInServiceStaffCount,
         availablePercentage = (availableStaffCount / totalStaffCount) * 100,
+        breakInServicePercentage = (breakInServiceStaffCount / totalStaffCount) * 100,
         notAvailablePercentage = (notAvailableStaffCount / totalStaffCount) * 100;
 
     var config = {
@@ -75,11 +77,14 @@ export default class DashboardView extends React.Component {
         name: 'Availability',
         colorByPoint: true,
         data: [{
-          name: 'Available',
-          y: availablePercentage
+          name: 'Break In Service',
+          y: breakInServicePercentage
         }, {
           name: 'Not Available',
           y: notAvailablePercentage
+        }, {
+          name: 'Available',
+          y: availablePercentage
         }]
       }]
     };
@@ -89,7 +94,7 @@ export default class DashboardView extends React.Component {
       <div>
         <Row>
           <Col xs={12} md={4}>
-          <StatusCard heading={notAvailableStaffCount}
+          <StatusCard heading={breakInServiceStaffCount}
                       subheading="Break In Service"
                       bsStyle="info"
                       link="break-in-service" />
@@ -101,10 +106,10 @@ export default class DashboardView extends React.Component {
                       link="available" />
           </Col>
           <Col xs={12} md={4}>
-          <StatusCard heading="5"
+          <StatusCard heading={notAvailableStaffCount}
                       subheading="Not Available"
                       bsStyle="danger"
-                      link="dashboard"/>
+                      link="not-available"/>
           </Col>
         </Row>
         <Row>
@@ -121,22 +126,6 @@ export default class DashboardView extends React.Component {
           <Col xs={12} md={4}>
           <Panel header="Test">
             <Highcharts config={donut}></Highcharts>
-          </Panel>
-          </Col>
-        </Row>
-        <Row>
-          <Col xs={12} md={6}>
-          <Panel header="Not Available" bsStyle="danger">
-            <ListGroup fill>
-              <ListGroupItem>
-                <span><Glyphicon glyph="comment"/> New Comment</span>
-                <span className="pull-right text-muted small"><em>New Comment</em></span>
-              </ListGroupItem>
-              <ListGroupItem>
-                <span><Glyphicon glyph="comment"/> New Comment</span>
-                <span className="pull-right text-muted small"><em>New Comment</em></span>
-              </ListGroupItem>
-            </ListGroup>
           </Panel>
           </Col>
         </Row>

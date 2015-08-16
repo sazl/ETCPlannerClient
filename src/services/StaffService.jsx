@@ -14,7 +14,7 @@ class StaffService {
   }
 
   getSummary() {
-    return RequestService.get('staff/summary');
+    return RequestService.get('staff/summary/');
   }
 }
 

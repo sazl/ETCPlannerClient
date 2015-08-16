@@ -26,6 +26,10 @@ class StaffStore {
     this.notAvailable = staff;
   }
 
+  onUpdateBreakInService(staff) {
+    this.breakInService = staff;
+  }
+
   getBreakInService() {
     return this.breakInService;
   }

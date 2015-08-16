@@ -16,13 +16,13 @@ export default class Dashboard extends React.Component {
   }
 
   static getPropsFromStores() {
-    console.log(StaffStore.getState());
     return StaffStore.getState();
   }
 
   componentWillMount() {
     StaffActions.fetchAvailable();
     StaffActions.fetchNotAvailable();
+    StaffActions.fetchBreakInService();
   }
 
   render() {

@@ -1,14 +1,11 @@
 import React from 'react/addons';
 import connectToStores from 'alt/utils/connectToStores';
-
-import BaseComponent from 'components/BaseComponent';
 import StaffActions from 'actions/StaffActions';
 import StaffStore from 'stores/StaffStore';
 import StaffStatus from 'components/dashboard/StaffStatus';
 
 @connectToStores
-export default class StaffAvailable extends BaseComponent {
-
+export default class StaffNotAvailable extends React.Component {
   static getStores() {
     return [StaffStore];
   }
@@ -18,14 +15,14 @@ export default class StaffAvailable extends BaseComponent {
   }
 
   componentWillMount() {
-    StaffActions.fetchAvailable();
+    StaffActions.fetchNotAvailable();
   }
 
   render() {
     return (
-      <StaffStatus staffList={this.props.available}
-                   heading="Available"
-                   bsStyle="success"/>
+      <StaffStatus staffList={this.props.notAvailable}
+                   heading="Not Available"
+                   bsStyle="danger"/>
     );
   }
 }

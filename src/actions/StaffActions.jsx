@@ -23,6 +23,17 @@ class StaffActions {
   updateNotAvailable(staff) {
     this.dispatch(staff);
   }
+
+  fetchBreakInService() {
+    this.dispatch();
+    StaffService.getBreakInService().then((staff) => {
+      this.actions.updateBreakInService(staff);
+    });
+  }
+
+  updateBreakInService(staff) {
+    this.dispatch(staff);
+  }
 }
 
 module.exports = alt.createActions(StaffActions);

@@ -38,6 +38,14 @@ var development = {
     reasons: true
   },
 
+  module: {
+    loaders: [{
+      test: /\.(js|jsx)$/,
+      exclude: /node_modules/,
+      loader: 'react-hot!babel-loader?stage=1'
+    }]
+  },
+
   plugins: [
     new webpack.HotModuleReplacementPlugin()
   ]

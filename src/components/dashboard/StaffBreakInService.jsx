@@ -15,8 +15,7 @@ export default class StaffBreakInService extends React.Component {
   }
 
   componentWillMount() {
-    StaffActions.fetchAvailable();
-    StaffActions.fetchNotAvailable();
+    StaffActions.fetchBreakInService();
   }
 
   render() {
