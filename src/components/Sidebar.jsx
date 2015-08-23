@@ -21,7 +21,7 @@ import '../styles/Sidebar.scss';
 export default class Sidebar extends React.Component {
   render() {
     return (
-      <ListGroup fill>
+      <ListGroup fill className="card-shadow-small">
         <ListGroupItemLink to="dashboard">
           <span>
             <Glyphicon glyph="home" style={{paddingRight: 10}}/>

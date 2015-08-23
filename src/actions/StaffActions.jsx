@@ -2,6 +2,7 @@ import alt from '../alt';
 import StaffService from 'services/StaffService';
 
 class StaffActions {
+
   fetchAvailable() {
     this.dispatch();
     StaffService.getAvailable().then((staff) => {

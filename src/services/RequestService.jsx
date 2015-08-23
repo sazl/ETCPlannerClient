@@ -24,4 +24,16 @@ class RequestService {
   }
 }
 
-export default new RequestService();
+const requestService = new RequestService();
+
+const getRequest = (path) => {
+  return function (target, key, descriptor) {
+    descriptor.value = (data) => { return requestService.get(path, data); };
+    return this;
+  };
+};
+
+module.exports = {
+  RequestService: requestService,
+  getRequest: getRequest
+};

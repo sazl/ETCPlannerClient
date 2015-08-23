@@ -1,21 +1,18 @@
-import RequestService from 'services/RequestService';
+import { getRequest, RequestService } from 'services/RequestService';
 
 class StaffService {
-  getAvailable() {
-    return RequestService.get('staff/available/');
-  }
 
-  getNotAvailable() {
-    return RequestService.get('staff/not-available/');
-  }
+  @getRequest('staff/available/')
+  getAvailable() {}
 
-  getBreakInService() {
-    return RequestService.get('staff/break-in-service/');
-  }
+  @getRequest('staff/not-available/')
+  getNotAvailable() {}
 
-  getSummary() {
-    return RequestService.get('staff/summary/');
-  }
+  @getRequest('staff/break-in-service/')
+  getBreakInService() {}
+
+  @getRequest('staff/summary/')
+  getSummary() {}
 }
 
 export default new StaffService();

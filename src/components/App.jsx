@@ -38,7 +38,7 @@ export default class App extends React.Component {
     return (
       <div>
         <Affix>
-          <Navbar brand="ETC Planner" fluid>
+          <Navbar brand="ETC Planner" className="card-shadow-small" fluid>
             <Nav>
               <NavItemLink to="planner">
                 <span>Planner</span>

@@ -5,6 +5,10 @@
   }
 }
 
+.medium {
+  font-size: 14px;
+}
+
 .large {
   font-size: 18px;
 }
@@ -13,12 +17,17 @@
     font-size: 64px;
 }
 
-.griddle-filter {
-  margin-bottom: 20px;
+.card-shadow-small {
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
+}
 
-  .form-control {
-    width: 50%;
-  }
+
+.card-shadow {
+  box-shadow: 3px 3px 10px rgba(0, 0, 0, 0.3);
+}
+
+.panel {
+  box-shadow: 1px 1px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* transitions */

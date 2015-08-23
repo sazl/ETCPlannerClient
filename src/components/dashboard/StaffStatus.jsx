@@ -2,20 +2,23 @@ import React from 'react/addons';
 import {
   Row,
   Col,
+  Button,
+  Glyphicon,
   Panel
 } from 'react-bootstrap';
 
 import Griddle from 'griddle-react';
 import { Table, Tr, Td } from 'reactable';
 
+import BaseComponent from 'components/BaseComponent';
 import StatusCard from 'components/dashboard/StatusCard';
 
 import 'styles/Griddle.scss';
 
-export default class StaffStatus extends React.Component {
+
+export default class StaffStatus extends BaseComponent {
   render() {
     var statusCount = this.props.staffList.length.toString();
-
     return (
       <div>
         <Row>
@@ -28,17 +31,11 @@ export default class StaffStatus extends React.Component {
         <Row>
           <Col xs={12}>
           <Panel>
-            <Table className="table table-bordered table-striped" filterable={['Index']} sortable={['Index']} itemsPerPage={5}>
-              {this.props.staffList.map((staff) => {
-                return (
-                  <Tr>
-                  <Td column="Index" data={staff.index}>
-                  {staff.index}
-                  </Td>
-                  </Tr>
-                );
-               })}
-            </Table>
+            <Griddle tableClassName="table table-bordered table-striped"
+                     showFilter={true}
+                     showSettings={true}
+                     results={this.props.staffList}
+                     columns={['index', 'firstName']}/>
           </Panel>
           </Col>
         </Row>

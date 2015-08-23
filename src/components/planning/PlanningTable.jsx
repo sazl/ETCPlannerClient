@@ -16,6 +16,7 @@ import {
 import BaseComponent from 'components/BaseComponent';
 import CollapseButton from 'components/CollapseButton';
 import MissionForm from 'components/forms/MissionForm';
+import MissionRoleForm from 'components/forms/MissionRoleForm';
 
 export default class PlanningTable extends BaseComponent {
 
@@ -24,13 +25,17 @@ export default class PlanningTable extends BaseComponent {
     this.state = {
       missionCollapse: {},
       missionRoleCollapse: {},
-      showMissionForm: false
+      showMissionForm: false,
+      showMissionRoleForm: false
     };
+
     this._bind(
       'collapseMission',
       'collapseMissionRole',
       'showMissionForm',
-      'closeMissionForm'
+      'closeMissionForm',
+      'showMissionRoleForm',
+      'closeMissionRoleForm'
     );
   }
 
@@ -79,10 +84,10 @@ export default class PlanningTable extends BaseComponent {
         <td></td>
         <td className="text-center">
           <ButtonGroup>
-            <Button bsSize="xs" bsStyle="default">
+            <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionRoleForm(missionRole); }}>
               <Glyphicon glyph="edit"/>
             </Button>
-            <Button bsSize="xs" bsStyle="success">
+            <Button bsSize="xs" bsStyle="success" onClick={() => { this.showMissionRoleForm(missionRole); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -109,7 +114,7 @@ export default class PlanningTable extends BaseComponent {
             <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionForm(mission); }}>
               <Glyphicon glyph="edit"/>
             </Button>
-            <Button bsSize="xs" bsStyle="success">
+            <Button bsSize="xs" bsStyle="success" onClick={() => { this.showMissionForm(mission); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -148,12 +153,24 @@ export default class PlanningTable extends BaseComponent {
     });
   }
 
+  showMissionRoleForm(missionRole) {
+    this.setState({
+      showMissionRoleForm: true
+    });
+  }
+
+  closeMissionRoleForm() {
+    this.setState({
+      showMissionRoleForm: false
+    });
+  }
+
+
   render() {
     var rows = this.renderRows();
-    console.log(this.state.showMissionForm);
     return (
       <div>
-        <Table bordered striped hover condensed>
+        <Table bordered striped hover condensed className="card-shadow">
           <thead>
             <tr>
               <th></th>
@@ -174,15 +191,23 @@ export default class PlanningTable extends BaseComponent {
                onHide={this.closeMissionForm}
                backdrop={false}>
           <Modal.Header closeButton>
-            <Modal.Title>Modal title</Modal.Title>
+            <Modal.Title>Mission Form</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MissionForm />
+            <MissionForm onClose={this.closeMissionForm} />
           </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.closeMissionForm}>Close</Button>
-            <Button bsStyle='primary'>Save changes</Button>
-          </Modal.Footer>
+        </Modal>
+
+        <Modal bsSize="small"
+               show={this.state.showMissionRoleForm}
+               onHide={this.closeMissionRoleForm}
+               backdrop={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Mission Role Form</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <MissionRoleForm onClose={this.closeMissionRoleForm} />
+          </Modal.Body>
         </Modal>
       </div>
     );
