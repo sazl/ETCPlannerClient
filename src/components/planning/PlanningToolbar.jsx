@@ -30,17 +30,25 @@ export default class Toolbar extends BaseComponent {
     super(props);
     this._bind(
       'onFilterClick',
+      'onSortClick',
       'onColumnClick'
     );
     this.state = {
       showFilters: false,
-      showColumns: false
+      showColumns: false,
+      showSort: false
     };
   }
 
   onFilterClick() {
     this.setState({
       showFilters: !this.state.showFilters
+    });
+  }
+
+  onSortClick() {
+    this.setState({
+      showSort: !this.state.showSort
     });
   }
 
@@ -65,10 +73,10 @@ export default class Toolbar extends BaseComponent {
                 </Button>
               </ButtonGroup>
               <ButtonGroup>
-                <Button bsStyle={this.state.showColumns ? "warning" : "default"}
-                        onClick={this.onColumnClick}
-                        active={this.state.showColumns}>
-                  <Glyphicon glyph={this.state.showColumns ? "remove" : "sort-by-attributes"}/>
+                <Button bsStyle={this.state.showSort ? "warning" : "default"}
+                        onClick={this.onSortClick}
+                        active={this.state.showSort}>
+                  <Glyphicon glyph={this.state.showSort ? "remove" : "sort-by-attributes"}/>
                   &nbsp; Sort
                 </Button>
               </ButtonGroup>
@@ -90,12 +98,6 @@ export default class Toolbar extends BaseComponent {
                 </Button>
               </ButtonGroup>
               <ButtonGroup className="pull-right">
-                <Button bsStyle="warning">
-                  <Glyphicon glyph="edit" />
-                  &nbsp; Edit Mission
-                </Button>
-              </ButtonGroup>
-              <ButtonGroup className="pull-right">
                 <Button bsStyle="info">
                   <Glyphicon glyph="save"/>
                   &nbsp; Export
@@ -106,86 +108,90 @@ export default class Toolbar extends BaseComponent {
         </div>
 
         <Collapse in={this.state.showFilters}>
-          <div>
-            <div className="row">
-              <hr></hr>
+          <div className="row">
+            <legend>Filter</legend>
+            <div className="col-xs-4">
+              <PanelGroup className="card-shadow-small">
+                <Panel header={<div>
+                               Missions
+                               <span className="label label-default medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Mission Roles
+                               <span className="label label-success medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Staff Assignments
+                               <span className="label label-info medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+              </PanelGroup>
             </div>
 
-
-            <div className="row">
-              <legend>Filter</legend>
-              <div className="col-xs-4">
-                <PanelGroup className="card-shadow-small">
-                  <Panel header={<div>
-                                 Missions
-                                 <span className="label label-default medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                  <Panel header={<div>
-                                 Mission Roles
-                                 <span className="label label-success medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                  <Panel header={<div>
-                                 Staff Assignments
-                                 <span className="label label-info medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                </PanelGroup>
-              </div>
-
-              <div className="col-xs-4">
-                <PanelGroup className="card-shadow-small" defaultExpanded={true}>
-                  <Panel header={<div>
-                                 Mission Type
-                                 <span className="label label-success medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                  <Panel header={<div>
-                                 Confirmed Types
-                                 <span className="label label-default medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                  <Panel header={<div>
-                                 Profile Types
-                                 <span className="label label-success medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                </PanelGroup>
-              </div>
-              <div className="col-xs-4">
-                <PanelGroup className="card-shadow-small" defaultExpanded={true}>
-                  <Panel header={<div>
-                                 Duration
-                                 <span className="label label-default medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                  <Panel header={<div>
-                                 Countries
-                                 <span className="label label-info medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                  <Panel header={<div>
-                                 Staff
-                                 <span className="label label-info medium pull-right">-</span>
-                                 </div>} collapsible defaultExpanded={true}>
-                    <Multiselect placeholder="Missions" filter="contains"/>
-                  </Panel>
-                </PanelGroup>
-              </div>
+            <div className="col-xs-4">
+              <PanelGroup className="card-shadow-small" >
+                <Panel header={<div>
+                               Mission Type
+                               <span className="label label-success medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Confirmed Types
+                               <span className="label label-default medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Profile Types
+                               <span className="label label-success medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+              </PanelGroup>
+            </div>
+            <div className="col-xs-4">
+              <PanelGroup className="card-shadow-small" >
+                <Panel header={<div>
+                               Duration
+                               <span className="label label-default medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Countries
+                               <span className="label label-info medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Staff
+                               <span className="label label-info medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Missions" filter="contains"/>
+                </Panel>
+              </PanelGroup>
             </div>
           </div>
         </Collapse>
-      </div>
 
+        <Collapse in={this.state.showSort}>
+          <div className="row">
+            <legend>Sort</legend>
+          </div>
+        </Collapse>
+
+        <Collapse in={this.state.showColumns}>
+          <div className="row">
+            <legend>Columns</legend>
+          </div>
+        </Collapse>
+      </div>
     );
   }
 }

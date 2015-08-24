@@ -55,10 +55,10 @@ export default class App extends React.Component {
         </Affix>
         <Grid fluid>
           <Row>
-            <Col xs={6} md={2}>
+            <Col xs={12} md={2}>
             <Sidebar/>
             </Col>
-            <Col xs={6} md={10}>
+            <Col xs={12} md={10}>
             <RouteHandler/>
             </Col>
           </Row>

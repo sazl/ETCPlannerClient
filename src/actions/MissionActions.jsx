@@ -3,11 +3,19 @@ import MissionService from 'services/MissionService';
 
 class MissionActions {
 
-  fetchMissions() {
+  _fetchMissions(data={}, action=this.actions.updateMissions) {
     this.dispatch();
-    MissionService.getMissions().then((missions) => {
-      this.actions.updateMissions(missions);
+    MissionService.getMissions(data).then((missions) => {
+      action(missions);
     });
+  }
+
+  fetchMissions() {
+    this.actions._fetchMissions();
+  }
+
+  fetchDetailedMissions() {
+    this.actions._fetchMissions({ 'detailed': 'true' });
   }
 
   updateMissions(missions) {

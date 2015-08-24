@@ -9,12 +9,12 @@ class RequestService {
     this.token = 'g3moM57ZbUCXsCNfNxkSClqutUywrI'; //debug token
   }
 
-  get(url, data) {
-    data = data || {};
+  get(url, params) {
+    params = params || {};
     return this.request({
       url: API_URL + url,
       method: 'GET',
-      data: data,
+      data: params,
       type: 'json',
       crossOrigin: true,
       headers: {
@@ -29,7 +29,7 @@ const requestService = new RequestService();
 const getRequest = (path) => {
   return function (target, key, descriptor) {
     descriptor.value = (data) => { return requestService.get(path, data); };
-    return this;
+    return descriptor;
   };
 };
 

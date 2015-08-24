@@ -13,6 +13,8 @@
     "alt": "^0.16.5",
     "bootstrap": "^3.3.5",
     "griddle-react": "^0.2.13",
+    "immutable": "^3.7.4",
+    "moment": "^2.10.6",
     "normalize.css": "~3.0.3",
     "react": "0.13.x",
     "react-bootstrap": "^0.24.3",

@@ -14,7 +14,8 @@ var common = {
       'components': path.resolve(ROOT_PATH, 'src/components/'),
       'constants': path.resolve(ROOT_PATH, 'src/constants/'),
       'stores':  path.resolve(ROOT_PATH, 'src/stores/'),
-      'services': path.resolve(ROOT_PATH, 'src/services/')
+      'services': path.resolve(ROOT_PATH, 'src/services/'),
+      'utils': path.resolve(ROOT_PATH, 'src/utils/')
     }
   },
 
