@@ -26,6 +26,7 @@
         "new-cap": false,
         "no-console": 1,
         "no-extra-semi": 1,
+        "no-empty": 1,
         "no-underscore-dangle": false,
         "no-unused-vars": false,
         "react/jsx-boolean-value": 1,

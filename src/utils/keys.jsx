@@ -1,14 +1,8 @@
+var counter = 0;
 
 export default class KeyUtil {
-  static getMissionKey(mission) {
-    return 'mission' + String(mission.id);
-  }
-
-  static getMissionRoleKey(missionRole) {
-    return 'missionRole' + String(missionRole.id);
-  }
-
-  static getStaffAssignmentKey(staffAssignment) {
-    return 'staffAssignment' + String(staffAssignment.id);
+  static getKey() {
+    counter += 1;
+    return 'key_' + String(counter);
   }
 }

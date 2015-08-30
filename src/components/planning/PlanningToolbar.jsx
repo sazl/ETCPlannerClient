@@ -1,5 +1,7 @@
 import React from 'react/addons';
 
+import Immutable from 'immutable';
+
 import {
   Row,
   Col,
@@ -18,25 +20,42 @@ import {
   Input
 } from 'react-bootstrap';
 
-import { Multiselect } from 'react-widgets';
+import { Multiselect, DateTimePicker } from 'react-widgets';
 
 import BaseComponent from 'components/BaseComponent';
+import MissionActions from 'actions/MissionActions';
+
+import Utils from 'utils/utils';
+import DateUtils from 'utils/date';
 
 import 'react-widgets/dist/css/react-widgets.css';
 
-export default class Toolbar extends BaseComponent {
+
+export default class PlanningToolbar extends BaseComponent {
 
   constructor(props) {
     super(props);
     this._bind(
       'onFilterClick',
       'onSortClick',
-      'onColumnClick'
+      'onColumnClick',
+      'onMissionsChange',
+      'onProfileTypesChange',
+      'onConfirmedTypesChange',
+      'onMissionTypesChange',
+      'onStartDateChange',
+      'onEndDateChange'
     );
     this.state = {
       showFilters: false,
       showColumns: false,
-      showSort: false
+      showSort: false,
+      missions: Immutable.List(),
+      profileTypes: Immutable.List(),
+      confirmedTypes: Immutable.List(),
+      missionTypes: Immutable.List(),
+      startDate: null,
+      endDate: null
     };
   }
 
@@ -56,6 +75,61 @@ export default class Toolbar extends BaseComponent {
     this.setState({
       showColumns: !this.state.showColumns
     });
+  }
+
+  getFilters() {
+    return Immutable.Map({
+      'mission_id': Utils.commaJoin(this.state.missions),
+      'profile_type_id': Utils.commaJoin(this.state.profileTypes),
+      'confirmed_type_id': Utils.commaJoin(this.state.confirmedTypes),
+      'mission_type_id': Utils.commaJoin(this.state.missionTypes),
+      'start_date': this.state.startDate,
+      'end_date': this.state.endDate
+    });
+  }
+
+  filterDetailedMissionsAction() {
+    MissionActions.fetchDetailedMissions(this.getFilters());
+  }
+
+  onMissionsChange(missions) {
+    const missionIds = Utils.getField({ data: missions });
+    this.setState({
+      missions: missionIds
+    }, this.filterDetailedMissionsAction);
+  }
+
+  onProfileTypesChange(profileTypes) {
+    const profileTypeIds = Utils.getField({ data: profileTypes });
+    this.setState({
+      profileTypes: profileTypeIds
+    }, this.filterDetailedMissionsAction);
+  }
+
+  onConfirmedTypesChange(confirmedTypes) {
+    const confirmedTypeIds = Utils.getField({ data: confirmedTypes });
+    this.setState({
+      confirmedTypes: confirmedTypeIds
+    }, this.filterDetailedMissionsAction);
+  }
+
+  onMissionTypesChange(missionTypes) {
+    const missionTypeIds = Utils.getField({ data: missionTypes });
+    this.setState({
+      missionTypes: missionTypeIds
+    }, this.filterDetailedMissionsAction);
+  }
+
+  onStartDateChange(date) {
+    this.setState({
+      startDate: DateUtils.formatISO(date)
+    }, this.filterDetailedMissionsAction);
+  }
+
+  onEndDateChange(date) {
+    this.setState({
+      endDate: DateUtils.formatISO(date)
+    }, this.filterDetailedMissionsAction);
   }
 
   render() {
@@ -110,73 +184,94 @@ export default class Toolbar extends BaseComponent {
         <Collapse in={this.state.showFilters}>
           <div className="row">
             <legend>Filter</legend>
-            <div className="col-xs-4">
-              <PanelGroup className="card-shadow-small">
+            <div className="col-xs-6">
+              <PanelGroup className="card-shadow-small" >
                 <Panel header={<div>
                                Missions
                                <span className="label label-default medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                  <Multiselect placeholder="Missions"
+                               onChange={this.onMissionsChange}
+                               filter="contains"/>
                 </Panel>
-                <Panel header={<div>
-                               Mission Roles
-                               <span className="label label-success medium pull-right">-</span>
-                               </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
-                </Panel>
-                <Panel header={<div>
-                               Staff Assignments
-                               <span className="label label-info medium pull-right">-</span>
-                               </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
-                </Panel>
-              </PanelGroup>
-            </div>
-
-            <div className="col-xs-4">
-              <PanelGroup className="card-shadow-small" >
                 <Panel header={<div>
                                Mission Type
                                <span className="label label-success medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                  <Multiselect placeholder="Mission Types"
+                               data={this.props.missionTypes}
+                               textField="missionType"
+                               onChange={this.onMissionTypesChange}
+                               filter="contains"/>
                 </Panel>
                 <Panel header={<div>
                                Confirmed Types
                                <span className="label label-default medium pull-right">-</span>
-                               </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                               </div>} collapsible>
+                  <Multiselect placeholder="Confirmed Types"
+                               data={this.props.confirmedTypes}
+                               textField="confirmedType"
+                               busy={this.props.confirmedTypes.length === 0}
+                               onChange={this.onConfirmedTypesChange}
+                               filter="contains"/>
                 </Panel>
                 <Panel header={<div>
                                Profile Types
                                <span className="label label-success medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                  <Multiselect placeholder="Profile Types"
+                               data={this.props.profileTypes}
+                               textField="profileType"
+                               onChange={this.onProfileTypesChange}
+                               filter="contains"/>
                 </Panel>
               </PanelGroup>
             </div>
-            <div className="col-xs-4">
+            <div className="col-xs-6">
               <PanelGroup className="card-shadow-small" >
                 <Panel header={<div>
                                Duration
                                <span className="label label-default medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                  <form>
+                    <div className="form-group">
+                      <label className="control-label">Start Date</label>
+                      <div>
+                        <DateTimePicker format="dd/MM/yyyy" onChange={this.onStartDateChange} />
+                      </div>
+                    </div>
+                    <div>
+                      <label className="control-label">End Date</label>
+                      <div>
+                        <DateTimePicker format="dd/MM/yyyy" onChange={this.onEndDateChange} />
+                      </div>
+                    </div>
+                  </form>
                 </Panel>
                 <Panel header={<div>
                                Countries
                                <span className="label label-info medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                  <Multiselect placeholder="Countries" filter="contains"/>
                 </Panel>
                 <Panel header={<div>
                                Staff
                                <span className="label label-info medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions" filter="contains"/>
+                  <Multiselect placeholder="Staff"
+                               data={this.props.staff}
+                               textField="fullName"
+                               filter="contains"/>
+                </Panel>
+                <Panel header={<div>
+                               Languages
+                               <span className="label label-info medium pull-right">-</span>
+                               </div>} collapsible >
+                  <Multiselect placeholder="Languages" filter="contains"/>
                 </Panel>
               </PanelGroup>
             </div>
+
           </div>
         </Collapse>
 
@@ -195,3 +290,7 @@ export default class Toolbar extends BaseComponent {
     );
   }
 }
+
+PlanningToolbar.propTypes = {
+  profileTypes: React.PropTypes.array
+};

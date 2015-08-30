@@ -23,11 +23,17 @@ export default class MissionForm extends React.Component {
         <Input type="text" placeholder="ETC Service Map" label="ETC Service Map" />
         <div className="form-group">
           <label>Confirmed Type</label>
-          <DropdownList placeholder="Confirmed Type" filter="contains" />
+          <DropdownList placeholder="Confirmed Type"
+                        data={this.props.confirmedTypes}
+                        textField="confirmedType"
+                        filter="contains" />
         </div>
         <div className="form-group">
           <label>Mission Type</label>
-          <DropdownList placeholder="Mission Type" filter="contains" />
+          <DropdownList placeholder="Mission Type"
+                        data={this.props.missionTypes}
+                        textField="missionType"
+                        filter="contains" />
         </div>
         <div className="form-group">
           <label>Country</label>
@@ -46,5 +52,7 @@ export default class MissionForm extends React.Component {
 
 MissionForm.propTypes = {
   mission: React.PropTypes.object,
-  onClose: React.PropTypes.func
+  onClose: React.PropTypes.func,
+  confirmedTypes: React.PropTypes.array,
+  missionTypes: React.PropTypes.array
 };

@@ -13,6 +13,7 @@
     "alt": "^0.16.5",
     "bootstrap": "^3.3.5",
     "griddle-react": "^0.2.13",
+    "halogen": "^0.1.10",
     "immutable": "^3.7.4",
     "moment": "^2.10.6",
     "normalize.css": "~3.0.3",

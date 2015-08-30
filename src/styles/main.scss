@@ -30,6 +30,21 @@
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
 
+.absolute-center {
+  margin-left: 45%;
+}
+
+.row-centered {
+  text-align:center;
+}
+
+.col-centered {
+  display:inline-block;
+  float:none;
+  text-align:left;
+  margin-right:-4px;
+}
+
 /* transitions */
 
 .fade-enter {

@@ -3,6 +3,17 @@ import StaffService from 'services/StaffService';
 
 class StaffActions {
 
+  fetchStaff() {
+    this.dispatch();
+    StaffService.getStaff().then((staff) => {
+      this.actions.updateStaff(staff);
+    });
+  }
+
+  updateStaff(staff) {
+    this.dispatch(staff);
+  }
+
   fetchAvailable() {
     this.dispatch();
     StaffService.getAvailable().then((staff) => {

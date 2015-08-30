@@ -25,6 +25,18 @@ import connectToStores from 'alt/utils/connectToStores';
 import MissionActions from 'actions/MissionActions';
 import MissionStore from 'stores/MissionStore';
 
+import ProfileTypeActions from 'actions/ProfileTypeActions';
+import ProfileTypeStore from 'stores/ProfileTypeStore';
+
+import ConfirmedTypeActions from 'actions/ConfirmedTypeActions';
+import ConfirmedTypeStore from 'stores/ConfirmedTypeStore';
+
+import MissionTypeActions from 'actions/MissionTypeActions';
+import MissionTypeStore from 'stores/MissionTypeStore';
+
+import StaffActions from 'actions/StaffActions';
+import StaffStore from 'stores/StaffStore';
+
 import BaseComponent from 'components/BaseComponent';
 import PlanningToolbar from 'components/planning/PlanningToolbar';
 import PlanningTable from 'components/planning/PlanningTable';
@@ -35,19 +47,39 @@ import 'styles/Planning.scss';
 
 let RouteHandler = Router.RouteHandler;
 
+
 @connectToStores
 export default class Planning extends BaseComponent {
 
   static getStores() {
-    return [MissionStore];
+    return [
+      MissionStore,
+      ProfileTypeStore,
+      MissionTypeStore,
+      ConfirmedTypeStore,
+      StaffStore
+    ];
   }
 
   static getPropsFromStores() {
-    return MissionStore.getState();
+    const missionState = MissionStore.getState();
+    return {
+      loadingDetailedMissions: missionState.loadingDetailedMissions,
+      detailedMissions: missionState.detailedMissions,
+      profileTypes: ProfileTypeStore.getState().profileTypes,
+      confirmedTypes: ConfirmedTypeStore.getState().confirmedTypes,
+      missionTypes: MissionTypeStore.getState().missionTypes,
+      staff: StaffStore.getState().staff
+    };
   }
 
   componentWillMount() {
     MissionActions.fetchDetailedMissions();
+    MissionActions.fetchMissions();
+    StaffActions.fetchStaff();
+    ProfileTypeActions.fetchProfileTypes();
+    ConfirmedTypeActions.fetchConfirmedTypes();
+    MissionTypeActions.fetchMissionTypes();
   }
 
   render() {
@@ -56,9 +88,16 @@ export default class Planning extends BaseComponent {
         <Row>
           <Col xs={12}>
           <Panel collapsible defaultExpanded header="Planning">
-            <PlanningToolbar />
+            <PlanningToolbar profileTypes={this.props.profileTypes}
+                             staff={this.props.staff}
+                             confirmedTypes={this.props.confirmedTypes}
+                             missionTypes={this.props.missionTypes}
+                             missions={this.props.missions} />
             <hr></hr>
-            <PlanningTable missions={this.props.missions}/>
+            <PlanningTable missions={this.props.detailedMissions}
+                           confirmedTypes={this.props.confirmedTypes}
+                           missionTypes={this.props.missionTypes}
+                           loadingMissions={this.props.loadingDetailedMissions} />
           </Panel>
           </Col>
         </Row>

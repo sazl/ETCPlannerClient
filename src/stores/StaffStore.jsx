@@ -6,6 +6,9 @@ import StaffActions from 'actions/StaffActions';
 class StaffStore {
 
   constructor() {
+    this.staff = [];
+    this.loadingStaff = false;
+
     this.breakInService = [];
     this.available = [];
     this.notAvailable = [];
@@ -16,6 +19,15 @@ class StaffStore {
       getAvailable: this.getAvailable,
       getNotAvailable: this.getNotAvailable
     });
+  }
+
+  onFetchStaff() {
+    this.loadingStaff = true;
+  }
+
+  onUpdateStaff(staff) {
+    this.loadingStaff = false;
+    this.staff = staff;
   }
 
   onUpdateAvailable(staff) {

@@ -2,6 +2,9 @@ import { getRequest, RequestService } from 'services/RequestService';
 
 class StaffService {
 
+  @getRequest('staff/')
+  getStaff() {}
+
   @getRequest('staff/available/')
   getAvailable() {}
 

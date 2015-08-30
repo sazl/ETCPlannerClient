@@ -15,13 +15,15 @@ import {
   Modal
 } from 'react-bootstrap';
 
+import { GridLoader } from 'halogen';
+
 import BaseComponent from 'components/BaseComponent';
 import CollapseButton from 'components/CollapseButton';
 import MissionForm from 'components/forms/MissionForm';
 import MissionRoleForm from 'components/forms/MissionRoleForm';
 
 import KeyUtil from 'utils/keys';
-
+import DateUtil from 'utils/date';
 
 export default class PlanningTable extends BaseComponent {
 
@@ -33,7 +35,7 @@ export default class PlanningTable extends BaseComponent {
       missionRoleCollapse: Immutable.Map(),
       showMissionForm: false,
       showMissionRoleForm: false,
-      isCollapsed: false
+      isCollapsed: true
     };
 
     this._bind(
@@ -50,38 +52,43 @@ export default class PlanningTable extends BaseComponent {
   componentWillReceiveProps(props) {
     let missionCollapse = {};
     let missionRoleCollapse = {};
+    const defaultCollapseState = true;
 
     props.missions.forEach((mission) => {
-      const missionKey = KeyUtil.getMissionKey(mission);
-      missionCollapse[missionKey] = false;
+      mission.key = KeyUtil.getKey();
+      missionCollapse[mission.key] = defaultCollapseState;
       mission.missionRoles.forEach((missionRole) => {
-        const missionRoleKey = KeyUtil.getMissionRoleKey(missionRole);
-        missionRoleCollapse[missionRoleKey] = false;
+        missionRole.key = KeyUtil.getKey();
+        missionRoleCollapse[missionRole.key] = defaultCollapseState;
+        missionRole.staffAssignments.forEach((staffAssignment) => {
+          staffAssignment.key = KeyUtil.getKey();
+        });
       });
     });
 
     this.setState({
       missionCollapse: Immutable.Map(missionCollapse),
       missionRoleCollapse: Immutable.Map(missionRoleCollapse),
-      isCollapsed: false
+      isCollapsed: defaultCollapseState
     });
   }
 
   collapseMission(missionId) {
     this.setState({
-      missionCollapse: this.state.missionCollapse.update(missionId, (x) => { return !x; })
+      missionCollapse: this.state.missionCollapse.update(
+        missionId, (x) => { return !x; })
     });
   }
 
   collapseMissionRole(missionRoleId) {
     this.setState({
-      missionRoleCollapse: this.state.missionRoleCollapse.update(missionRoleId, (x) => { return !x; })
+      missionRoleCollapse: this.state.missionRoleCollapse.update(
+        missionRoleId, (x) => { return !x; })
     });
   }
 
   collapseAll() {
     const operation = (x) => { return !this.state.isCollapsed; };
-    console.log(this.state.missionCollapse);
     this.setState({
       isCollapsed: !this.state.isCollapsed,
       missionCollapse: this.state.missionCollapse.map(operation),
@@ -90,41 +97,55 @@ export default class PlanningTable extends BaseComponent {
   }
 
   renderStaffAssignment(staffAssignment) {
-    const key = KeyUtil.getStaffAssignmentKey(staffAssignment);
+    const key = staffAssignment.key;
     const staffName = `${staffAssignment.staff.firstName} ${staffAssignment.staff.lastName}`;
+    const startDate = DateUtil.formatDate(staffAssignment.startDate);
+    const endDate = DateUtil.formatDate(staffAssignment.endDate);
 
     return (
       <tr key={key}>
         <td className="text-center"></td>
         <td>{staffName}</td>
-        <td>{staffAssignment.startDate}</td>
-        <td>{staffAssignment.endDate}</td>
+        <td>{startDate}</td>
+        <td>{endDate}</td>
         <td></td>
         <td></td>
         <td></td>
-        <td></td>
-        <td className="text-center">
+        <td>
+          <ButtonGroup>
+            <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionForm(mission); }}>
+              <Glyphicon glyph="edit"/>
+            </Button>
+            <Button style={{display: 'none'}} bsSize="xs" bsStyle="success" onClick={() => { }}>
+              <Glyphicon glyph="plus"/>
+            </Button>
+          </ButtonGroup>
         </td>
       </tr>
     );
   }
 
   renderMissionRole(missionRole) {
-    const key = KeyUtil.getMissionRoleKey(missionRole);
+    const key = missionRole.key;
     const profileType = missionRole.profileType.profileType;
+    const startDate = DateUtil.formatDate(missionRole.startDate);
+    const endDate = DateUtil.formatDate(missionRole.endDate);
+    const location = missionRole.location;
 
     return (
       <tr className="warning" key={key}>
         <td className="text-center">
+          {missionRole.staffAssignments.length > 0 ?
           <ButtonGroup>
             <CollapseButton onClick={() => this.collapseMissionRole(key)}
                             isCollapsed={this.state.missionRoleCollapse.get(key)} />
           </ButtonGroup>
+          :
+          null}
         </td>
         <td>{profileType}</td>
-        <td>{missionRole.startDate}</td>
-        <td>{missionRole.endDate}</td>
-        <td></td>
+        <td>{startDate}</td>
+        <td>{endDate}</td>
         <td></td>
         <td></td>
         <td></td>
@@ -143,7 +164,7 @@ export default class PlanningTable extends BaseComponent {
   }
 
   renderMission(mission) {
-    const key = KeyUtil.getMissionKey(mission);
+    const key = mission.key;
     const description = mission.description;
     const countries = mission.countries.map((country) => {
       return country.fullName;
@@ -154,24 +175,28 @@ export default class PlanningTable extends BaseComponent {
     return (
       <tr className="info" key={key}>
         <td className="text-center">
+          {mission.missionRoles.length > 0 ?
           <ButtonGroup>
             <CollapseButton onClick={() => this.collapseMission(key)}
                             isCollapsed={this.state.missionCollapse.get(key)} />
           </ButtonGroup>
+          :
+          null}
         </td>
         <td>{description}</td>
         <td></td>
         <td></td>
         <td>{countries}</td>
-        <td></td>
         <td>{confirmedType}</td>
         <td>{missionType}</td>
         <td className="text-center">
           <ButtonGroup>
-            <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionForm(mission); }}>
+            <Button bsSize="xs" bsStyle="default"
+                    onClick={() => { this.showMissionForm(mission); }}>
               <Glyphicon glyph="edit"/>
             </Button>
-            <Button bsSize="xs" bsStyle="success" onClick={() => { this.showMissionForm(mission); }}>
+            <Button bsSize="xs" bsStyle="success"
+                    onClick={() => { this.showMissionForm(mission); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -183,12 +208,12 @@ export default class PlanningTable extends BaseComponent {
   renderRows() {
     var rows = [];
     this.props.missions.forEach((mission) => {
-      const missionKey = KeyUtil.getMissionKey(mission);
+      const missionKey = mission.key;
       rows.push(this.renderMission(mission));
 
       if (!this.state.missionCollapse.get(missionKey)) {
         mission.missionRoles.forEach((missionRole) => {
-          const missionRoleKey = KeyUtil.getMissionRoleKey(missionRole);
+          const missionRoleKey = missionRole.key;
           rows.push(this.renderMissionRole(missionRole));
 
           if (!this.state.missionRoleCollapse.get(missionRoleKey)) {
@@ -200,6 +225,38 @@ export default class PlanningTable extends BaseComponent {
       }
     });
     return rows;
+  }
+
+  renderEmptyRow(body) {
+    return (
+      <tr>
+        <td colSpan="8">
+          <div className="absolute-center">
+            {body}
+          </div>
+        </td>
+      </tr>
+    );
+  }
+
+  renderLoading() {
+    return this.renderEmptyRow(
+      <div>
+        <b>Loading</b>
+        <GridLoader color="#00CC66"/>
+      </div>
+    );
+  }
+
+  renderTableBody() {
+    if (this.props.loadingMissions) {
+      return this.renderLoading();
+    }
+    else if (this.props.missions.length === 0) {
+      return this.renderEmptyRow(<b>No Results</b>);
+    } else {
+      return this.renderRows();
+    }
   }
 
   showMissionForm(mission) {
@@ -226,9 +283,8 @@ export default class PlanningTable extends BaseComponent {
     });
   }
 
-
   render() {
-    var rows = this.renderRows();
+    var rows = this.renderTableBody();
     return (
       <div>
         <Table bordered striped hover condensed className="card-shadow">
@@ -239,10 +295,9 @@ export default class PlanningTable extends BaseComponent {
                                 isCollapsed={this.state.isCollapsed} />
               </th>
               <th>Name</th>
-              <th>Start Date</th>
-              <th>End Date</th>
+              <th className="col-md-1">Start Date</th>
+              <th className="col-md-1">End Date</th>
               <th>Location</th>
-              <th>Profile Type</th>
               <th>Confirmed Type</th>
               <th>Mission Type</th>
               <th></th>
@@ -261,7 +316,9 @@ export default class PlanningTable extends BaseComponent {
             <Modal.Title>Mission Form</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MissionForm onClose={this.closeMissionForm} />
+            <MissionForm onClose={this.closeMissionForm}
+                         confirmedTypes={this.props.confirmedTypes}
+                         missionTypes={this.props.missionTypes} />
           </Modal.Body>
         </Modal>
 
@@ -282,5 +339,6 @@ export default class PlanningTable extends BaseComponent {
 }
 
 PlanningTable.propTypes = {
-  missions: React.PropTypes.array.isRequired
+  missions: React.PropTypes.array.isRequired,
+  loadingMissions: React.PropTypes.bool.isRequired
 };
