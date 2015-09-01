@@ -34,6 +34,19 @@ class MissionActions {
     });
   }
 
+  saveOrUpdateMission(mission) {
+    this.dispatch();
+    const plainData = mission.toJS();
+    console.log(plainData);
+    /*
+    MissionService.saveMission(mission).then((result) => {
+
+    }).error((error) => {
+
+    });
+    */
+  }
+
   updateMissions(missions) {
     this.dispatch(missions);
   }

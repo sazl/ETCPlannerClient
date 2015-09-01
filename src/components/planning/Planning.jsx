@@ -31,8 +31,14 @@ import ProfileTypeStore from 'stores/ProfileTypeStore';
 import ConfirmedTypeActions from 'actions/ConfirmedTypeActions';
 import ConfirmedTypeStore from 'stores/ConfirmedTypeStore';
 
+import CountryActions from 'actions/CountryActions';
+import CountryStore from 'stores/CountryStore';
+
 import MissionTypeActions from 'actions/MissionTypeActions';
 import MissionTypeStore from 'stores/MissionTypeStore';
+
+import MissionRoleActions from 'actions/MissionRoleActions';
+import MissionRoleStore from 'stores/MissionRoleStore';
 
 import StaffActions from 'actions/StaffActions';
 import StaffStore from 'stores/StaffStore';
@@ -55,7 +61,9 @@ export default class Planning extends BaseComponent {
     return [
       MissionStore,
       ProfileTypeStore,
+      CountryStore,
       MissionTypeStore,
+      MissionRoleStore,
       ConfirmedTypeStore,
       StaffStore
     ];
@@ -64,22 +72,29 @@ export default class Planning extends BaseComponent {
   static getPropsFromStores() {
     const missionState = MissionStore.getState();
     return {
-      loadingDetailedMissions: missionState.loadingDetailedMissions,
-      detailedMissions: missionState.detailedMissions,
+      loadingDetailedMissions: MissionStore.getState().loadingDetailedMissions,
+      detailedMissions: MissionStore.getState().detailedMissions,
+      missions: MissionStore.getState().missions,
       profileTypes: ProfileTypeStore.getState().profileTypes,
       confirmedTypes: ConfirmedTypeStore.getState().confirmedTypes,
+      countries: CountryStore.getState().countries,
       missionTypes: MissionTypeStore.getState().missionTypes,
-      staff: StaffStore.getState().staff
+      missionRoles: MissionRoleStore.getState().missionRoles,
+      staffList: StaffStore.getState().staff
     };
   }
 
   componentWillMount() {
-    MissionActions.fetchDetailedMissions();
+    if (this.props.detailedMissions.length === 0) {
+      // MissionActions.fetchDetailedMissions();
+    }
     MissionActions.fetchMissions();
-    StaffActions.fetchStaff();
     ProfileTypeActions.fetchProfileTypes();
     ConfirmedTypeActions.fetchConfirmedTypes();
+    CountryActions.fetchCountries();
     MissionTypeActions.fetchMissionTypes();
+    MissionRoleActions.fetchMissionRoles();
+    StaffActions.fetchStaff();
   }
 
   render() {
@@ -88,16 +103,24 @@ export default class Planning extends BaseComponent {
         <Row>
           <Col xs={12}>
           <Panel collapsible defaultExpanded header="Planning">
-            <PlanningToolbar profileTypes={this.props.profileTypes}
-                             staff={this.props.staff}
-                             confirmedTypes={this.props.confirmedTypes}
-                             missionTypes={this.props.missionTypes}
-                             missions={this.props.missions} />
+            <PlanningToolbar
+             profileTypes={this.props.profileTypes}
+             confirmedTypes={this.props.confirmedTypes}
+             countries={this.props.countries}
+             missionTypes={this.props.missionTypes}
+             missions={this.props.missions}
+             staffList={this.props.staffList} />
             <hr></hr>
-            <PlanningTable missions={this.props.detailedMissions}
-                           confirmedTypes={this.props.confirmedTypes}
-                           missionTypes={this.props.missionTypes}
-                           loadingMissions={this.props.loadingDetailedMissions} />
+            <PlanningTable
+             detailedMissions={this.props.detailedMissions}
+             loadingMissions={this.props.loadingDetailedMissions}
+             missions={this.props.missions}
+             missionRoles={this.props.missionRoles}
+             confirmedTypes={this.props.confirmedTypes}
+             profileTypes={this.props.profileTypes}
+             countries={this.props.countries}
+             missionTypes={this.props.missionTypes}
+             staffList={this.props.staffList} />
           </Panel>
           </Col>
         </Row>

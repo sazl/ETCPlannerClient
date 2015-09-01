@@ -21,6 +21,7 @@ import BaseComponent from 'components/BaseComponent';
 import CollapseButton from 'components/CollapseButton';
 import MissionForm from 'components/forms/MissionForm';
 import MissionRoleForm from 'components/forms/MissionRoleForm';
+import StaffAssignmentForm from 'components/forms/StaffAssignmentForm';
 
 import KeyUtil from 'utils/keys';
 import DateUtil from 'utils/date';
@@ -35,7 +36,9 @@ export default class PlanningTable extends BaseComponent {
       missionRoleCollapse: Immutable.Map(),
       showMissionForm: false,
       showMissionRoleForm: false,
-      isCollapsed: true
+      isCollapsed: true,
+      selectedMission: null,
+      selectedMissionRole: null
     };
 
     this._bind(
@@ -45,16 +48,18 @@ export default class PlanningTable extends BaseComponent {
       'showMissionForm',
       'closeMissionForm',
       'showMissionRoleForm',
-      'closeMissionRoleForm'
+      'closeMissionRoleForm',
+      'showStaffAssignmentForm',
+      'closeStaffAssignmentForm'
     );
   }
 
   componentWillReceiveProps(props) {
     let missionCollapse = {};
     let missionRoleCollapse = {};
-    const defaultCollapseState = true;
+    const defaultCollapseState = false;
 
-    props.missions.forEach((mission) => {
+    props.detailedMissions.forEach((mission) => {
       mission.key = KeyUtil.getKey();
       missionCollapse[mission.key] = defaultCollapseState;
       mission.missionRoles.forEach((missionRole) => {
@@ -96,11 +101,61 @@ export default class PlanningTable extends BaseComponent {
     });
   }
 
-  renderStaffAssignment(staffAssignment) {
+  showMissionForm(mission) {
+    this.setState({
+      showMissionForm: true,
+      selectedMission: mission
+    });
+  }
+
+  closeMissionForm() {
+    this.setState({
+      showMissionForm: false,
+      selectedMission: null
+    });
+  }
+
+  showMissionRoleForm(missionRole, mission) {
+    if (missionRole) {
+      missionRole.mission = mission;
+    }
+    this.setState({
+      showMissionRoleForm: true,
+      selectedMissionRole: missionRole
+    });
+  }
+
+  closeMissionRoleForm() {
+    this.setState({
+      showMissionRoleForm: false,
+      selectedMissionRole: null
+    });
+  }
+
+  showStaffAssignmentForm(staffAssignment, missionRole) {
+    if (staffAssignment) {
+      staffAssignment.missionRole = missionRole;
+    }
+    this.setState({
+      showStaffAssignmentForm: true,
+      selectedStaffAssignment: staffAssignment
+    });
+  }
+
+  closeStaffAssignmentForm() {
+    this.setState({
+      showStaffAssignmentForm: false,
+      selectedStaffAssignment: null
+    });
+  }
+
+  renderStaffAssignment(staffAssignment, missionRole) {
     const key = staffAssignment.key;
-    const staffName = `${staffAssignment.staff.firstName} ${staffAssignment.staff.lastName}`;
+    const staffName = staffAssignment.staff.fullName;
     const startDate = DateUtil.formatDate(staffAssignment.startDate);
     const endDate = DateUtil.formatDate(staffAssignment.endDate);
+    const location = staffAssignment.location;
+    const confirmedType = staffAssignment.confirmedType.confirmedType;
 
     return (
       <tr key={key}>
@@ -108,15 +163,24 @@ export default class PlanningTable extends BaseComponent {
         <td>{staffName}</td>
         <td>{startDate}</td>
         <td>{endDate}</td>
+        <td>{location}</td>
+        <td>{confirmedType}</td>
         <td></td>
-        <td></td>
-        <td></td>
-        <td>
+      <td className="text-center">
           <ButtonGroup>
-            <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionForm(mission); }}>
+            <Button
+            bsSize="xs"
+            bsStyle="default"
+            onClick={() => {
+              this.showStaffAssignmentForm(staffAssignment, missionRole);
+            }}>
               <Glyphicon glyph="edit"/>
             </Button>
-            <Button style={{display: 'none'}} bsSize="xs" bsStyle="success" onClick={() => { }}>
+            <Button
+            style={{display: 'none'}}
+            bsSize="xs"
+            bsStyle="success"
+            onClick={() => { this.showStaffAssignmentForm(); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -125,7 +189,7 @@ export default class PlanningTable extends BaseComponent {
     );
   }
 
-  renderMissionRole(missionRole) {
+  renderMissionRole(missionRole, mission) {
     const key = missionRole.key;
     const profileType = missionRole.profileType.profileType;
     const startDate = DateUtil.formatDate(missionRole.startDate);
@@ -136,12 +200,13 @@ export default class PlanningTable extends BaseComponent {
       <tr className="warning" key={key}>
         <td className="text-center">
           {missionRole.staffAssignments.length > 0 ?
-          <ButtonGroup>
-            <CollapseButton onClick={() => this.collapseMissionRole(key)}
-                            isCollapsed={this.state.missionRoleCollapse.get(key)} />
-          </ButtonGroup>
-          :
-          null}
+           <ButtonGroup>
+             <CollapseButton
+              onClick={() => this.collapseMissionRole(key)}
+              isCollapsed={this.state.missionRoleCollapse.get(key)} />
+           </ButtonGroup>
+           :
+           null}
         </td>
         <td>{profileType}</td>
         <td>{startDate}</td>
@@ -151,10 +216,16 @@ export default class PlanningTable extends BaseComponent {
         <td></td>
         <td className="text-center">
           <ButtonGroup>
-            <Button bsSize="xs" bsStyle="default" onClick={() => { this.showMissionRoleForm(missionRole); }}>
+            <Button
+            bsSize="xs"
+            bsStyle="default"
+            onClick={() => { this.showMissionRoleForm(missionRole, mission); }}>
               <Glyphicon glyph="edit"/>
             </Button>
-            <Button bsSize="xs" bsStyle="success" onClick={() => { this.showMissionRoleForm(missionRole); }}>
+            <Button
+            bsSize="xs"
+            bsStyle="success"
+            onClick={() => { this.showMissionRoleForm(); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -177,8 +248,10 @@ export default class PlanningTable extends BaseComponent {
         <td className="text-center">
           {mission.missionRoles.length > 0 ?
           <ButtonGroup>
-            <CollapseButton onClick={() => this.collapseMission(key)}
-                            isCollapsed={this.state.missionCollapse.get(key)} />
+            <CollapseButton
+             onClick={() => this.collapseMission(key)}
+             isCollapsed={this.state.missionCollapse.get(key)}
+            />
           </ButtonGroup>
           :
           null}
@@ -191,12 +264,16 @@ export default class PlanningTable extends BaseComponent {
         <td>{missionType}</td>
         <td className="text-center">
           <ButtonGroup>
-            <Button bsSize="xs" bsStyle="default"
-                    onClick={() => { this.showMissionForm(mission); }}>
+            <Button
+             bsSize="xs"
+             bsStyle="default"
+             onClick={() => { this.showMissionForm(mission); }}>
               <Glyphicon glyph="edit"/>
             </Button>
-            <Button bsSize="xs" bsStyle="success"
-                    onClick={() => { this.showMissionForm(mission); }}>
+            <Button
+             bsSize="xs"
+             bsStyle="success"
+             onClick={() => { this.showMissionForm(); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -207,18 +284,19 @@ export default class PlanningTable extends BaseComponent {
 
   renderRows() {
     var rows = [];
-    this.props.missions.forEach((mission) => {
+    this.props.detailedMissions.forEach((mission) => {
       const missionKey = mission.key;
       rows.push(this.renderMission(mission));
 
       if (!this.state.missionCollapse.get(missionKey)) {
         mission.missionRoles.forEach((missionRole) => {
           const missionRoleKey = missionRole.key;
-          rows.push(this.renderMissionRole(missionRole));
+          rows.push(this.renderMissionRole(missionRole, mission));
 
           if (!this.state.missionRoleCollapse.get(missionRoleKey)) {
             missionRole.staffAssignments.forEach((staffAssignment) => {
-              rows.push(this.renderStaffAssignment(staffAssignment));
+              rows.push(
+                this.renderStaffAssignment(staffAssignment, missionRole));
             });
           }
         });
@@ -252,47 +330,24 @@ export default class PlanningTable extends BaseComponent {
     if (this.props.loadingMissions) {
       return this.renderLoading();
     }
-    else if (this.props.missions.length === 0) {
+    else if (this.props.detailedMissions.length === 0) {
       return this.renderEmptyRow(<b>No Results</b>);
     } else {
       return this.renderRows();
     }
   }
 
-  showMissionForm(mission) {
-    this.setState({
-      showMissionForm: true
-    });
-  }
-
-  closeMissionForm() {
-    this.setState({
-      showMissionForm: false
-    });
-  }
-
-  showMissionRoleForm(missionRole) {
-    this.setState({
-      showMissionRoleForm: true
-    });
-  }
-
-  closeMissionRoleForm() {
-    this.setState({
-      showMissionRoleForm: false
-    });
-  }
-
   render() {
-    var rows = this.renderTableBody();
     return (
       <div>
         <Table bordered striped hover condensed className="card-shadow">
           <thead>
             <tr>
               <th className="text-center">
-                <CollapseButton onClick={this.collapseAll}
-                                isCollapsed={this.state.isCollapsed} />
+                <CollapseButton
+                onClick={this.collapseAll}
+                isCollapsed={this.state.isCollapsed}
+                />
               </th>
               <th>Name</th>
               <th className="col-md-1">Start Date</th>
@@ -304,21 +359,27 @@ export default class PlanningTable extends BaseComponent {
             </tr>
           </thead>
           <tbody>
-            {rows}
+            {this.renderTableBody()}
           </tbody>
         </Table>
 
-        <Modal bsSize="small"
-               show={this.state.showMissionForm}
-               onHide={this.closeMissionForm}
-               backdrop={false}>
+        <Modal
+         bsSize="small"
+         show={this.state.showMissionForm}
+         onHide={this.closeMissionForm}
+         backdrop={false}>
           <Modal.Header closeButton>
             <Modal.Title>Mission Form</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MissionForm onClose={this.closeMissionForm}
-                         confirmedTypes={this.props.confirmedTypes}
-                         missionTypes={this.props.missionTypes} />
+            <MissionForm
+
+             onClose={this.closeMissionForm}
+             mission={this.state.selectedMission}
+             confirmedTypes={this.props.confirmedTypes}
+             missionTypes={this.props.missionTypes}
+             countries={this.props.countries}
+            />
           </Modal.Body>
         </Modal>
 
@@ -330,7 +391,31 @@ export default class PlanningTable extends BaseComponent {
             <Modal.Title>Mission Role Form</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <MissionRoleForm onClose={this.closeMissionRoleForm} />
+            <MissionRoleForm
+            onClose={this.closeMissionRoleForm}
+            missionRole={this.state.selectedMissionRole}
+            missions={this.props.missions}
+            profileTypes={this.props.profileTypes}
+            />
+          </Modal.Body>
+        </Modal>
+
+        <Modal bsSize="small"
+               show={this.state.showStaffAssignmentForm}
+               onHide={this.closeStaffAssignmentForm}
+               backdrop={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Staff Assignment Form</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <StaffAssignmentForm
+            onClose={this.closeStaffAssignmentForm}
+            staffAssignment={this.state.selectedStaffAssignment}
+            staffList={this.props.staffList}
+            missionRoles={this.props.missionRoles}
+            confirmedTypes={this.props.confirmedTypes}
+            profileTypes={this.props.profileTypes}
+            />
           </Modal.Body>
         </Modal>
       </div>
@@ -340,5 +425,9 @@ export default class PlanningTable extends BaseComponent {
 
 PlanningTable.propTypes = {
   missions: React.PropTypes.array.isRequired,
+  detailedMissions: React.PropTypes.array.isRequired,
+  confirmedTypes: React.PropTypes.array.isRequired,
+  countries: React.PropTypes.array.isRequired,
+  missionTypes: React.PropTypes.array.isRequired,
   loadingMissions: React.PropTypes.bool.isRequired
 };

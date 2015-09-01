@@ -25,6 +25,8 @@ import { Multiselect, DateTimePicker } from 'react-widgets';
 import BaseComponent from 'components/BaseComponent';
 import MissionActions from 'actions/MissionActions';
 
+import NotificationActions from 'actions/NotificationActions';
+
 import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
 
@@ -39,12 +41,14 @@ export default class PlanningToolbar extends BaseComponent {
       'onFilterClick',
       'onSortClick',
       'onColumnClick',
+      'onExportClick',
       'onMissionsChange',
       'onProfileTypesChange',
       'onConfirmedTypesChange',
       'onMissionTypesChange',
       'onStartDateChange',
-      'onEndDateChange'
+      'onEndDateChange',
+      'onStaffListChange'
     );
     this.state = {
       showFilters: false,
@@ -55,7 +59,8 @@ export default class PlanningToolbar extends BaseComponent {
       confirmedTypes: Immutable.List(),
       missionTypes: Immutable.List(),
       startDate: null,
-      endDate: null
+      endDate: null,
+      staffList: Immutable.List()
     };
   }
 
@@ -77,6 +82,10 @@ export default class PlanningToolbar extends BaseComponent {
     });
   }
 
+  onExportClick() {
+    NotificationActions.notifySuccess('hello');
+  }
+
   getFilters() {
     return Immutable.Map({
       'mission_id': Utils.commaJoin(this.state.missions),
@@ -84,7 +93,8 @@ export default class PlanningToolbar extends BaseComponent {
       'confirmed_type_id': Utils.commaJoin(this.state.confirmedTypes),
       'mission_type_id': Utils.commaJoin(this.state.missionTypes),
       'start_date': this.state.startDate,
-      'end_date': this.state.endDate
+      'end_date': this.state.endDate,
+      'staff_index': Utils.commaJoin(this.state.staffList)
     });
   }
 
@@ -132,6 +142,13 @@ export default class PlanningToolbar extends BaseComponent {
     }, this.filterDetailedMissionsAction);
   }
 
+  onStaffListChange(staffList) {
+    const staffIds = Utils.getField({ data: staffList, field: 'index' });
+    this.setState({
+      staffList: staffIds
+    }, this.filterDetailedMissionsAction);
+  }
+
   render() {
     return (
       <div className="container-fluid">
@@ -172,7 +189,7 @@ export default class PlanningToolbar extends BaseComponent {
                 </Button>
               </ButtonGroup>
               <ButtonGroup className="pull-right">
-                <Button bsStyle="info">
+                <Button bsStyle="info" onClick={this.onExportClick}>
                   <Glyphicon glyph="save"/>
                   &nbsp; Export
                 </Button>
@@ -259,9 +276,10 @@ export default class PlanningToolbar extends BaseComponent {
                                <span className="label label-info medium pull-right">-</span>
                                </div>} collapsible >
                   <Multiselect placeholder="Staff"
-                               data={this.props.staff}
+                               data={this.props.staffList}
                                textField="fullName"
-                               filter="contains"/>
+                               filter="contains"
+                               onChange={this.onStaffListChange}/>
                 </Panel>
                 <Panel header={<div>
                                Languages

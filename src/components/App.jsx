@@ -2,27 +2,18 @@
 
 import React from 'react/addons';
 import Router from 'react-router';
+var RouteHandler = Router.RouteHandler;
 
 import {
-  Affix,
-  Button,
   Grid,
   Row,
-  Col,
-  ListGroup, ListGroupItem,
-  Navbar,
-  Nav,
-  NavItem,
-  DropdownButton,
-  MenuItem,
-  Panel,
-  Glyphicon
+  Col
 } from 'react-bootstrap';
 
-import { NavItemLink } from 'react-router-bootstrap';
-
-import authenticatedComponent from './AuthenticatedComponent';
-import Sidebar from './Sidebar';
+import authenticatedComponent from 'components/AuthenticatedComponent';
+import BaseComponent from 'components/BaseComponent';
+import MainNavbar from 'components/MainNavbar';
+import Sidebar from 'components/Sidebar';
 
 // CSS
 import 'normalize.css';
@@ -31,28 +22,12 @@ import 'bootstrap/dist/css/bootstrap.css';
 import 'styles/bootstrap.scss';
 import 'styles/main.scss';
 
-var RouteHandler = Router.RouteHandler;
 
-export default class App extends React.Component {
+export default class App extends BaseComponent {
   render() {
     return (
       <div>
-        <Affix>
-          <Navbar brand="ETC Planner" className="card-shadow-small" fluid>
-            <Nav>
-              <NavItemLink to="planner">
-                <span>Planner</span>
-              </NavItemLink>
-              <NavItem>
-                <span>ETC</span>
-              </NavItem>
-            </Nav>
-            <Nav right>
-              <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>} />
-              <DropdownButton title={<span><Glyphicon glyph="user"/> Account</span>} />
-            </Nav>
-          </Navbar>
-        </Affix>
+        <MainNavbar />
         <Grid fluid>
           <Row>
             <Col xs={12} md={2}>

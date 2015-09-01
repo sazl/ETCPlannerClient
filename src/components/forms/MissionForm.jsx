@@ -1,51 +1,188 @@
 import React from 'react/addons';
+
+import Immutable from 'immutable';
+
 import {
   Input,
   Button,
-  ButtonInput
+  ButtonInput,
+  Modal
 } from 'react-bootstrap';
+
+import { Form, ValidatedInput } from 'react-bootstrap-validation';
 
 import { DropdownList, Multiselect } from 'react-widgets';
 
+import MissionActions from 'actions/MissionActions';
 
-export default class MissionForm extends React.Component {
+import BaseComponent from 'components/BaseComponent';
+import ValidatedForm from 'components/inputs/ValidatedForm';
+import ValidatedDropdownList from 'components/inputs/ValidatedDropdownList';
+
+
+export default class MissionForm extends BaseComponent {
   constructor(props) {
     super(props);
+
     this.state = {
-      mission: this.props.mission || {}
+      mission: Immutable.Map(this.props.mission || {
+        description: null,
+        etcServiceMap: null,
+        missionType: null,
+        confirmedType: null,
+        countries: []
+      })
     };
+
+    this._bind(
+      'handleDescriptionChange',
+      'handleEtcServiceMapChange',
+      'handleConfirmedTypeChange',
+      'handleMissionTypeChange',
+      'handleCountriesChange',
+      'onSave',
+      'onValidSubmit',
+      'onInvalidSubmit'
+    );
+  }
+
+  handleDescriptionChange() {
+    this.setState({
+      mission: this.state.mission.set(
+        'description',
+        this.refs.description.getValue()
+      )
+    });
+  }
+
+  handleEtcServiceMapChange() {
+    this.setState({
+      mission: this.state.mission.set(
+        'etcServiceMap',
+        this.refs.etcServiceMap.getValue()
+      )
+    });
+  }
+
+  handleConfirmedTypeChange(confirmedType) {
+    this.setState({
+      mission: this.state.mission.set(
+        'confirmedType',
+        confirmedType
+      )
+    });
+  }
+
+  handleMissionTypeChange(missionType) {
+    this.setState({
+      mission: this.state.mission.set(
+        'missionType',
+        missionType
+      )
+    });
+  }
+
+  handleCountriesChange(countries) {
+    this.setState({
+      mission: this.state.mission.set(
+        'countries',
+        countries
+      )
+    });
+  }
+
+  onSave() {
+    MissionActions.saveOrUpdateMission(this.state.mission);
+    this.props.onSave();
+  }
+
+  onValidSubmit(values) {
+    console.log(values);
+  }
+
+  onInvalidSubmit(errors, values) {
+    console.log(errors);
+    console.log(values);
   }
 
   render() {
     return (
-      <form>
-        <Input type="text" placeholder="Description" label="Description" />
-        <Input type="text" placeholder="ETC Service Map" label="ETC Service Map" />
-        <div className="form-group">
-          <label>Confirmed Type</label>
-          <DropdownList placeholder="Confirmed Type"
-                        data={this.props.confirmedTypes}
-                        textField="confirmedType"
-                        filter="contains" />
-        </div>
-        <div className="form-group">
-          <label>Mission Type</label>
-          <DropdownList placeholder="Mission Type"
-                        data={this.props.missionTypes}
-                        textField="missionType"
-                        filter="contains" />
-        </div>
-        <div className="form-group">
-          <label>Country</label>
-          <Multiselect placeholder="Country"/>
-        </div>
-        <hr/>
-        <div className="pull-right">
-          <Button onClick={this.props.onClose}>Close</Button>
-          <Button bsStyle='primary'>Save changes</Button>
-        </div>
-        <div className="clearfix"/>
-      </form>
+      <div className="modal-container">
+        <ValidatedForm
+         onValidSubmit={this.onValidSubmit}
+         onInvalidsubmit={this.onInvalidSubmit}>
+          <ValidatedInput
+          type="text"
+          placeholder="Description"
+          name="description"
+          label="Description"
+          ref="description"
+          value={this.state.mission.get('description')}
+          validate="required"
+          errorHelp="Description is required"
+          onChange={this.handleDescriptionChange}
+          hasFeedback
+          />
+          <Input
+          type="text"
+          placeholder="ETC Service Map"
+          label="ETC Service Map"
+          ref="etcServiceMap"
+          value={this.state.mission.get('etcServiceMap')}
+          onChange={this.handleEtcServiceMapChange}
+          hasFeedback
+          />
+          <ValidatedDropdownList
+           name="confirmedType"
+           label="Confirmed Type"
+           placeholder="Confirmed Type"
+           errorHelp="Confirmed Type is required"
+           validate="required"
+           value={this.state.mission.get('confirmedType')}
+           data={this.props.confirmedTypes}
+           valueField="id"
+           textField="confirmedType"
+           filter="contains"
+           onChange={this.handleConfirmedTypeChange}
+          />
+          <ValidatedDropdownList
+           name="missionType"
+           label="Mission Type"
+           placeholder="Mission Type"
+           errorHelp="Mission Type is required"
+           validate="required"
+           value={this.state.mission.get('missionType')}
+           data={this.props.missionTypes}
+           valueField="id"
+           textField="missionType"
+           filter="contains"
+           onChange={this.handleMissionTypeChange}
+          />
+          <Input
+           label="Countries"
+           hasFeedback>
+            <Multiselect
+            placeholder="Country"
+            value={this.state.mission.get('countries')}
+            data={this.props.countries}
+            textField="fullName"
+            valueField="id"
+            filter="contains"
+            onChange={this.handleCountriesChange}
+            />
+          </Input>
+          <hr/>
+          <div className="pull-right">
+            <Button onClick={this.props.onClose}>Close</Button>
+            <Button
+             bsStyle="primary"
+             type="submit">
+              Save changes
+            </Button>
+          </div>
+          <div className="clearfix"/>
+        </ValidatedForm>
+      </div>
     );
   }
 }
@@ -53,6 +190,8 @@ export default class MissionForm extends React.Component {
 MissionForm.propTypes = {
   mission: React.PropTypes.object,
   onClose: React.PropTypes.func,
+  onSave: React.PropTypes.func,
   confirmedTypes: React.PropTypes.array,
-  missionTypes: React.PropTypes.array
+  missionTypes: React.PropTypes.array,
+  countries: React.PropTypes.array
 };

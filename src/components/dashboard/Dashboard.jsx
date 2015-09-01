@@ -27,9 +27,11 @@ export default class Dashboard extends React.Component {
 
   render() {
     return (
-      <DashboardView availableStaff={this.props.available}
-                     breakInServiceStaff={this.props.breakInService}
-                     notAvailableStaff={this.props.notAvailable} />
+      <DashboardView
+      availableStaff={this.props.available}
+      breakInServiceStaff={this.props.breakInService}
+      notAvailableStaff={this.props.notAvailable}
+      />
     );
   }
 }

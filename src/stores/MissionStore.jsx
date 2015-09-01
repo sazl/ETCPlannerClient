@@ -12,6 +12,8 @@ class MissionStore {
     this.detailedMissions = [];
 
     this.bindListeners({
+      onFetchMissions: MissionActions.FETCH_MISSIONS,
+      onUpdateMissions: MissionActions.UPDATE_MISSIONS,
       onFetchDetailedMissions: MissionActions.FETCH_DETAILED_MISSIONS,
       onUpdateDetailedMissions: MissionActions.UPDATE_DETAILED_MISSIONS
     });
