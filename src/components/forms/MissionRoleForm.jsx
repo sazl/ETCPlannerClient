@@ -33,11 +33,11 @@ export default class MissionRoleForm extends BaseComponent {
       'handleEndDateChange'
     );
     this.state = {
-      missionRole: Immutable.Map(this.props.missionRole || {
+      missionRole: Immutable.Map(props.missionRole || {
         startDate: null,
         endDate: null,
         location: null,
-        mission: null,
+        mission: props.mission,
         profileType: null
       })
     };
@@ -169,6 +169,7 @@ export default class MissionRoleForm extends BaseComponent {
 
 MissionRoleForm.propTypes = {
   missionRole: React.PropTypes.object,
+  mission: React.PropTypes.object,
   missions: React.PropTypes.array,
   profileTypes: React.PropTypes.array,
   onClose: React.PropTypes.func

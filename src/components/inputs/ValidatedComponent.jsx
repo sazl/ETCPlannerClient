@@ -15,5 +15,5 @@ export default class ValidatedComponent extends ValidatedInput {
 }
 
 ValidatedComponent.defaultProps = {
-  validateEvent: 'onChange'
+  validationEvent: 'onBlur'
 };

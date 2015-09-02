@@ -23,6 +23,7 @@ import MissionForm from 'components/forms/MissionForm';
 import MissionRoleForm from 'components/forms/MissionRoleForm';
 import StaffAssignmentForm from 'components/forms/StaffAssignmentForm';
 
+import Utils from 'utils/utils';
 import KeyUtil from 'utils/keys';
 import DateUtil from 'utils/date';
 
@@ -121,6 +122,7 @@ export default class PlanningTable extends BaseComponent {
     }
     this.setState({
       showMissionRoleForm: true,
+      selectedMission: mission,
       selectedMissionRole: missionRole
     });
   }
@@ -128,6 +130,7 @@ export default class PlanningTable extends BaseComponent {
   closeMissionRoleForm() {
     this.setState({
       showMissionRoleForm: false,
+      selectedMission: null,
       selectedMissionRole: null
     });
   }
@@ -138,6 +141,7 @@ export default class PlanningTable extends BaseComponent {
     }
     this.setState({
       showStaffAssignmentForm: true,
+      selectedMissionRole: missionRole,
       selectedStaffAssignment: staffAssignment
     });
   }
@@ -145,17 +149,23 @@ export default class PlanningTable extends BaseComponent {
   closeStaffAssignmentForm() {
     this.setState({
       showStaffAssignmentForm: false,
+      selectedMissionRole: null,
       selectedStaffAssignment: null
     });
   }
 
-  renderStaffAssignment(staffAssignment, missionRole) {
+  renderStaffAssignment(staffAssignment, missionRole, renderButton=false) {
     const key = staffAssignment.key;
     const staffName = staffAssignment.staff.fullName;
     const startDate = DateUtil.formatDate(staffAssignment.startDate);
     const endDate = DateUtil.formatDate(staffAssignment.endDate);
     const location = staffAssignment.location;
     const confirmedType = staffAssignment.confirmedType.confirmedType;
+    const profileTypes = Utils.getField({
+      data: staffAssignment.staff.profileTypes,
+      many: true,
+      field: 'profileType'
+    });
 
     return (
       <tr key={key}>
@@ -165,7 +175,11 @@ export default class PlanningTable extends BaseComponent {
         <td>{endDate}</td>
         <td>{location}</td>
         <td>{confirmedType}</td>
-        <td></td>
+        <td>
+          <ul className="list-unstyled">
+            {profileTypes.map((x) => { return <li key={KeyUtil.getKey()}>{x}</li>; })}
+          </ul>
+        </td>
       <td className="text-center">
           <ButtonGroup>
             <Button
@@ -176,13 +190,14 @@ export default class PlanningTable extends BaseComponent {
             }}>
               <Glyphicon glyph="edit"/>
             </Button>
+            {renderButton ?
             <Button
-            style={{display: 'none'}}
             bsSize="xs"
             bsStyle="success"
-            onClick={() => { this.showStaffAssignmentForm(); }}>
+            onClick={() => { this.showStaffAssignmentForm(null, missionRole); }}>
               <Glyphicon glyph="plus"/>
             </Button>
+            : null}
           </ButtonGroup>
         </td>
       </tr>
@@ -201,9 +216,12 @@ export default class PlanningTable extends BaseComponent {
         <td className="text-center">
           {missionRole.staffAssignments.length > 0 ?
            <ButtonGroup>
-             <CollapseButton
-              onClick={() => this.collapseMissionRole(key)}
-              isCollapsed={this.state.missionRoleCollapse.get(key)} />
+           <CollapseButton
+           bsStyle="warning"
+           text={missionRole.staffAssignments.length.toString()}
+           onClick={() => this.collapseMissionRole(key)}
+           isCollapsed={this.state.missionRoleCollapse.get(key)}
+           />
            </ButtonGroup>
            :
            null}
@@ -225,7 +243,7 @@ export default class PlanningTable extends BaseComponent {
             <Button
             bsSize="xs"
             bsStyle="success"
-            onClick={() => { this.showMissionRoleForm(); }}>
+            onClick={() => { this.showMissionRoleForm(null, mission); }}>
               <Glyphicon glyph="plus"/>
             </Button>
           </ButtonGroup>
@@ -248,10 +266,11 @@ export default class PlanningTable extends BaseComponent {
         <td className="text-center">
           {mission.missionRoles.length > 0 ?
           <ButtonGroup>
-            <CollapseButton
-             onClick={() => this.collapseMission(key)}
-             isCollapsed={this.state.missionCollapse.get(key)}
-            />
+           <CollapseButton
+           text={mission.missionRoles.length.toString()}
+           onClick={() => this.collapseMission(key)}
+           isCollapsed={this.state.missionCollapse.get(key)}
+           />
           </ButtonGroup>
           :
           null}
@@ -294,9 +313,9 @@ export default class PlanningTable extends BaseComponent {
           rows.push(this.renderMissionRole(missionRole, mission));
 
           if (!this.state.missionRoleCollapse.get(missionRoleKey)) {
-            missionRole.staffAssignments.forEach((staffAssignment) => {
+            missionRole.staffAssignments.forEach((staffAssignment, index) => {
               rows.push(
-                this.renderStaffAssignment(staffAssignment, missionRole));
+                this.renderStaffAssignment(staffAssignment, missionRole, index === 0));
             });
           }
         });
@@ -354,7 +373,7 @@ export default class PlanningTable extends BaseComponent {
               <th className="col-md-1">End Date</th>
               <th>Location</th>
               <th>Confirmed Type</th>
-              <th>Mission Type</th>
+              <th>Type</th>
               <th></th>
             </tr>
           </thead>
@@ -373,7 +392,6 @@ export default class PlanningTable extends BaseComponent {
           </Modal.Header>
           <Modal.Body>
             <MissionForm
-
              onClose={this.closeMissionForm}
              mission={this.state.selectedMission}
              confirmedTypes={this.props.confirmedTypes}
@@ -394,6 +412,7 @@ export default class PlanningTable extends BaseComponent {
             <MissionRoleForm
             onClose={this.closeMissionRoleForm}
             missionRole={this.state.selectedMissionRole}
+            mission={this.state.selectedMission}
             missions={this.props.missions}
             profileTypes={this.props.profileTypes}
             />
@@ -411,6 +430,7 @@ export default class PlanningTable extends BaseComponent {
             <StaffAssignmentForm
             onClose={this.closeStaffAssignmentForm}
             staffAssignment={this.state.selectedStaffAssignment}
+            missionRole={this.state.selectedMissionRole}
             staffList={this.props.staffList}
             missionRoles={this.props.missionRoles}
             confirmedTypes={this.props.confirmedTypes}

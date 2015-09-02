@@ -53,7 +53,6 @@ export default class ValidatedForm extends Form {
           }
         }
 
-        console.log(React.cloneElement(child, newProps));
         return React.cloneElement(child, newProps);
       } else {
         return React.cloneElement(child, {}, this._renderChildren(child.props && child.props.children));
