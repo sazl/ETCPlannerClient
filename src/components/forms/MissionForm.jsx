@@ -18,6 +18,7 @@ import MissionActions from 'actions/MissionActions';
 import BaseComponent from 'components/BaseComponent';
 import ValidatedForm from 'components/inputs/ValidatedForm';
 import ValidatedDropdownList from 'components/inputs/ValidatedDropdownList';
+import ValidatedMultiselect from 'components/inputs/ValidatedMultiselect';
 
 
 export default class MissionForm extends BaseComponent {
@@ -123,7 +124,9 @@ export default class MissionForm extends BaseComponent {
           onChange={this.handleDescriptionChange}
           hasFeedback
           />
-          <Input
+          <ValidatedInput
+          name="etcServiceMap"
+          errorHelp="Must be a valid URL"
           type="text"
           placeholder="ETC Service Map"
           label="ETC Service Map"
@@ -158,19 +161,19 @@ export default class MissionForm extends BaseComponent {
            filter="contains"
            onChange={this.handleMissionTypeChange}
           />
-          <Input
+          <ValidatedMultiselect
+           name="countries"
+           placeholder="Country"
            label="Countries"
-           hasFeedback>
-            <Multiselect
-            placeholder="Country"
-            value={this.state.mission.get('countries')}
-            data={this.props.countries}
-            textField="fullName"
-            valueField="id"
-            filter="contains"
-            onChange={this.handleCountriesChange}
-            />
-          </Input>
+           errorHelp="A country is required"
+           validate="required"
+           value={this.state.mission.get('countries')}
+           data={this.props.countries}
+           textField="fullName"
+           valueField="id"
+           filter="contains"
+           onChange={this.handleCountriesChange}
+          />
           <hr/>
           <div className="pull-right">
             <Button onClick={this.props.onClose}>Close</Button>

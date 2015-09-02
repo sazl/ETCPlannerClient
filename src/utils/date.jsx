@@ -2,7 +2,12 @@ import moment from 'moment';
 
 export default class DateUtil {
   static parseDate(str) {
-    return moment(str).toDate();
+    const result = moment(str).toDate();
+    if (moment(result).isValid()) {
+      return result;
+    } else {
+      return null;
+    }
   }
 
   static formatDate(date) {
@@ -21,5 +26,9 @@ export default class DateUtil {
     } else {
       return '';
     }
+  }
+
+  static now() {
+    return moment();
   }
 }

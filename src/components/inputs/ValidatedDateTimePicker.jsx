@@ -1,10 +1,11 @@
 import React from 'react/addons';
 import { Input } from 'react-bootstrap';
-import { DropdownList } from 'react-widgets';
+import { DateTimePicker } from 'react-widgets';
 
 import ValidatedComponent from 'components/inputs/ValidatedComponent';
 
-class DropdownListInput extends React.Component {
+
+class DateTimePickerInput extends React.Component {
   render() {
     const { label, help, bsStyle, ...other } = this.props;
     return (
@@ -13,16 +14,16 @@ class DropdownListInput extends React.Component {
        bsStyle={bsStyle}
        help={help}
        hasFeedback>
-      <DropdownList {...other}/>
+      <DateTimePicker {...other}/>
       </Input>
     );
   }
 }
 
-export default class ValidatedDropdownList extends ValidatedComponent {
+export default class ValidatedDateTimePicker extends ValidatedComponent {
   render() {
     return (
-      <DropdownListInput {...this.props} />
+      <DateTimePickerInput {...this.props} />
     );
   }
 }

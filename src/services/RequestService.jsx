@@ -2,6 +2,8 @@ import request from 'reqwest';
 
 import { API_URL } from 'constants/APIConstants';
 
+import DateUtils from 'utils/date';
+
 const _token = 'g3moM57ZbUCXsCNfNxkSClqutUywrI'; //debug token
 let _pendingRequests = {};
 
@@ -10,6 +12,32 @@ function _abortRequest(key) {
   if (key && _pendingRequests[key]) {
     _pendingRequests[key].abort();
     delete _pendingRequests[key];
+  }
+}
+
+function _isDateField(fieldName) {
+  return /.*[dD]ate.*/.test(fieldName);
+}
+
+function _interceptObject(obj) {
+  for (const key in obj) {
+    const value = obj[key];
+    if (_isDateField(key)) {
+      obj[key] = DateUtils.parseDate(value);
+    } else if (Array.isArray(value)) {
+      obj[key] = value.map(_interceptObject);
+    } else if (!Array.isArray(value) && (value instanceof Object)) {
+      obj[key] = _interceptObject(value);
+    }
+  }
+  return obj;
+}
+
+function _interceptor(response) {
+  if (Array.isArray(response)) {
+    return response.map(_interceptObject);
+  } else {
+    return _interceptObject(response);
   }
 }
 
@@ -25,6 +53,9 @@ function _request({ url='', params={}, method='GET', key=false }) {
     crossOrigin: true,
     headers: {
       'Authorization': 'Bearer ' + _token
+    },
+    success: (response) => {
+      _interceptor(response);
     }
   });
   if (key) {

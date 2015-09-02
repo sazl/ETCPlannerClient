@@ -207,40 +207,49 @@ export default class PlanningToolbar extends BaseComponent {
                                Missions
                                <span className="label label-default medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Missions"
-                               onChange={this.onMissionsChange}
-                               filter="contains"/>
+                  <Multiselect
+                   placeholder="Missions"
+                   data={this.props.missions}
+                   textField="description"
+                   busy={this.props.missions.length === 0}
+                   onChange={this.onMissionsChange}
+                   filter="contains"/>
                 </Panel>
                 <Panel header={<div>
                                Mission Type
                                <span className="label label-success medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Mission Types"
-                               data={this.props.missionTypes}
-                               textField="missionType"
-                               onChange={this.onMissionTypesChange}
-                               filter="contains"/>
+                  <Multiselect
+                   placeholder="Mission Types"
+                   data={this.props.missionTypes}
+                   textField="missionType"
+                   busy={this.props.missionTypes.length === 0}
+                   onChange={this.onMissionTypesChange}
+                   filter="contains"/>
                 </Panel>
                 <Panel header={<div>
                                Confirmed Types
                                <span className="label label-default medium pull-right">-</span>
                                </div>} collapsible>
-                  <Multiselect placeholder="Confirmed Types"
-                               data={this.props.confirmedTypes}
-                               textField="confirmedType"
-                               busy={this.props.confirmedTypes.length === 0}
-                               onChange={this.onConfirmedTypesChange}
-                               filter="contains"/>
+                  <Multiselect
+                   placeholder="Confirmed Types"
+                   data={this.props.confirmedTypes}
+                   textField="confirmedType"
+                   busy={this.props.confirmedTypes.length === 0}
+                   onChange={this.onConfirmedTypesChange}
+                   filter="contains"/>
                 </Panel>
                 <Panel header={<div>
                                Profile Types
                                <span className="label label-success medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Profile Types"
-                               data={this.props.profileTypes}
-                               textField="profileType"
-                               onChange={this.onProfileTypesChange}
-                               filter="contains"/>
+                  <Multiselect
+                   placeholder="Profile Types"
+                   data={this.props.profileTypes}
+                   textField="profileType"
+                   busy={this.props.profileTypes.length === 0}
+                   onChange={this.onProfileTypesChange}
+                   filter="contains"/>
                 </Panel>
               </PanelGroup>
             </div>
@@ -254,13 +263,19 @@ export default class PlanningToolbar extends BaseComponent {
                     <div className="form-group">
                       <label className="control-label">Start Date</label>
                       <div>
-                        <DateTimePicker format="dd/MM/yyyy" onChange={this.onStartDateChange} />
+                        <DateTimePicker
+                         format="dd/MM/yyyy"
+                         time={false}
+                         onChange={this.onStartDateChange} />
                       </div>
                     </div>
                     <div>
                       <label className="control-label">End Date</label>
                       <div>
-                        <DateTimePicker format="dd/MM/yyyy" onChange={this.onEndDateChange} />
+                        <DateTimePicker
+                         format="dd/MM/yyyy"
+                         time={false}
+                         onChange={this.onEndDateChange} />
                       </div>
                     </div>
                   </form>
@@ -269,23 +284,32 @@ export default class PlanningToolbar extends BaseComponent {
                                Countries
                                <span className="label label-info medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Countries" filter="contains"/>
+                  <Multiselect
+                   placeholder="Countries"
+                   filter="contains"
+                  />
                 </Panel>
                 <Panel header={<div>
                                Staff
                                <span className="label label-info medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Staff"
-                               data={this.props.staffList}
-                               textField="fullName"
-                               filter="contains"
-                               onChange={this.onStaffListChange}/>
+                  <Multiselect
+                   placeholder="Staff"
+                   data={this.props.staffList}
+                   textField="fullName"
+                   busy={this.props.staffList.length === 0}
+                   filter="contains"
+                   onChange={this.onStaffListChange}
+                  />
                 </Panel>
                 <Panel header={<div>
                                Languages
                                <span className="label label-info medium pull-right">-</span>
                                </div>} collapsible >
-                  <Multiselect placeholder="Languages" filter="contains"/>
+                  <Multiselect
+                   placeholder="Languages"
+                   filter="contains"
+                  />
                 </Panel>
               </PanelGroup>
             </div>

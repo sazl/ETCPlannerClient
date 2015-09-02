@@ -29,7 +29,6 @@ export default class ValidatedForm extends Form {
 
         let origCallback = child.props[evtName];
         newProps[evtName] = e => {
-          console.log(e, name, evtName, this._inputs);
           this._validateInput(name);
           return origCallback && origCallback(e);
         };
@@ -54,6 +53,7 @@ export default class ValidatedForm extends Form {
           }
         }
 
+        console.log(React.cloneElement(child, newProps));
         return React.cloneElement(child, newProps);
       } else {
         return React.cloneElement(child, {}, this._renderChildren(child.props && child.props.children));
