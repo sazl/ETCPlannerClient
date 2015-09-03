@@ -17,6 +17,7 @@ import {
 import { ValidatedInput } from 'react-bootstrap-validation';
 
 import BaseComponent from 'components/BaseComponent';
+import StaffAssignmentList from 'components/forms/list/StaffAssignmentList';
 
 import ValidatedForm from 'components/inputs/ValidatedForm';
 import ValidatedDropdownList from 'components/inputs/ValidatedDropdownList';
@@ -37,7 +38,8 @@ export default class StaffAssignmentForm extends BaseComponent {
       'handleLocationChange',
       'handleCommentsChange',
       'handleValidSubmit',
-      'renderProfileTypeErrorModal'
+      'handleProfileTypeErrorClose',
+      'handleStaffDurationErrorClose'
     );
     this.state = {
       staffAssignment: Immutable.Map(props.staffAssignment || {
@@ -49,7 +51,8 @@ export default class StaffAssignmentForm extends BaseComponent {
         confirmedType: null,
         missionRole: props.missionRole
       }),
-      showProfileTypeError: false
+      showProfileTypeError: false,
+      showStaffDurationError: false
     };
   }
 
@@ -132,18 +135,22 @@ export default class StaffAssignmentForm extends BaseComponent {
   }
 
   _validateStaffAssignmentDuration() {
+    this.setState({
+      showStaffDurationError: true
+    });
     return true;
   }
 
   handleValidSubmit(values) {
     const { missionRole, staff } = values;
-    var valid = this._validateProfileType(missionRole, staff);
-    if (valid) {
-      valid = this._validateStaffAssignmentDuration();
-      if (valid) {
-        /* empty */
-      }
-    }
+    this._validateProfileType(missionRole, staff);
+    this._validateStaffAssignmentDuration();
+  }
+
+  handleProfileTypeErrorClose() {
+    this.setState({
+      showProfileTypeError: false
+    });
   }
 
   renderProfileTypeErrorModal() {
@@ -152,21 +159,76 @@ export default class StaffAssignmentForm extends BaseComponent {
         <Modal
          bsSize="small"
          show={this.state.showProfileTypeError}
-         onHide={() => {}}
+         onHide={this.handleProfileTypeErrorClose}
          backdrop={false}>
           <Modal.Header closeButton>
             <Modal.Title>Profile Type Conflict</Modal.Title>
           </Modal.Header>
-          <Modal.Body bsStyle="danger">
-            This mission role requires the profile type &nbsp;
-            <b>{this.state.staffAssignment.get('missionRole').profileType.profileType}</b>
-            &nbsp; the selected staff member does not have the required
-            profile type. Would you still like to assign the staff member
-            to the mission role?
+          <Modal.Body className="alert alert-danger">
+            <div>
+              This mission role requires the profile type &nbsp;
+              <b>{this.state.staffAssignment.get('missionRole').profileType.profileType}</b>
+              &nbsp; the selected staff member does not have the required
+              profile type. Would you still like to assign the staff member
+              to the mission role?
+            </div>
           </Modal.Body>
           <Modal.Footer>
-            <Button>No</Button>
-            <Button bsStyle='primary'>Yes</Button>
+            <Button onClick={this.handleProfileTypeErrorClose}>No</Button>
+            <Button bsStyle='danger'>Yes</Button>
+          </Modal.Footer>
+        </Modal>
+      );
+    }
+  }
+
+  handleStaffDurationErrorClose() {
+    this.setState({
+      showStaffDurationError: false
+    });
+  }
+
+  renderStaffDurationErrorModal() {
+    if (this.state.showStaffDurationError) {
+      const startDate = DateUtils.formatReadable(this.state.staffAssignment.get('startDate'));
+      const endDate = DateUtils.formatReadable(this.state.staffAssignment.get('endDate'));
+      return (
+        <Modal
+         bsSize="medium"
+         show={this.state.showStaffDurationError}
+         onHide={this.handleStaffDurationErrorClose}
+         backdrop={false}>
+          <Modal.Header closeButton>
+            <Modal.Title>Staff Duration Conflict</Modal.Title>
+          </Modal.Header>
+          <Modal.Body className="alert alert-danger">
+            <div>
+              <p>
+                This staff member is currently unavailable during the time
+                period between:
+              </p>
+              <p className="text-center">
+                <b>{startDate}</b> to <b>{endDate}</b>
+              </p>
+              <p>
+                because they are currently assigned to another task during this period. Would
+                you still like to assign the staff member during this period
+                of time?
+              </p>
+              <p>
+                <StaffAssignmentList
+                 staff={this.state.staffAssignment.get('staff')}
+                 startDate={this.state.staffAssignment.get('startDate')}
+                 endDate={this.state.staffAssignment.get('endDate')}
+                />
+              </p>
+            </div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button
+             bsStyle="danger"
+             onClick={this.handleStaffDurationErrorClose}>No</Button>
+            <Button bsStyle="success">Yes</Button>
           </Modal.Footer>
         </Modal>
       );
@@ -237,12 +299,12 @@ export default class StaffAssignmentForm extends BaseComponent {
           onChange={this.handleEndDateChange}
           />
           <Input
-        type="text"
-        value={this.state.staffAssignment.get('location')}
-        placeholder="Location"
-        label="Location"
-        onChange={this.handleLocationChange}
-        hasFeedback
+           type="text"
+           value={this.state.staffAssignment.get('location')}
+           placeholder="Location"
+           label="Location"
+           onChange={this.handleLocationChange}
+           hasFeedback
           />
           <Input
            type="text"
@@ -264,6 +326,7 @@ export default class StaffAssignmentForm extends BaseComponent {
           <div className="clearfix"/>
         </ValidatedForm>
         {this.renderProfileTypeErrorModal()}
+        {this.renderStaffDurationErrorModal()}
       </div>
     );
   }

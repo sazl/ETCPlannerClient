@@ -10,22 +10,25 @@ export default class DateUtil {
     }
   }
 
-  static formatDate(date) {
+  static format(date, fmt) {
     const fmtDate = moment(date);
     if (fmtDate.isValid()) {
-      return fmtDate.format('DD-MM-YYYY');
+      return fmtDate.format(fmt);
     } else {
       return '';
     }
   }
 
+  static formatReadable(date) {
+    return this.format(date, 'MMM Do, YYYY');
+  }
+
+  static formatDate(date) {
+    return this.format(date, 'DD-MM-YYYY');
+  }
+
   static formatISO(date) {
-    const fmtDate = moment(date);
-    if (fmtDate.isValid()) {
-      return fmtDate.format('YYYY-MM-DD');
-    } else {
-      return '';
-    }
+    return this.format(date, 'YYYY-MM-DD');
   }
 
   static now() {

@@ -180,24 +180,24 @@ export default class PlanningTable extends BaseComponent {
             {profileTypes.map((x) => { return <li key={KeyUtil.getKey()}>{x}</li>; })}
           </ul>
         </td>
-      <td className="text-center">
+        <td className="text-center">
           <ButtonGroup>
             <Button
             bsSize="xs"
             bsStyle="default"
             onClick={() => {
-              this.showStaffAssignmentForm(staffAssignment, missionRole);
-            }}>
+                     this.showStaffAssignmentForm(staffAssignment, missionRole);
+                     }}>
               <Glyphicon glyph="edit"/>
             </Button>
             {renderButton ?
-            <Button
-            bsSize="xs"
-            bsStyle="success"
-            onClick={() => { this.showStaffAssignmentForm(null, missionRole); }}>
-              <Glyphicon glyph="plus"/>
-            </Button>
-            : null}
+             <Button
+             bsSize="xs"
+             bsStyle="success"
+             onClick={() => { this.showStaffAssignmentForm(null, missionRole); }}>
+             <Glyphicon glyph="plus"/>
+             </Button>
+             : null}
           </ButtonGroup>
         </td>
       </tr>
@@ -265,15 +265,15 @@ export default class PlanningTable extends BaseComponent {
       <tr className="info" key={key}>
         <td className="text-center">
           {mission.missionRoles.length > 0 ?
-          <ButtonGroup>
+           <ButtonGroup>
            <CollapseButton
            text={mission.missionRoles.length.toString()}
            onClick={() => this.collapseMission(key)}
            isCollapsed={this.state.missionCollapse.get(key)}
            />
-          </ButtonGroup>
-          :
-          null}
+           </ButtonGroup>
+           :
+           null}
         </td>
         <td>{description}</td>
         <td></td>

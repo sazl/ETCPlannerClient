@@ -26,17 +26,28 @@ export default class DashboardView extends React.Component {
 
     var config = {
       credits: false,
+      title: {
+        text: 'Deployment Types'
+      },
       xAxis: {
         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       },
       series: [{
+        name: 'Number of Deployments',
         animation: false,
-        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        data: [10, 11, 7, 8, 6, 7, 8, 9, 6, 12, 11, 10]
+      }, {
+        name: 'Confirmed',
+        animation: false,
+        data: [5, 3, 5, 4, 5, 6, 5, 3, 5, 8, 7, 6]
       }]
     };
 
     var config2 = {
       credits: false,
+      title: {
+        text: 'Deployments'
+      },
       chart: {
         polar: true
       },
@@ -44,8 +55,9 @@ export default class DashboardView extends React.Component {
         categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
       },
       series: [{
+        name: 'Total',
         animation: false,
-        data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        data: [10, 11, 7, 8, 6, 7, 8, 9, 6, 12, 11, 10]
       }]
     };
     var donut = {
@@ -114,17 +126,17 @@ export default class DashboardView extends React.Component {
         </Row>
         <Row>
           <Col xs={12} md={4}>
-          <Panel header="Test">
+          <Panel header="Deployments">
             <Highcharts config={config}></Highcharts>
           </Panel>
           </Col>
           <Col xs={12} md={4}>
-          <Panel header="Test">
+          <Panel header="Deployments">
             <Highcharts config={config2}/>
           </Panel>
           </Col>
           <Col xs={12} md={4}>
-          <Panel header="Test">
+          <Panel header="Staff Availability">
             <Highcharts config={donut}></Highcharts>
           </Panel>
           </Col>

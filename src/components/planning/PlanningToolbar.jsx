@@ -215,8 +215,8 @@ export default class PlanningToolbar extends BaseComponent {
 
         <Collapse in={this.state.showFilters}>
           <div className="row">
-            <legend>Filter</legend>
             <div className="col-xs-12">
+            <legend>Filter</legend>
               <div className="row" style={{marginBottom: 15}}>
                 <div className="col-xs-6">
                   <ButtonToolbar>
