@@ -1,8 +1,8 @@
-import { getRequest, RequestService } from 'services/RequestService';
+import { request, RequestService } from 'services/RequestService';
 
 class MissionRoleService {
 
-  @getRequest('mission-roles/')
+  @request('mission-roles/')
   getMissionRoles() {}
 }
 

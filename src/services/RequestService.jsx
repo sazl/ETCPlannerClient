@@ -15,14 +15,10 @@ function _abortRequest(key) {
   }
 }
 
-function _isDateField(fieldName) {
-  return /.*[dD]ate.*/.test(fieldName);
-}
-
 function _interceptObject(obj) {
   for (const key in obj) {
     const value = obj[key];
-    if (_isDateField(key)) {
+    if (DateUtils.isDateField(key)) {
       obj[key] = DateUtils.parseDate(value);
     } else if (Array.isArray(value)) {
       obj[key] = value.map(_interceptObject);
@@ -48,8 +44,9 @@ function _request({ url='', params={}, method='GET', key=false }) {
   const req = request({
     url: API_URL + url,
     method: method,
-    data: params,
+    data: method === 'GET' ? params : JSON.stringify(params),
     type: 'json',
+    contentType: 'application/json',
     crossOrigin: true,
     headers: {
       'Authorization': 'Bearer ' + _token
@@ -64,26 +61,16 @@ function _request({ url='', params={}, method='GET', key=false }) {
   return req;
 }
 
-class RequestService {
-  static get({ url='', params={}, key=false }) {
-    return _request({
-      url: url,
-      params: params,
-      key: key
-    });
-
-  }
-}
-
-const getRequest = (path, abort) => {
+const annotateRequest = (path, method='GET', abort=true) => {
   return function (target, key, descriptor) {
     descriptor.value = (data) => {
-      if (abort) {
+      if (!abort) {
         key = false;
       }
-      return RequestService.get({
+      return _request({
         url: path,
         params: data,
+        method: method,
         key: key
       });
     };
@@ -91,7 +78,35 @@ const getRequest = (path, abort) => {
   };
 };
 
+class RequestService {
+  static get({ url='', params={}, key=false }) {
+    return _request({
+      url: url,
+      params: params,
+      key: key
+    });
+  }
+
+  static post({ url='', params={}, key=false }) {
+    return _request({
+      url: url,
+      params: params,
+      method: 'POST',
+      key: key
+    });
+  }
+
+  static put({ url='', params={}, key=false }) {
+    return _request({
+      url: url,
+      params: params,
+      method: 'PUT',
+      key: key
+    });
+  }
+}
+
 module.exports = {
   RequestService: RequestService,
-  getRequest: getRequest
+  request: annotateRequest
 };

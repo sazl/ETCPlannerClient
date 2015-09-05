@@ -1,8 +1,8 @@
-import { getRequest, RequestService } from 'services/RequestService';
+import { request, RequestService } from 'services/RequestService';
 
 class ConfirmedTypeService {
 
-  @getRequest('confirmed-types/')
+  @request('confirmed-types/')
   getConfirmedTypes() {}
 }
 

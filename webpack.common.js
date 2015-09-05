@@ -6,6 +6,7 @@ var ROOT_PATH = path.resolve(__dirname);
 
 var common = {
   resolve: {
+    root: ROOT_PATH,
     extensions: ['', '.js', '.jsx'],
     alias: {
       'styles': path.resolve(ROOT_PATH, 'src/styles'),

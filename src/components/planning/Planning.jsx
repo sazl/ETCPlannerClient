@@ -104,12 +104,12 @@ export default class Planning extends BaseComponent {
           <Col xs={12}>
           <Panel collapsible defaultExpanded header="Planning">
             <PlanningToolbar
-             profileTypes={this.props.profileTypes}
-             confirmedTypes={this.props.confirmedTypes}
-             countries={this.props.countries}
-             missionTypes={this.props.missionTypes}
-             missions={this.props.missions}
-             staffList={this.props.staffList} />
+             profileTypesList={this.props.profileTypes}
+             confirmedTypesList={this.props.confirmedTypes}
+             countriesList={this.props.countries}
+             missionTypesList={this.props.missionTypes}
+             missionsList={this.props.missions}
+             staffListAll={this.props.staffList} />
             <hr></hr>
             <PlanningTable
              detailedMissions={this.props.detailedMissions}

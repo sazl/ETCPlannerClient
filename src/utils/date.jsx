@@ -19,6 +19,10 @@ export default class DateUtil {
     }
   }
 
+  static isDateField(fieldName) {
+    return /.*[dD]ate.*/.test(fieldName);
+  }
+
   static formatReadable(date) {
     return this.format(date, 'MMM Do, YYYY');
   }
@@ -29,6 +33,10 @@ export default class DateUtil {
 
   static formatISO(date) {
     return this.format(date, 'YYYY-MM-DD');
+  }
+
+    static formatISOFull(date) {
+    return this.format(date);
   }
 
   static now() {

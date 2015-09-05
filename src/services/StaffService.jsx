@@ -1,20 +1,20 @@
-import { getRequest, RequestService } from 'services/RequestService';
+import { request, RequestService } from 'services/RequestService';
 
 class StaffService {
 
-  @getRequest('staff/')
+  @request('staff/')
   getStaff() {}
 
-  @getRequest('staff/available/')
+  @request('staff/available/')
   getAvailable() {}
 
-  @getRequest('staff/not-available/')
+  @request('staff/not-available/')
   getNotAvailable() {}
 
-  @getRequest('staff/break-in-service/')
+  @request('staff/break-in-service/')
   getBreakInService() {}
 
-  @getRequest('staff/summary/')
+  @request('staff/summary/')
   getSummary() {}
 }
 

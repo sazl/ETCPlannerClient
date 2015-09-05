@@ -23,8 +23,13 @@ import {
 import { Multiselect, DateTimePicker } from 'react-widgets';
 
 import BaseComponent from 'components/BaseComponent';
-import MissionActions from 'actions/MissionActions';
 
+import connectToStores from 'alt/utils/connectToStores';
+
+import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
+import PlanningToolbarActions from 'components/planning/PlanningToolbarActions';
+
+import MissionActions from 'actions/MissionActions';
 import NotificationActions from 'actions/NotificationActions';
 
 import Utils from 'utils/utils';
@@ -32,7 +37,7 @@ import DateUtils from 'utils/date';
 
 import 'react-widgets/dist/css/react-widgets.css';
 
-
+@connectToStores
 export default class PlanningToolbar extends BaseComponent {
 
   constructor(props) {
@@ -54,27 +59,16 @@ export default class PlanningToolbar extends BaseComponent {
     this.state = {
       showFilters: false,
       showColumns: false,
-      showSort: false,
-      missions: Immutable.List(),
-      profileTypes: Immutable.List(),
-      confirmedTypes: Immutable.List(),
-      missionTypes: Immutable.List(),
-      startDate: null,
-      endDate: null,
-      staffList: Immutable.List()
+      showSort: false
     };
   }
 
-  clearFilters() {
-    this.setState({
-      missions: Immutable.List(),
-      profileTypes: Immutable.List(),
-      confirmedTypes: Immutable.List(),
-      missionTypes: Immutable.List(),
-      startDate: null,
-      endDate: null,
-      staffList: Immutable.List()
-    }, this.filterDetailedMissionsAction);
+  static getStores() {
+    return [PlanningToolbarStore];
+  }
+
+  static getPropsFromStores() {
+    return PlanningToolbarStore.getState();
   }
 
   onFilterClick() {
@@ -96,70 +90,53 @@ export default class PlanningToolbar extends BaseComponent {
   }
 
   onExportClick() {
-    NotificationActions.notifySuccess('hello');
+    /* empty */
+  }
+
+  filter() {
+    PlanningToolbarActions.filter(
+      PlanningToolbarStore.getFilters());
+    console.log(PlanningToolbarStore.getFilters().toJS());
   }
 
   onClearFilterClick() {
-    this.clearFilters();
-    NotificationActions.notifySuccess('Filters Cleared');
-  }
-
-  getFilters() {
-    return Immutable.Map({
-      'mission_id': Utils.commaJoinField(this.state.missions),
-      'profile_type_id': Utils.commaJoinField(this.state.profileTypes),
-      'confirmed_type_id': Utils.commaJoinField(this.state.confirmedTypes),
-      'mission_type_id': Utils.commaJoinField(this.state.missionTypes),
-      'start_date': DateUtils.formatISO(this.state.startDate),
-      'end_date': DateUtils.formatISO(this.state.endDate),
-      'staff_index': Utils.commaJoinField(this.state.staffList, 'index')
-    });
-  }
-
-  filterDetailedMissionsAction() {
-    MissionActions.fetchDetailedMissions(this.getFilters());
+    PlanningToolbarActions.clearFilters();
+    this.filter();
   }
 
   onMissionsChange(missions) {
-    this.setState({
-      missions: Immutable.List(missions)
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.missionsChange(missions);
+    this.filter();
   }
 
   onProfileTypesChange(profileTypes) {
-    this.setState({
-      profileTypes: Immutable.List(profileTypes)
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.profileTypesChange(profileTypes);
+    this.filter();
   }
 
   onConfirmedTypesChange(confirmedTypes) {
-    this.setState({
-      confirmedTypes: Immutable.List(confirmedTypes)
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.confirmedTypesChange(confirmedTypes);
+    this.filter();
   }
 
   onMissionTypesChange(missionTypes) {
-    this.setState({
-      missionTypes: Immutable.List(missionTypes)
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.missionTypesChange(missionTypes);
+    this.filter();
   }
 
   onStartDateChange(date) {
-    this.setState({
-      startDate: date
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.startDateChange(date);
+    this.filter();
   }
 
   onEndDateChange(date) {
-    this.setState({
-      endDate: date
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.endDateChange(date);
+    this.filter();
   }
 
   onStaffListChange(staffList) {
-    this.setState({
-      staffList: Immutable.List(staffList)
-    }, this.filterDetailedMissionsAction);
+    PlanningToolbarActions.staffListChange(staffList);
+    this.filter();
   }
 
   render() {
@@ -235,60 +212,60 @@ export default class PlanningToolbar extends BaseComponent {
                     <Panel header={<div>
                                    Missions
                                    <span className="label label-default medium pull-right">
-                                   {this.state.missions.size}
+                                   {this.props.missions.size}
                                    </span>
                                    </div>} collapsible >
                       <Multiselect
                        placeholder="Missions"
-                       value={this.state.missions.toArray()}
-                       data={this.props.missions}
+                       value={this.props.missions.toArray()}
+                       data={this.props.missionsList}
                        textField="description"
-                       busy={this.props.missions.length === 0}
+                       busy={this.props.missionsList.length === 0}
                        onChange={this.onMissionsChange}
                        filter="contains"/>
                     </Panel>
                     <Panel header={<div>
                                    Mission Type
                                    <span className="label label-default medium pull-right">
-                                   {this.state.missionTypes.size}
+                                   {this.props.missionTypes.size}
                                    </span>
                                    </div>} collapsible >
                       <Multiselect
                        placeholder="Mission Types"
-                       value={this.state.missionTypes.toArray()}
-                       data={this.props.missionTypes}
+                       value={this.props.missionTypes.toArray()}
+                       data={this.props.missionTypesList}
                        textField="missionType"
-                       busy={this.props.missionTypes.length === 0}
+                       busy={this.props.missionTypesList.length === 0}
                        onChange={this.onMissionTypesChange}
                        filter="contains"/>
                     </Panel>
                     <Panel header={<div>
                                    Confirmed Types
                                    <span className="label label-default medium pull-right">
-                                   {this.state.confirmedTypes.size}
+                                   {this.props.confirmedTypes.size}
                                    </span>
                                    </div>} collapsible>
                       <Multiselect
                        placeholder="Confirmed Types"
-                       value={this.state.confirmedTypes.toArray()}
-                       data={this.props.confirmedTypes}
+                       value={this.props.confirmedTypes.toArray()}
+                       data={this.props.confirmedTypesList}
                        textField="confirmedType"
-                       busy={this.props.confirmedTypes.length === 0}
+                       busy={this.props.confirmedTypesList.length === 0}
                        onChange={this.onConfirmedTypesChange}
                        filter="contains"/>
                     </Panel>
                     <Panel header={<div>
                                    Profile Types
                                    <span className="label label-default medium pull-right">
-                                   {this.state.profileTypes.size}
+                                   {this.props.profileTypes.size}
                                    </span>
                                    </div>} collapsible >
                       <Multiselect
                        placeholder="Profile Types"
-                       value={this.state.profileTypes.toArray()}
-                       data={this.props.profileTypes}
+                       value={this.props.profileTypes.toArray()}
+                       data={this.props.profileTypesList}
                        textField="profileType"
-                       busy={this.props.profileTypes.length === 0}
+                       busy={this.props.profileTypesList.length === 0}
                        onChange={this.onProfileTypesChange}
                        filter="contains"/>
                     </Panel>
@@ -308,7 +285,7 @@ export default class PlanningToolbar extends BaseComponent {
                           <div>
                             <DateTimePicker
                              format="dd/MM/yyyy"
-                             value={this.state.startDate}
+                             value={this.props.startDate}
                              time={false}
                              onChange={this.onStartDateChange} />
                           </div>
@@ -318,7 +295,7 @@ export default class PlanningToolbar extends BaseComponent {
                           <div>
                             <DateTimePicker
                              format="dd/MM/yyyy"
-                             value={this.state.endtDate}
+                             value={this.props.endtDate}
                              time={false}
                              onChange={this.onEndDateChange} />
                           </div>
@@ -339,15 +316,15 @@ export default class PlanningToolbar extends BaseComponent {
                     <Panel header={<div>
                                    Staff
                                    <span className="label label-default medium pull-right">
-                                   {this.state.staffList.size}
+                                   {this.props.staffList.size}
                                    </span>
                                    </div>} collapsible >
                       <Multiselect
                        placeholder="Staff"
-                       value={this.state.staffList.toArray()}
-                       data={this.props.staffList}
+                       value={this.props.staffList.toArray()}
+                       data={this.props.staffListAll}
                        textField="fullName"
-                       busy={this.props.staffList.length === 0}
+                       busy={this.props.staffListAll.length === 0}
                        filter="contains"
                        onChange={this.onStaffListChange}
                       />
@@ -385,7 +362,3 @@ export default class PlanningToolbar extends BaseComponent {
     );
   }
 }
-
-PlanningToolbar.propTypes = {
-  profileTypes: React.PropTypes.array
-};

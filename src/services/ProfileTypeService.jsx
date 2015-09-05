@@ -1,8 +1,8 @@
-import { getRequest, RequestService } from 'services/RequestService';
+import { request, RequestService } from 'services/RequestService';
 
 class ProfileTypeService {
 
-  @getRequest('profile-types/')
+  @request('profile-types/')
   getProfileTypes() {}
 }
 

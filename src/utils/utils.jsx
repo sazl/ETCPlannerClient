@@ -1,3 +1,4 @@
+import DateUtils from 'utils/date';
 
 export default class Util {
   static commaJoin(arr) {
@@ -13,6 +14,10 @@ export default class Util {
         field: field
       })
     );
+  }
+
+  static getEntityURL(url, id) {
+    return url + id + '/';
   }
 
   static getField({ field='id', many=true, data=[]}) {

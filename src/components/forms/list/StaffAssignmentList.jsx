@@ -31,14 +31,6 @@ export default class StaffAssignmentList extends BaseComponent {
     this.state = { collapsed: false };
   }
 
-  componentWillMount() {
-    StaffAssignmentActions.fetchStaffAssignmentsByIndex({
-      'staff_index': this.props.staff.index,
-      'start_date_lte': DateUtils.formatISO(this.props.endDate),
-      'end_date_gte': DateUtils.formatISO(this.props.startDate)
-    });
-  }
-
   onToggleCollapse() {
     this.setState({
       collapsed: !this.state.collapsed

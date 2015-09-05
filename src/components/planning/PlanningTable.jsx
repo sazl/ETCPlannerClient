@@ -23,6 +23,9 @@ import MissionForm from 'components/forms/MissionForm';
 import MissionRoleForm from 'components/forms/MissionRoleForm';
 import StaffAssignmentForm from 'components/forms/StaffAssignmentForm';
 
+import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
+import PlanningToolbarActions from 'components/planning/PlanningToolbarActions';
+
 import Utils from 'utils/utils';
 import KeyUtil from 'utils/keys';
 import DateUtil from 'utils/date';
@@ -51,7 +54,8 @@ export default class PlanningTable extends BaseComponent {
       'showMissionRoleForm',
       'closeMissionRoleForm',
       'showStaffAssignmentForm',
-      'closeStaffAssignmentForm'
+      'closeStaffAssignmentForm',
+      'onSaveStaffAssignmentForm'
     );
   }
 
@@ -114,6 +118,12 @@ export default class PlanningTable extends BaseComponent {
       showMissionForm: false,
       selectedMission: null
     });
+  }
+
+  onSaveStaffAssignmentForm() {
+    PlanningToolbarActions.filter(
+      PlanningToolbarStore.getFilters());
+    this.closeStaffAssignmentForm();
   }
 
   showMissionRoleForm(missionRole, mission) {
@@ -428,6 +438,7 @@ export default class PlanningTable extends BaseComponent {
           </Modal.Header>
           <Modal.Body>
             <StaffAssignmentForm
+            onSave={this.onSaveStaffAssignmentForm}
             onClose={this.closeStaffAssignmentForm}
             staffAssignment={this.state.selectedStaffAssignment}
             missionRole={this.state.selectedMissionRole}

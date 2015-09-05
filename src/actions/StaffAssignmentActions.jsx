@@ -20,6 +20,12 @@ class StaffAssignmentActions {
     });
   }
 
+  saveStaffAssignment(staffAssignment) {
+    StaffAssignmentService.saveStaffAssignment(staffAssignment).then((result) => {
+      this.dispatch(result);
+    });
+  }
+
   updateStaffAssignments(staffAssignments) {
     this.dispatch(staffAssignments);
   }

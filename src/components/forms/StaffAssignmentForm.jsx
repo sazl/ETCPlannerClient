@@ -2,6 +2,8 @@ import React from 'react/addons';
 
 import Immutable from 'immutable';
 
+import connectToStores from 'alt/utils/connectToStores';
+
 import {
   Input,
   Button,
@@ -16,6 +18,9 @@ import {
 
 import { ValidatedInput } from 'react-bootstrap-validation';
 
+import StaffAssignmentActions from 'actions/StaffAssignmentActions';
+import StaffAssignmentStore from 'stores/StaffAssignmentStore';
+
 import BaseComponent from 'components/BaseComponent';
 import StaffAssignmentList from 'components/forms/list/StaffAssignmentList';
 
@@ -23,10 +28,21 @@ import ValidatedForm from 'components/inputs/ValidatedForm';
 import ValidatedDropdownList from 'components/inputs/ValidatedDropdownList';
 import ValidatedDateTimePicker from 'components/inputs/ValidatedDateTimePicker';
 
+
 import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
 
+@connectToStores
 export default class StaffAssignmentForm extends BaseComponent {
+
+  static getStores() {
+    return [StaffAssignmentStore];
+  }
+
+  static getPropsFromStores() {
+    return StaffAssignmentStore.getState();
+  }
+
   constructor(props) {
     super(props);
     this._bind(
@@ -39,7 +55,9 @@ export default class StaffAssignmentForm extends BaseComponent {
       'handleCommentsChange',
       'handleValidSubmit',
       'handleProfileTypeErrorClose',
-      'handleStaffDurationErrorClose'
+      'handleProfileTypeErrorAccept',
+      'handleStaffDurationErrorClose',
+      'handleStaffDurationErrorAccept'
     );
     this.state = {
       staffAssignment: Immutable.Map(props.staffAssignment || {
@@ -52,7 +70,11 @@ export default class StaffAssignmentForm extends BaseComponent {
         missionRole: props.missionRole
       }),
       showProfileTypeError: false,
-      showStaffDurationError: false
+      profileTypeError: false,
+      forceProfileTypeValid: false,
+      showStaffDurationError: false,
+      staffDurationError: false,
+      forceStaffDurationValid: false
     };
   }
 
@@ -119,38 +141,93 @@ export default class StaffAssignmentForm extends BaseComponent {
     });
   }
 
-  _validateProfileType(missionRole, staff) {
+  _checkValidProfileType() {
+    if (this.state.forceProfileTypeValid) {
+      return true;
+    }
     const profileTypeIds = Utils.getField({
       many: true,
-      data: staff.profileTypes
+      data: this.state.staffAssignment.get('staff').profileTypes
     });
-    const valid = profileTypeIds.indexOf(missionRole.profileType.id) > -1;
+    const valid = profileTypeIds.indexOf(
+      this.state.staffAssignment.get('missionRole').profileType.id) > -1;
+    return valid;
+  }
+
+  _validateProfileType() {
+    const valid = this._checkValidProfileType();
     if (!valid) {
       this.setState({
-        showProfileTypeError: true
+        showProfileTypeError: true,
+        profileTypeError: true
       });
-      return false;
     }
-    return true;
+    return valid;
+  }
+
+  _checkValidStaffDuration() {
+    if (this.state.forceStaffDurationValid) {
+      return true;
+    }
+    StaffAssignmentActions.fetchStaffAssignmentsByIndex({
+      'staff_index': this.state.staffAssignment.get('staff').index,
+      'start_date_lte': DateUtils.formatISO(this.state.staffAssignment.get('endDate')),
+      'end_date_gte': DateUtils.formatISO(this.state.staffAssignment.get('startDate')),
+      'exclude_id': this.state.staffAssignment.get('id')
+    });
+    const assignments = this.props.staffAssignmentsByStaffIndex.get(
+      this.state.staffAssignment.get('staff').index.toString());
+    return !assignments || assignments.length === 0;
   }
 
   _validateStaffAssignmentDuration() {
-    this.setState({
-      showStaffDurationError: true
-    });
-    return true;
+    const valid = this._checkValidStaffDuration();
+    if (!valid) {
+      this.setState({
+        showStaffDurationError: true,
+        staffDurationError: true
+      });
+    }
+    return valid;
+  }
+
+  _saveStaffAssignment() {
+    if (this._checkValidStaffDuration() && this._checkValidProfileType()) {
+      StaffAssignmentActions.saveStaffAssignment(
+        this.state.staffAssignment.toJS());
+      this.setState({
+        showProfileTypeError: false,
+        profileTypeError: false,
+        forceProfileTypeValid: false,
+        showStaffDurationError: false,
+        staffDurationError: false,
+        forceStaffDurationValid: false
+      });
+      if (this.props.onSave) {
+        this.props.onSave();
+      }
+    }
   }
 
   handleValidSubmit(values) {
-    const { missionRole, staff } = values;
-    this._validateProfileType(missionRole, staff);
     this._validateStaffAssignmentDuration();
+    this._validateProfileType();
+    this._saveStaffAssignment();
   }
 
   handleProfileTypeErrorClose() {
     this.setState({
-      showProfileTypeError: false
+      showProfileTypeError: false,
+      profileTypeError: true
     });
+  }
+
+  handleProfileTypeErrorAccept() {
+    this.setState({
+      showProfileTypeError: false,
+      profileTypeError: false,
+      forceProfileTypeValid: true
+    }, this._saveStaffAssignment);
   }
 
   renderProfileTypeErrorModal() {
@@ -175,7 +252,7 @@ export default class StaffAssignmentForm extends BaseComponent {
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.handleProfileTypeErrorClose}>No</Button>
-            <Button bsStyle='danger'>Yes</Button>
+            <Button bsStyle='danger' onClick={this.handleProfileTypeErrorAccept}>Yes</Button>
           </Modal.Footer>
         </Modal>
       );
@@ -184,8 +261,17 @@ export default class StaffAssignmentForm extends BaseComponent {
 
   handleStaffDurationErrorClose() {
     this.setState({
-      showStaffDurationError: false
+      showStaffDurationError: false,
+      staffDurationError: true
     });
+  }
+
+  handleStaffDurationErrorAccept() {
+    this.setState({
+      showStaffDurationError: false,
+      staffDurationError: false,
+      forceStaffDurationValid: true
+    }, this._saveStaffAssignment);
   }
 
   renderStaffDurationErrorModal() {
@@ -228,7 +314,7 @@ export default class StaffAssignmentForm extends BaseComponent {
             <Button
              bsStyle="danger"
              onClick={this.handleStaffDurationErrorClose}>No</Button>
-            <Button bsStyle="success">Yes</Button>
+            <Button bsStyle="success" onClick={this.handleStaffDurationErrorAccept}>Yes</Button>
           </Modal.Footer>
         </Modal>
       );
@@ -239,64 +325,64 @@ export default class StaffAssignmentForm extends BaseComponent {
     return (
       <div>
         <ValidatedForm
-          onValidSubmit={this.handleValidSubmit}>
+         onValidSubmit={this.handleValidSubmit}>
           <ValidatedDropdownList
-          name="missionRole"
-          label="Mission Role"
-          validate="required"
-          errorHelp="Mission role is required"
-          data={this.props.missionRoles}
-          value={this.state.staffAssignment.get('missionRole')}
-          textField={(mr) => { return mr.profileType.profileType; }}
-          placeholder="Mission Role"
-          filter="contains"
-          onChange={this.handleMissionRoleChange}
+           name="missionRole"
+           label="Mission Role"
+           validate="required"
+           errorHelp="Mission role is required"
+           data={this.props.missionRoles}
+           value={this.state.staffAssignment.get('missionRole')}
+           textField={(mr) => { return mr.profileType.profileType; }}
+           placeholder="Mission Role"
+           filter="contains"
+           onChange={this.handleMissionRoleChange}
           />
           <ValidatedDropdownList
-          name="staff"
-          label="Staff"
-          validate="required"
-          errorHelp="Staff is required"
-          data={this.props.staffList}
-          textField="fullName"
-          value={this.state.staffAssignment.get('staff')}
-          placeholder="Staff"
-          filter="contains"
-          onChange={this.handleStaffChange}
+           name="staff"
+           label="Staff"
+           validate="required"
+           errorHelp="Staff is required"
+           data={this.props.staffList}
+           textField="fullName"
+           value={this.state.staffAssignment.get('staff')}
+           placeholder="Staff"
+           filter="contains"
+           onChange={this.handleStaffChange}
           />
           <ValidatedDropdownList
-          name="confirmedType"
-          label="Confirmed Type"
-          validate="required"
-          errorHelp="Confirmed type is required, select `Not Confirmed` if unsure"
-          data={this.props.confirmedTypes}
-          textField="confirmedType"
-          value={this.state.staffAssignment.get('confirmedType')}
-          placeholder="ConfirmedType"
-          filter="contains"
-          onChange={this.handleConfirmedTypeChange}
+           name="confirmedType"
+           label="Confirmed Type"
+           validate="required"
+           errorHelp="Confirmed type is required, select `Not Confirmed` if unsure"
+           data={this.props.confirmedTypes}
+           textField="confirmedType"
+           value={this.state.staffAssignment.get('confirmedType')}
+           placeholder="ConfirmedType"
+           filter="contains"
+           onChange={this.handleConfirmedTypeChange}
           />
           <ValidatedDateTimePicker
-          name="startDate"
-          label="Start Date"
-          validate="required"
-          errorHelp="A valid start date is required"
-          time={false}
-          value={DateUtils.parseDate(
-                 this.state.staffAssignment.get('startDate'))}
-          format="MMM dd, yyyy"
-          onChange={this.handleStartDateChange}
+           name="startDate"
+           label="Start Date"
+           validate="required"
+           errorHelp="A valid start date is required"
+           time={false}
+           value={DateUtils.parseDate(
+                  this.state.staffAssignment.get('startDate'))}
+           format="MMM dd, yyyy"
+           onChange={this.handleStartDateChange}
           />
           <ValidatedDateTimePicker
-          name="endDate"
-          label="End Date"
-          time={false}
-          validate="isDate"
-          errorHelp="A valid end date is required"
-          value={DateUtils.parseDate(
-                 this.state.staffAssignment.get('endDate'))}
-          format="MMM dd, yyyy"
-          onChange={this.handleEndDateChange}
+           name="endDate"
+           label="End Date"
+           time={false}
+           validate="isDate"
+           errorHelp="A valid end date is required"
+           value={DateUtils.parseDate(
+                  this.state.staffAssignment.get('endDate'))}
+           format="MMM dd, yyyy"
+           onChange={this.handleEndDateChange}
           />
           <Input
            type="text"
@@ -339,5 +425,6 @@ StaffAssignmentForm.propTypes = {
   missionRoles: React.PropTypes.array,
   confirmedTypes: React.PropTypes.array,
   profileTypes: React.PropTypes.array,
-  onClose: React.PropTypes.func
+  onClose: React.PropTypes.func,
+  onSave: React.PropTypes.func
 };

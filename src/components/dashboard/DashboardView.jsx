@@ -106,19 +106,19 @@ export default class DashboardView extends React.Component {
       <div>
         <Row>
           <Col xs={12} md={4}>
-          <StatusCard heading={breakInServiceStaffCount}
+          <StatusCard heading={breakInServiceStaffCount.toString()}
                       subheading="Break In Service"
                       bsStyle="info"
                       link="break-in-service" />
           </Col>
           <Col xs={12} md={4}>
-          <StatusCard heading={availableStaffCount}
+          <StatusCard heading={availableStaffCount.toString()}
                       subheading="Available"
                       bsStyle="success"
                       link="available" />
           </Col>
           <Col xs={12} md={4}>
-          <StatusCard heading={notAvailableStaffCount}
+          <StatusCard heading={notAvailableStaffCount.toString()}
                       subheading="Not Available"
                       bsStyle="danger"
                       link="not-available"/>
