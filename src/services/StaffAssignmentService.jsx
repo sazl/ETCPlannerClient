@@ -22,6 +22,12 @@ class StaffAssignmentService {
   @request('staff-assignments/')
   getStaffAssignments() {}
 
+  @request('staff-assignments/not-available/?nested=true')
+  getNotAvailable() {}
+
+  @request('staff-assignments/break-in-service/?nested=true')
+  getBreakInService() {}
+
   saveStaffAssignment(staffAssignment) {
     const entity = _toJSON(staffAssignment);
     console.log(entity);

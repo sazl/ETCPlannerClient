@@ -13,7 +13,6 @@ import { Table, Tr, Td } from 'reactable';
 import BaseComponent from 'components/BaseComponent';
 import StatusCard from 'components/dashboard/StatusCard';
 
-import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
 
 import 'styles/Griddle.scss';
@@ -21,15 +20,17 @@ import 'styles/Griddle.scss';
 
 export default class StaffStatus extends BaseComponent {
   render() {
-    const statusCount = this.props.staffList.length.toString();
-    const columns = ['firstName', 'lastName', 'profileTypes'];
+    const statusCount = this.props.staffAssignments.length.toString();
+    const columns = ['firstName', 'lastName', 'mission', 'profileType',
+                     'startDate', 'endDate'];
 
-    const staffList = this.props.staffList.map((staff) => {
-      staff.profileTypes = Utils.getField({
-        data: staff.profileTypes,
-        field: 'profileType',
-        many: true
-      });
+    const staffAssignments = this.props.staffAssignments.map((staff) => {
+      staff.firstName = staff.staff.firstName;
+      staff.lastName = staff.staff.lastName;
+      staff.startDate = DateUtils.formatDate(staff.startDate);
+      staff.endDate = DateUtils.formatDate(staff.endDate);
+      staff.profileType = staff.missionRole.profileType.profileType;
+      staff.mission = staff.missionRole.mission.description;
       return staff;
     });
 
@@ -40,8 +41,17 @@ export default class StaffStatus extends BaseComponent {
       columnName: 'lastName',
       displayName: 'Last Name'
     }, {
-      columnName: 'profileTypes',
+      columnName: 'profileType',
       displayName: 'Profile Type'
+    }, {
+      columnName: 'mission',
+      displayName: 'Mission'
+    }, {
+      columnName: 'startDate',
+      displayName: 'Start Date'
+    }, {
+      columnName: 'endDate',
+      displayName: 'End Date'
     }];
 
     return (
@@ -62,7 +72,7 @@ export default class StaffStatus extends BaseComponent {
              tableClassName="table table-bordered table-striped"
              showFilter={true}
              showSettings={true}
-             results={staffList}
+             results={staffAssignments}
              columns={columns}
              columnMetadata={columnMetadata}
             />
@@ -77,5 +87,5 @@ export default class StaffStatus extends BaseComponent {
 StaffStatus.propTypes = {
   heading: React.PropTypes.string.isRequired,
   bsStyle: React.PropTypes.string.isRequired,
-  staffList: React.PropTypes.array.isRequired
+  staffAssignments: React.PropTypes.array.isRequired
 };

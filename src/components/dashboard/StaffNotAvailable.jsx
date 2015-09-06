@@ -1,28 +1,30 @@
 import React from 'react/addons';
 import connectToStores from 'alt/utils/connectToStores';
-import StaffActions from 'actions/StaffActions';
-import StaffStore from 'stores/StaffStore';
-import StaffStatus from 'components/dashboard/StaffStatus';
+import StaffAssignmentActions from 'actions/StaffAssignmentActions';
+import StaffAssignmentsStore from 'stores/StaffAssignmentsStore';
+import StaffAssignmentStatus from 'components/dashboard/StaffAssignmentStatus';
 
 @connectToStores
 export default class StaffNotAvailable extends React.Component {
   static getStores() {
-    return [StaffStore];
+    return [StaffAssignmentsStore];
   }
 
   static getPropsFromStores() {
-    return StaffStore.getState();
+    return StaffAssignmentsStore.getState();
   }
 
   componentWillMount() {
-    StaffActions.fetchNotAvailable();
+    StaffAssignmentActions.fetchNotAvailable();
   }
 
   render() {
     return (
-      <StaffStatus staffList={this.props.notAvailable}
-                   heading="Not Available"
-                   bsStyle="danger"/>
+      <StaffAssignmentStatus
+       staffAssignments={this.props.notAvailable}
+       heading="Not Available"
+       bsStyle="danger"
+      />
     );
   }
 }

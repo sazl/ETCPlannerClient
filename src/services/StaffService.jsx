@@ -5,13 +5,13 @@ class StaffService {
   @request('staff/')
   getStaff() {}
 
-  @request('staff/available/')
+  @request('staff/available/?nested=true')
   getAvailable() {}
 
-  @request('staff/not-available/')
+  @request('staff/not-available/?nested=true')
   getNotAvailable() {}
 
-  @request('staff/break-in-service/')
+  @request('staff/break-in-service/?nested=true')
   getBreakInService() {}
 
   @request('staff/summary/')

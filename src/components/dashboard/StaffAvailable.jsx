@@ -23,9 +23,11 @@ export default class StaffAvailable extends BaseComponent {
 
   render() {
     return (
-      <StaffStatus staffList={this.props.available}
-                   heading="Available"
-                   bsStyle="success"/>
+      <StaffStatus
+       staffList={this.props.available}
+       heading="Available"
+       bsStyle="success"
+      />
     );
   }
 }

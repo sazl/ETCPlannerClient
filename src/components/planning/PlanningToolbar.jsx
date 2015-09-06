@@ -23,6 +23,7 @@ import {
 import { Multiselect, DateTimePicker } from 'react-widgets';
 
 import BaseComponent from 'components/BaseComponent';
+import MultiselectPanel from 'components/planning/MultiselectPanel';
 
 import connectToStores from 'alt/utils/connectToStores';
 
@@ -36,6 +37,7 @@ import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
 
 import 'react-widgets/dist/css/react-widgets.css';
+
 
 @connectToStores
 export default class PlanningToolbar extends BaseComponent {
@@ -57,7 +59,7 @@ export default class PlanningToolbar extends BaseComponent {
       'onStaffListChange'
     );
     this.state = {
-      showFilters: false,
+      showFilters: true,
       showColumns: false,
       showSort: false
     };
@@ -193,7 +195,7 @@ export default class PlanningToolbar extends BaseComponent {
         <Collapse in={this.state.showFilters}>
           <div className="row">
             <div className="col-xs-12">
-            <legend>Filter</legend>
+              <legend>Filter</legend>
               <div className="row" style={{marginBottom: 15}}>
                 <div className="col-xs-6">
                   <ButtonToolbar>
@@ -209,13 +211,8 @@ export default class PlanningToolbar extends BaseComponent {
               <div className="row">
                 <div className="col-xs-6">
                   <PanelGroup className="card-shadow-small" >
-                    <Panel header={<div>
-                                   Missions
-                                   <span className="label label-default medium pull-right">
-                                   {this.props.missions.size}
-                                   </span>
-                                   </div>} collapsible >
-                      <Multiselect
+                    <MultiselectPanel
+                       header="Missions"
                        placeholder="Missions"
                        value={this.props.missions.toArray()}
                        data={this.props.missionsList}
@@ -223,14 +220,8 @@ export default class PlanningToolbar extends BaseComponent {
                        busy={this.props.missionsList.length === 0}
                        onChange={this.onMissionsChange}
                        filter="contains"/>
-                    </Panel>
-                    <Panel header={<div>
-                                   Mission Type
-                                   <span className="label label-default medium pull-right">
-                                   {this.props.missionTypes.size}
-                                   </span>
-                                   </div>} collapsible >
-                      <Multiselect
+                    <MultiselectPanel
+                       header="Mission Types"
                        placeholder="Mission Types"
                        value={this.props.missionTypes.toArray()}
                        data={this.props.missionTypesList}
@@ -238,14 +229,8 @@ export default class PlanningToolbar extends BaseComponent {
                        busy={this.props.missionTypesList.length === 0}
                        onChange={this.onMissionTypesChange}
                        filter="contains"/>
-                    </Panel>
-                    <Panel header={<div>
-                                   Confirmed Types
-                                   <span className="label label-default medium pull-right">
-                                   {this.props.confirmedTypes.size}
-                                   </span>
-                                   </div>} collapsible>
-                      <Multiselect
+                    <MultiselectPanel
+                       header="Confirmed Types"
                        placeholder="Confirmed Types"
                        value={this.props.confirmedTypes.toArray()}
                        data={this.props.confirmedTypesList}
@@ -253,22 +238,6 @@ export default class PlanningToolbar extends BaseComponent {
                        busy={this.props.confirmedTypesList.length === 0}
                        onChange={this.onConfirmedTypesChange}
                        filter="contains"/>
-                    </Panel>
-                    <Panel header={<div>
-                                   Profile Types
-                                   <span className="label label-default medium pull-right">
-                                   {this.props.profileTypes.size}
-                                   </span>
-                                   </div>} collapsible >
-                      <Multiselect
-                       placeholder="Profile Types"
-                       value={this.props.profileTypes.toArray()}
-                       data={this.props.profileTypesList}
-                       textField="profileType"
-                       busy={this.props.profileTypesList.length === 0}
-                       onChange={this.onProfileTypesChange}
-                       filter="contains"/>
-                    </Panel>
                   </PanelGroup>
                 </div>
                 <div className="col-xs-6">
@@ -302,24 +271,8 @@ export default class PlanningToolbar extends BaseComponent {
                         </div>
                       </form>
                     </Panel>
-                    <Panel header={<div>
-                                   Countries
-                                   <span className="label label-default medium pull-right">
-                                   -
-                                   </span>
-                                   </div>} collapsible >
-                      <Multiselect
-                       placeholder="Countries"
-                       filter="contains"
-                      />
-                    </Panel>
-                    <Panel header={<div>
-                                   Staff
-                                   <span className="label label-default medium pull-right">
-                                   {this.props.staffList.size}
-                                   </span>
-                                   </div>} collapsible >
-                      <Multiselect
+                    <MultiselectPanel
+                       header="Staff"
                        placeholder="Staff"
                        value={this.props.staffList.toArray()}
                        data={this.props.staffListAll}
@@ -327,19 +280,17 @@ export default class PlanningToolbar extends BaseComponent {
                        busy={this.props.staffListAll.length === 0}
                        filter="contains"
                        onChange={this.onStaffListChange}
-                      />
-                    </Panel>
-                    <Panel header={<div>
-                                   Languages
-                                   <span className="label label-default medium pull-right">
-                                   -
-                                   </span>
-                                   </div>} collapsible >
-                      <Multiselect
-                       placeholder="Languages"
+                    />
+                    <MultiselectPanel
+                       header="Profile Types"
+                       placeholder="Profile Types"
+                       value={this.props.profileTypes.toArray()}
+                       data={this.props.profileTypesList}
+                       textField="profileType"
+                       busy={this.props.profileTypesList.length === 0}
+                       onChange={this.onProfileTypesChange}
                        filter="contains"
-                      />
-                    </Panel>
+                    />
                   </PanelGroup>
                 </div>
               </div>

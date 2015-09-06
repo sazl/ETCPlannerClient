@@ -4,27 +4,12 @@ import Immutable from 'immutable';
 
 import { Button, Collapse, Table } from 'react-bootstrap';
 
-import connectToStores from 'alt/utils/connectToStores';
-
 import BaseComponent from 'components/BaseComponent';
 
-import StaffAssignmentActions from 'actions/StaffAssignmentActions';
-import StaffAssignmentStore from 'stores/StaffAssignmentStore';
-
-import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
 
-@connectToStores
+
 export default class StaffAssignmentList extends BaseComponent {
-
-  static getStores() {
-    return [StaffAssignmentStore];
-  }
-
-  static getPropsFromStores() {
-    return StaffAssignmentStore.getState();
-  }
-
   constructor(props) {
     super(props);
     this._bind('onToggleCollapse');
@@ -52,9 +37,8 @@ export default class StaffAssignmentList extends BaseComponent {
   }
 
   render() {
-    const staffIndex = this.props.staff.index.toString();
-    const staffAssignments = this.props.staffAssignmentsByStaffIndex.get(
-      staffIndex, Immutable.List());
+    const staffAssignments = this.props.staffAssignments || [];
+
     return (
       <div className="alert alert-warning card-shadow-small">
         <div
@@ -89,7 +73,5 @@ export default class StaffAssignmentList extends BaseComponent {
 }
 
 StaffAssignmentList.propTypes = {
-  staff: React.PropTypes.object.isRequired,
-  startDate: React.PropTypes.object,
-  endDate: React.PropTypes.object
+  staffAssignments: React.PropTypes.array
 };

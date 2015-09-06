@@ -5,11 +5,13 @@ import StaffAssignmentActions from 'actions/StaffAssignmentActions';
 
 import Immutable from 'immutable';
 
-class StaffAssignmentStore {
+class StaffAssignmentsStore {
 
   constructor() {
     this.staffAssignments = [];
     this.staffAssignmentsByStaffIndex = Immutable.Map();
+    this.breakInService = [];
+    this.notAvailable = [];
     this.bindActions(StaffAssignmentActions);
   }
 
@@ -19,6 +21,22 @@ class StaffAssignmentStore {
 
   onFetchStaffAssignmentByStaffIndex() {
     /* empty */
+  }
+
+  onFetchNotAvailable() {
+    this.notAvailable = [];
+  }
+
+  onUpdateNotAvailable(staff) {
+    this.notAvailable = staff;
+  }
+
+  onFetchBreakInService() {
+    this.breakInService = [];
+  }
+
+  onUpdateBreakInService(staff) {
+    this.breakInService = staff;
   }
 
   onUpdateStaffAssignments(staffAssignments) {
@@ -41,4 +59,4 @@ class StaffAssignmentStore {
   }
 }
 
-module.exports = alt.createStore(StaffAssignmentStore, 'StaffAssignmentStore');
+module.exports = alt.createStore(StaffAssignmentsStore, 'StaffAssignmentsStore');

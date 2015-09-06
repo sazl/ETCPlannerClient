@@ -109,7 +109,8 @@ export default class Planning extends BaseComponent {
              countriesList={this.props.countries}
              missionTypesList={this.props.missionTypes}
              missionsList={this.props.missions}
-             staffListAll={this.props.staffList} />
+             staffListAll={this.props.staffList}
+            />
             <hr></hr>
             <PlanningTable
              detailedMissions={this.props.detailedMissions}
@@ -120,7 +121,8 @@ export default class Planning extends BaseComponent {
              profileTypes={this.props.profileTypes}
              countries={this.props.countries}
              missionTypes={this.props.missionTypes}
-             staffList={this.props.staffList} />
+             staffListAll={this.props.staffList}
+            />
           </Panel>
           </Col>
         </Row>

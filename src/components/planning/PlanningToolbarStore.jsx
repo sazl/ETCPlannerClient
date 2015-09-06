@@ -42,8 +42,8 @@ class PlanningToolbarStore {
       'profile_type_id': Utils.commaJoinField(state.profileTypes),
       'confirmed_type_id': Utils.commaJoinField(state.confirmedTypes),
       'mission_type_id': Utils.commaJoinField(state.missionTypes),
-      'start_date': DateUtils.formatISO(state.startDate),
-      'end_date': DateUtils.formatISO(state.endDate),
+      'start_date_lte': DateUtils.formatISO(state.endDate),
+      'end_date_gte': DateUtils.formatISO(state.startDate),
       'staff_index': Utils.commaJoinField(state.staffList, 'index')
     });
   }

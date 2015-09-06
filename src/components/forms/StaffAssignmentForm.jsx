@@ -19,10 +19,12 @@ import {
 import { ValidatedInput } from 'react-bootstrap-validation';
 
 import StaffAssignmentActions from 'actions/StaffAssignmentActions';
-import StaffAssignmentStore from 'stores/StaffAssignmentStore';
+import StaffAssignmentsStore from 'stores/StaffAssignmentsStore';
 
 import BaseComponent from 'components/BaseComponent';
-import StaffAssignmentList from 'components/forms/list/StaffAssignmentList';
+
+import ErrorModalController from 'components/forms/staff-assignment/ErrorModalController';
+import ProfileTypeErrorModal from 'components/forms/staff-assignment/ProfileTypeErrorModal';
 
 import ValidatedForm from 'components/inputs/ValidatedForm';
 import ValidatedDropdownList from 'components/inputs/ValidatedDropdownList';
@@ -36,11 +38,11 @@ import DateUtils from 'utils/date';
 export default class StaffAssignmentForm extends BaseComponent {
 
   static getStores() {
-    return [StaffAssignmentStore];
+    return [StaffAssignmentsStore];
   }
 
   static getPropsFromStores() {
-    return StaffAssignmentStore.getState();
+    return StaffAssignmentsStore.getState();
   }
 
   constructor(props) {
@@ -56,8 +58,10 @@ export default class StaffAssignmentForm extends BaseComponent {
       'handleValidSubmit',
       'handleProfileTypeErrorClose',
       'handleProfileTypeErrorAccept',
+      'handleProfileTypeError',
       'handleStaffDurationErrorClose',
-      'handleStaffDurationErrorAccept'
+      'handleStaffDurationErrorAccept',
+      'handleStaffDurationError'
     );
     this.state = {
       staffAssignment: Immutable.Map(props.staffAssignment || {
@@ -69,13 +73,46 @@ export default class StaffAssignmentForm extends BaseComponent {
         confirmedType: null,
         missionRole: props.missionRole
       }),
-      showProfileTypeError: false,
+      showProfileTypeError: true,
       profileTypeError: false,
-      forceProfileTypeValid: false,
-      showStaffDurationError: false,
-      staffDurationError: false,
-      forceStaffDurationValid: false
+      showStaffDurationError: true,
+      staffDurationError: false
     };
+  }
+
+  fetchStaffAssignmentsForDurationError() {
+    const staffAssignment = this.state.staffAssignment;
+    StaffAssignmentActions.fetchStaffAssignmentsByIndex({
+      'staff_index': staffAssignment.get('staff').index,
+      'start_date_lte': DateUtils.formatISO(staffAssignment.get('endDate')),
+      'end_date_gte': DateUtils.formatISO(staffAssignment.get('startDate')),
+      'exclude_id': staffAssignment.get('id')
+    });
+  }
+
+  _fetchAndClearStaffDurationError() {
+    this.fetchStaffAssignmentsForDurationError();
+    this.setState({
+      showStaffDurationError: true,
+      staffDurationError: false
+    });
+  }
+
+  _fetchAndClearProfileTypeError() {
+    this.setState({
+      showStaffDurationError: true,
+      staffDurationError: false
+    });
+  }
+
+  _fetchAndClearBoth() {
+    this.fetchStaffAssignmentsForDurationError();
+    this.setState({
+      showProfileTypeError: true,
+      profileTypeError: false,
+      showStaffDurationError: true,
+      staffDurationError: false
+    });
   }
 
   handleMissionRoleChange(missionRole) {
@@ -84,7 +121,7 @@ export default class StaffAssignmentForm extends BaseComponent {
         'missionRole',
         missionRole
       )
-    });
+    }, this._fetchAndClearProfileTypeError);
   }
 
   handleStaffChange(staff) {
@@ -93,7 +130,7 @@ export default class StaffAssignmentForm extends BaseComponent {
         'staff',
         staff
       )
-    });
+    }, this._fetchAndClearBoth);
   }
 
   handleConfirmedTypeChange(confirmedType) {
@@ -111,7 +148,7 @@ export default class StaffAssignmentForm extends BaseComponent {
         'startDate',
         startDate
       )
-    });
+    }, this._fetchAndClearStaffDurationError);
   }
 
   handleEndDateChange(endDate) {
@@ -120,7 +157,7 @@ export default class StaffAssignmentForm extends BaseComponent {
         'endDate',
         endDate
       )
-    });
+    }, this._fetchAndClearStaffDurationError);
   }
 
   handleLocationChange(location) {
@@ -141,68 +178,15 @@ export default class StaffAssignmentForm extends BaseComponent {
     });
   }
 
-  _checkValidProfileType() {
-    if (this.state.forceProfileTypeValid) {
-      return true;
-    }
-    const profileTypeIds = Utils.getField({
-      many: true,
-      data: this.state.staffAssignment.get('staff').profileTypes
-    });
-    const valid = profileTypeIds.indexOf(
-      this.state.staffAssignment.get('missionRole').profileType.id) > -1;
-    return valid;
-  }
-
-  _validateProfileType() {
-    const valid = this._checkValidProfileType();
-    if (!valid) {
-      this.setState({
-        showProfileTypeError: true,
-        profileTypeError: true
-      });
-    }
-    return valid;
-  }
-
-  _checkValidStaffDuration() {
-    if (this.state.forceStaffDurationValid) {
-      return true;
-    }
-    StaffAssignmentActions.fetchStaffAssignmentsByIndex({
-      'staff_index': this.state.staffAssignment.get('staff').index,
-      'start_date_lte': DateUtils.formatISO(this.state.staffAssignment.get('endDate')),
-      'end_date_gte': DateUtils.formatISO(this.state.staffAssignment.get('startDate')),
-      'exclude_id': this.state.staffAssignment.get('id')
-    });
-    const assignments = this.props.staffAssignmentsByStaffIndex.get(
-      this.state.staffAssignment.get('staff').index.toString());
-    return !assignments || assignments.length === 0;
-  }
-
-  _validateStaffAssignmentDuration() {
-    const valid = this._checkValidStaffDuration();
-    if (!valid) {
-      this.setState({
-        showStaffDurationError: true,
-        staffDurationError: true
-      });
-    }
-    return valid;
-  }
-
   _saveStaffAssignment() {
-    if (this._checkValidStaffDuration() && this._checkValidProfileType()) {
+    if (this.state.profileTypeError || this.state.staffDurationError) {
+      this.setState({
+        showProfileTypeError: this.state.profileTypeError,
+        showStaffDurationError: this.state.staffDurationError
+      });
+    } else {
       StaffAssignmentActions.saveStaffAssignment(
         this.state.staffAssignment.toJS());
-      this.setState({
-        showProfileTypeError: false,
-        profileTypeError: false,
-        forceProfileTypeValid: false,
-        showStaffDurationError: false,
-        staffDurationError: false,
-        forceStaffDurationValid: false
-      });
       if (this.props.onSave) {
         this.props.onSave();
       }
@@ -210,9 +194,14 @@ export default class StaffAssignmentForm extends BaseComponent {
   }
 
   handleValidSubmit(values) {
-    this._validateStaffAssignmentDuration();
-    this._validateProfileType();
     this._saveStaffAssignment();
+  }
+
+  handleProfileTypeError() {
+    this.setState({
+      showProfileTypeError: true,
+      profileTypeError: true
+    });
   }
 
   handleProfileTypeErrorClose() {
@@ -225,37 +214,16 @@ export default class StaffAssignmentForm extends BaseComponent {
   handleProfileTypeErrorAccept() {
     this.setState({
       showProfileTypeError: false,
-      profileTypeError: false,
-      forceProfileTypeValid: true
+      profileTypeError: false
     }, this._saveStaffAssignment);
   }
 
-  renderProfileTypeErrorModal() {
-    if (this.state.showProfileTypeError) {
-      return (
-        <Modal
-         bsSize="small"
-         show={this.state.showProfileTypeError}
-         onHide={this.handleProfileTypeErrorClose}
-         backdrop={false}>
-          <Modal.Header closeButton>
-            <Modal.Title>Profile Type Conflict</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="alert alert-danger">
-            <div>
-              This mission role requires the profile type &nbsp;
-              <b>{this.state.staffAssignment.get('missionRole').profileType.profileType}</b>
-              &nbsp; the selected staff member does not have the required
-              profile type. Would you still like to assign the staff member
-              to the mission role?
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button onClick={this.handleProfileTypeErrorClose}>No</Button>
-            <Button bsStyle='danger' onClick={this.handleProfileTypeErrorAccept}>Yes</Button>
-          </Modal.Footer>
-        </Modal>
-      );
+  handleStaffDurationError() {
+    if (!this.state.showStaffDurationError && !this.state.staffDurationError) {
+      this.setState({
+        showStaffDurationError: true,
+        staffDurationError: true
+      });
     }
   }
 
@@ -269,56 +237,8 @@ export default class StaffAssignmentForm extends BaseComponent {
   handleStaffDurationErrorAccept() {
     this.setState({
       showStaffDurationError: false,
-      staffDurationError: false,
-      forceStaffDurationValid: true
-    }, this._saveStaffAssignment);
-  }
-
-  renderStaffDurationErrorModal() {
-    if (this.state.showStaffDurationError) {
-      const startDate = DateUtils.formatReadable(this.state.staffAssignment.get('startDate'));
-      const endDate = DateUtils.formatReadable(this.state.staffAssignment.get('endDate'));
-      return (
-        <Modal
-         bsSize="medium"
-         show={this.state.showStaffDurationError}
-         onHide={this.handleStaffDurationErrorClose}
-         backdrop={false}>
-          <Modal.Header closeButton>
-            <Modal.Title>Staff Duration Conflict</Modal.Title>
-          </Modal.Header>
-          <Modal.Body className="alert alert-danger">
-            <div>
-              <p>
-                This staff member is currently unavailable during the time
-                period between:
-              </p>
-              <p className="text-center">
-                <b>{startDate}</b> to <b>{endDate}</b>
-              </p>
-              <p>
-                because they are currently assigned to another task during this period. Would
-                you still like to assign the staff member during this period
-                of time?
-              </p>
-              <p>
-                <StaffAssignmentList
-                 staff={this.state.staffAssignment.get('staff')}
-                 startDate={this.state.staffAssignment.get('startDate')}
-                 endDate={this.state.staffAssignment.get('endDate')}
-                />
-              </p>
-            </div>
-          </Modal.Body>
-          <Modal.Footer>
-            <Button
-             bsStyle="danger"
-             onClick={this.handleStaffDurationErrorClose}>No</Button>
-            <Button bsStyle="success" onClick={this.handleStaffDurationErrorAccept}>Yes</Button>
-          </Modal.Footer>
-        </Modal>
-      );
-    }
+      staffDurationError: false
+    });
   }
 
   render() {
@@ -411,8 +331,28 @@ export default class StaffAssignmentForm extends BaseComponent {
           </div>
           <div className="clearfix"/>
         </ValidatedForm>
-        {this.renderProfileTypeErrorModal()}
-        {this.renderStaffDurationErrorModal()}
+
+        <ProfileTypeErrorModal
+         onCancel={this.handleProfileTypeErrorClose}
+         onAccept={this.handleProfileTypeErrorAccept}
+         onError={this.handleProfileTypeError}
+         staffAssignment={this.state.staffAssignment}
+         show={this.state.showProfileTypeError}
+        />
+
+
+        {this.state.showStaffDurationError
+        ?
+        <ErrorModalController
+         onCancel={this.handleStaffDurationErrorClose}
+         onAccept={this.handleStaffDurationErrorAccept}
+         onError={this.handleStaffDurationError}
+         staffAssignment={this.state.staffAssignment}
+         staffAssignmentsByStaffIndex={this.props.staffAssignmentsByStaffIndex}
+         show={this.state.showStaffDurationError}
+        />
+        :
+        null}
       </div>
     );
   }

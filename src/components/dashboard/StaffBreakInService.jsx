@@ -1,28 +1,32 @@
 import React from 'react/addons';
 import connectToStores from 'alt/utils/connectToStores';
-import StaffActions from 'actions/StaffActions';
-import StaffStore from 'stores/StaffStore';
-import StaffStatus from 'components/dashboard/StaffStatus';
+import StaffAssignmentActions from 'actions/StaffAssignmentActions';
+import StaffAssignmentsStore from 'stores/StaffAssignmentsStore';
+import StaffAssignmentStatus from 'components/dashboard/StaffAssignmentStatus';
 
 @connectToStores
 export default class StaffBreakInService extends React.Component {
   static getStores() {
-    return [StaffStore];
+    return [StaffAssignmentsStore];
   }
 
   static getPropsFromStores() {
-    return StaffStore.getState();
+    return {
+      breakInService: StaffAssignmentsStore.getState().breakInService
+    };
   }
 
   componentWillMount() {
-    StaffActions.fetchBreakInService();
+    StaffAssignmentActions.fetchBreakInService();
   }
 
   render() {
     return (
-      <StaffStatus staffList={this.props.breakInService}
-                   heading="Break In Service"
-                   bsStyle="info"/>
+      <StaffAssignmentStatus
+       staffAssignments={this.props.breakInService}
+       heading="Break In Service"
+       bsStyle="info"
+      />
     );
   }
 }
