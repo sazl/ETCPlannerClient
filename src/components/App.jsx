@@ -27,14 +27,14 @@ export default class App extends BaseComponent {
   render() {
     return (
       <div>
-        <MainNavbar />
+        <MainNavbar/>
         <Grid fluid>
           <Row>
-            <Col xs={12} md={2}>
-            <Sidebar/>
+            <Col md={2} xs={6}>
+              <Sidebar />
             </Col>
-            <Col xs={12} md={10}>
-            <RouteHandler/>
+            <Col md={10} xs={6}>
+              <RouteHandler/>
             </Col>
           </Row>
         </Grid>

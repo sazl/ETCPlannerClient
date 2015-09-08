@@ -12,13 +12,17 @@ import {
   ButtonGroup,
   Glyphicon,
   Collapse,
-  Modal
+  Modal,
+  Popover, OverlayTrigger
 } from 'react-bootstrap';
 
 import { GridLoader } from 'halogen';
 
 import BaseComponent from 'components/BaseComponent';
+
 import CollapseButton from 'components/CollapseButton';
+import ActionButtons from 'components/planning/ActionButtons';
+
 import MissionForm from 'components/forms/MissionForm';
 import MissionRoleForm from 'components/forms/MissionRoleForm';
 import StaffAssignmentForm from 'components/forms/StaffAssignmentForm';
@@ -191,24 +195,9 @@ export default class PlanningTable extends BaseComponent {
           </ul>
         </td>
         <td className="text-center">
-          <ButtonGroup>
-            <Button
-            bsSize="xs"
-            bsStyle="default"
-            onClick={() => {
-                     this.showStaffAssignmentForm(staffAssignment, missionRole);
-                     }}>
-              <Glyphicon glyph="edit"/>
-            </Button>
-            {renderButton ?
-             <Button
-             bsSize="xs"
-             bsStyle="success"
-             onClick={() => { this.showStaffAssignmentForm(null, missionRole); }}>
-             <Glyphicon glyph="plus"/>
-             </Button>
-             : null}
-          </ButtonGroup>
+          <ActionButtons
+           onEdit={() => { this.showStaffAssignmentForm(staffAssignment, missionRole); }}
+           onNew={() => { this.showStaffAssignmentForm(null, missionRole); }} />
         </td>
       </tr>
     );
@@ -243,20 +232,10 @@ export default class PlanningTable extends BaseComponent {
         <td></td>
         <td></td>
         <td className="text-center">
-          <ButtonGroup>
-            <Button
-            bsSize="xs"
-            bsStyle="default"
-            onClick={() => { this.showMissionRoleForm(missionRole, mission); }}>
-              <Glyphicon glyph="edit"/>
-            </Button>
-            <Button
-            bsSize="xs"
-            bsStyle="success"
-            onClick={() => { this.showMissionRoleForm(null, mission); }}>
-              <Glyphicon glyph="plus"/>
-            </Button>
-          </ButtonGroup>
+          <ActionButtons
+           onEdit={() => { this.showMissionRoleForm(missionRole, mission); }}
+           onNew={() => { this.showMissionRoleForm(null, mission); }}
+          />
         </td>
       </tr>
     );
@@ -292,20 +271,9 @@ export default class PlanningTable extends BaseComponent {
         <td>{confirmedType}</td>
         <td>{missionType}</td>
         <td className="text-center">
-          <ButtonGroup>
-            <Button
-             bsSize="xs"
-             bsStyle="default"
-             onClick={() => { this.showMissionForm(mission); }}>
-              <Glyphicon glyph="edit"/>
-            </Button>
-            <Button
-             bsSize="xs"
-             bsStyle="success"
-             onClick={() => { this.showMissionForm(); }}>
-              <Glyphicon glyph="plus"/>
-            </Button>
-          </ButtonGroup>
+          <ActionButtons
+           onEdit={() => { this.showMissionForm(mission); }}
+           onNew={() => { this.showMissionForm(); }}/>
         </td>
       </tr>
     );

@@ -9,6 +9,7 @@ import {
   ListGroup,
   ListGroupItem,
   Glyphicon,
+  Button,
   Well
 } from 'react-bootstrap';
 
@@ -21,7 +22,7 @@ import '../styles/Sidebar.scss';
 export default class Sidebar extends React.Component {
   render() {
     return (
-      <ListGroup fill className="card-shadow-small">
+      <ListGroup fill className="sidebar-nav">
         <ListGroupItemLink to="dashboard">
           <span>
             <Glyphicon glyph="home" style={{paddingRight: 10}}/>

@@ -23,16 +23,8 @@ class StaffAssignmentsStore {
     /* empty */
   }
 
-  onFetchNotAvailable() {
-    this.notAvailable = [];
-  }
-
   onUpdateNotAvailable(staff) {
     this.notAvailable = staff;
-  }
-
-  onFetchBreakInService() {
-    this.breakInService = [];
   }
 
   onUpdateBreakInService(staff) {

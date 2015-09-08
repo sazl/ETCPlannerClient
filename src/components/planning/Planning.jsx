@@ -46,6 +46,8 @@ import StaffStore from 'stores/StaffStore';
 import BaseComponent from 'components/BaseComponent';
 import PlanningToolbar from 'components/planning/PlanningToolbar';
 import PlanningTable from 'components/planning/PlanningTable';
+import PlanningTimeline from 'components/planning/PlanningTimeline';
+
 
 // CSS
 import 'styles/Planning.scss';
@@ -111,7 +113,7 @@ export default class Planning extends BaseComponent {
              missionsList={this.props.missions}
              staffListAll={this.props.staffList}
             />
-            <hr></hr>
+            <hr/>
             <PlanningTable
              detailedMissions={this.props.detailedMissions}
              loadingMissions={this.props.loadingDetailedMissions}
@@ -122,6 +124,10 @@ export default class Planning extends BaseComponent {
              countries={this.props.countries}
              missionTypes={this.props.missionTypes}
              staffListAll={this.props.staffList}
+            />
+            <hr/>
+            <PlanningTimeline
+             missions={this.props.detailedMissions}
             />
           </Panel>
           </Col>

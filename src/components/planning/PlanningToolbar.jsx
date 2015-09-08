@@ -50,6 +50,7 @@ export default class PlanningToolbar extends BaseComponent {
       'onColumnClick',
       'onExportClick',
       'onClearFilterClick',
+      'onViewTimelineClick',
       'onMissionsChange',
       'onProfileTypesChange',
       'onConfirmedTypesChange',
@@ -61,7 +62,8 @@ export default class PlanningToolbar extends BaseComponent {
     this.state = {
       showFilters: true,
       showColumns: false,
-      showSort: false
+      showSort: false,
+      showTimeline: true
     };
   }
 
@@ -93,6 +95,12 @@ export default class PlanningToolbar extends BaseComponent {
 
   onExportClick() {
     /* empty */
+  }
+
+  onViewTimelineClick() {
+    this.setState({
+      showTimeline: !this.state.showTimeline
+    });
   }
 
   filter() {
@@ -147,7 +155,7 @@ export default class PlanningToolbar extends BaseComponent {
         <div className="row">
           <div className="col-xs-12">
             <ButtonToolbar>
-              <ButtonGroup>
+              <ButtonGroup bsSize="small">
                 <Button bsStyle={this.state.showFilters ? "warning" : "primary"}
                         onClick={this.onFilterClick}
                         active={this.state.showFilters}>
@@ -173,19 +181,27 @@ export default class PlanningToolbar extends BaseComponent {
                   </Button>
                   </ButtonGroup>
                 */}
-                  <ButtonGroup>
+                  <ButtonGroup bsSize="small">
                     <Input type="text" placeholder="Search"/>
                   </ButtonGroup>
-                  <ButtonGroup className="pull-right">
+                  <ButtonGroup bsSize="small" className="pull-right">
                     <Button bsStyle="success">
                       <Glyphicon glyph="plus" />
                       &nbsp; New Mission
                     </Button>
                   </ButtonGroup>
-                  <ButtonGroup className="pull-right">
+                  <ButtonGroup bsSize="small" className="pull-right">
                     <Button bsStyle="info" onClick={this.onExportClick}>
                       <Glyphicon glyph="save"/>
                       &nbsp; Export
+                    </Button>
+                  </ButtonGroup>
+                  <ButtonGroup bsSize="small" className="pull-right">
+                    <Button bsStyle={this.state.showTimeline ? "warning" : "primary"}
+                            onClick={this.onViewTimelineClick}
+                            active={this.state.showTimeline}>
+                      <Glyphicon glyph={this.state.showTimeline ? "remove" : "time"}/>
+                      &nbsp; Timeline
                     </Button>
                   </ButtonGroup>
             </ButtonToolbar>
@@ -199,7 +215,7 @@ export default class PlanningToolbar extends BaseComponent {
               <div className="row" style={{marginBottom: 15}}>
                 <div className="col-xs-6">
                   <ButtonToolbar>
-                    <ButtonGroup>
+                    <ButtonGroup bsSize="small">
                       <Button bsStyle="danger" onClick={this.onClearFilterClick}>
                         <Glyphicon glyph="remove"/>
                         &nbsp; Clear Filters

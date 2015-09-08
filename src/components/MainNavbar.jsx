@@ -54,9 +54,6 @@ export default class MainNavbar extends BaseComponent {
           <NavItemLink to="planner">
             <span>Planner</span>
           </NavItemLink>
-          <NavItem>
-            <span>ETC</span>
-          </NavItem>
         </Nav>
         <Nav right>
           <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>} />
