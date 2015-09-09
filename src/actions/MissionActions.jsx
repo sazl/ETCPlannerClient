@@ -47,6 +47,4 @@ class MissionActions {
   }
 }
 
-console.log(alt.createActions);
-
 module.exports = alt.createActions(MissionActions);

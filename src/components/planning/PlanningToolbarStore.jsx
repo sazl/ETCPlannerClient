@@ -14,10 +14,17 @@ class PlanningToolbarStore {
 
   constructor() {
     this.bindActions(PlanningToolbarActions);
-    this._initialize();
+    this._initializeWithDefaultDates();
     this.exportPublicMethods({
       getFilters: this.getFilters
     });
+  }
+
+  _initializeWithDefaultDates() {
+    const { start, end } = DateUtils.monthRange();
+    this._initialize();
+    this.startDate = start;
+    this.endDate = end;
   }
 
   _initialize() {

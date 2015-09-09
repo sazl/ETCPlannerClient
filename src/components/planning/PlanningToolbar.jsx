@@ -2,6 +2,8 @@ import React from 'react/addons';
 
 import Immutable from 'immutable';
 
+import connectToStores from 'alt/utils/connectToStores';
+
 import {
   Row,
   Col,
@@ -25,10 +27,9 @@ import { Multiselect, DateTimePicker } from 'react-widgets';
 import BaseComponent from 'components/BaseComponent';
 import MultiselectPanel from 'components/planning/MultiselectPanel';
 
-import connectToStores from 'alt/utils/connectToStores';
-
-import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
+import PlanningActions from 'components/planning/PlanningActions';
 import PlanningToolbarActions from 'components/planning/PlanningToolbarActions';
+import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
 
 import MissionActions from 'actions/MissionActions';
 import NotificationActions from 'actions/NotificationActions';
@@ -63,8 +64,9 @@ export default class PlanningToolbar extends BaseComponent {
       showFilters: true,
       showColumns: false,
       showSort: false,
-      showTimeline: true
+      showTimeline: false
     };
+    this.filter();
   }
 
   static getStores() {
@@ -100,13 +102,12 @@ export default class PlanningToolbar extends BaseComponent {
   onViewTimelineClick() {
     this.setState({
       showTimeline: !this.state.showTimeline
-    });
+    }, PlanningActions.collapseTimeline);
   }
 
   filter() {
     PlanningToolbarActions.filter(
       PlanningToolbarStore.getFilters());
-    console.log(PlanningToolbarStore.getFilters().toJS());
   }
 
   onClearFilterClick() {
@@ -280,7 +281,7 @@ export default class PlanningToolbar extends BaseComponent {
                           <div>
                             <DateTimePicker
                              format="dd/MM/yyyy"
-                             value={this.props.endtDate}
+                             value={this.props.endDate}
                              time={false}
                              onChange={this.onEndDateChange} />
                           </div>

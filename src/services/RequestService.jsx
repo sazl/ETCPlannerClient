@@ -1,7 +1,7 @@
 import request from 'reqwest';
 
 import { API_URL } from 'constants/APIConstants';
-
+import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
 
 const _token = 'g3moM57ZbUCXsCNfNxkSClqutUywrI'; //debug token
@@ -15,6 +15,7 @@ function _abortRequest(key) {
   }
 }
 
+/* Automatically convert date strings to Date objects */
 function _interceptObject(obj) {
   for (const key in obj) {
     const value = obj[key];
@@ -61,23 +62,6 @@ function _request({ url='', params={}, method='GET', key=false }) {
   return req;
 }
 
-const annotateRequest = (path, method='GET', abort=true) => {
-  return function (target, key, descriptor) {
-    descriptor.value = (data) => {
-      if (!abort) {
-        key = false;
-      }
-      return _request({
-        url: path,
-        params: data,
-        method: method,
-        key: key
-      });
-    };
-    return descriptor;
-  };
-};
-
 class RequestService {
   static get({ url='', params={}, key=false }) {
     return _request({
@@ -106,7 +90,48 @@ class RequestService {
   }
 }
 
+const annotateRequest = (path, method='GET', abort=true) => {
+  return function (target, key, descriptor) {
+    descriptor.value = (data) => {
+      if (!abort) {
+        key = false;
+      }
+      return _request({
+        url: path,
+        params: data,
+        method: method,
+        key: key
+      });
+    };
+    return descriptor;
+  };
+};
+
+const annotateSaveRequest = (path, converter= (x) => { return x; }) => {
+  return function (target, key, descriptor) {
+    descriptor.value = (data) => {
+      const entity = converter(data);
+      if (entity.id) {
+        const url = Utils.getEntityURL(
+          path, entity.id);
+        return RequestService.put({
+          url: url,
+          params: entity
+        });
+      } else {
+        return RequestService.post({
+          url: path,
+          params: entity
+        });
+      }
+    };
+    return descriptor;
+  };
+};
+
+
 module.exports = {
   RequestService: RequestService,
-  request: annotateRequest
+  request: annotateRequest,
+  saveRequest: annotateSaveRequest
 };

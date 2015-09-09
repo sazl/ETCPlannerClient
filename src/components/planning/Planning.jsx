@@ -4,18 +4,11 @@ import React from 'react/addons';
 import Router from 'react-router';
 
 import {
-  Button,
-  Glyphicon,
-  FormControls,
-  Input,
+  Collapse,
   Grid,
   Row,
   Col,
-  Label,
-  Panel,
-  Table,
-  ListGroup,
-  ListGroupItem
+  Panel
 } from 'react-bootstrap';
 
 import { DropdownList, Multiselect } from 'react-widgets';
@@ -43,6 +36,8 @@ import MissionRoleStore from 'stores/MissionRoleStore';
 import StaffActions from 'actions/StaffActions';
 import StaffStore from 'stores/StaffStore';
 
+import PlanningStore from 'components/planning/PlanningStore';
+
 import BaseComponent from 'components/BaseComponent';
 import PlanningToolbar from 'components/planning/PlanningToolbar';
 import PlanningTable from 'components/planning/PlanningTable';
@@ -67,7 +62,8 @@ export default class Planning extends BaseComponent {
       MissionTypeStore,
       MissionRoleStore,
       ConfirmedTypeStore,
-      StaffStore
+      StaffStore,
+      PlanningStore
     ];
   }
 
@@ -82,14 +78,12 @@ export default class Planning extends BaseComponent {
       countries: CountryStore.getState().countries,
       missionTypes: MissionTypeStore.getState().missionTypes,
       missionRoles: MissionRoleStore.getState().missionRoles,
-      staffList: StaffStore.getState().staff
+      staffList: StaffStore.getState().staff,
+      showTimeline: PlanningStore.getState().showTimeline
     };
   }
 
   componentWillMount() {
-    if (this.props.detailedMissions.length === 0) {
-      // MissionActions.fetchDetailedMissions();
-    }
     MissionActions.fetchMissions();
     ProfileTypeActions.fetchProfileTypes();
     ConfirmedTypeActions.fetchConfirmedTypes();
@@ -113,6 +107,14 @@ export default class Planning extends BaseComponent {
              missionsList={this.props.missions}
              staffListAll={this.props.staffList}
             />
+            <Collapse in={this.props.showTimeline}>
+              <div>
+                <hr/>
+                <PlanningTimeline
+                 missions={this.props.detailedMissions}
+                />
+              </div>
+            </Collapse>
             <hr/>
             <PlanningTable
              detailedMissions={this.props.detailedMissions}
@@ -126,9 +128,6 @@ export default class Planning extends BaseComponent {
              staffListAll={this.props.staffList}
             />
             <hr/>
-            <PlanningTimeline
-             missions={this.props.detailedMissions}
-            />
           </Panel>
           </Col>
         </Row>

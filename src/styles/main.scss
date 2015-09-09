@@ -56,6 +56,20 @@
   margin-bottom: 2px;
 }
 
+/* Timeline */
+
+.vis-item.green {
+  color: white;
+  background-color: green;
+  border-color: black;
+}
+
+.vis-item.grey {
+  color: white;
+  background-color: #929292;
+  border-color: black;
+}
+
 /* fix bug with modal shifting content to the left */
 
 .modal-open {
@@ -66,11 +80,17 @@ body, body.modal, body.modal-open {
   padding-right: 0 !important;
 }
 
+/* Sidebar */
+
+.sidebar-nav {
+  font-size: 9pt;
+}
+
 /* transitions */
 
 .fade-enter {
   opacity: 0.01;
-  transition: opacity .5s ease-in;
+  transition: opacity 0.3s ease-in;
 }
 
 .fade-enter.fade-enter-active {
@@ -79,7 +99,7 @@ body, body.modal, body.modal-open {
 
 .fade-leave {
   opacity: 1;
-  transition: opacity .5s ease-in;
+  transition: opacity 0.2s ease-in;
 }
 
 .fade-leave.fade-leave-active {

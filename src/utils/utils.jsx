@@ -17,7 +17,7 @@ export default class Util {
   }
 
   static getEntityURL(url, id) {
-    return url + id + '/';
+    return url.replace(/(\/+)$/g, '/') + id + '/';
   }
 
   static getField({ field='id', many=true, data=[]}) {

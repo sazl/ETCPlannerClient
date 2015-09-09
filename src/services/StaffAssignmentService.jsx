@@ -1,11 +1,10 @@
-import { request, RequestService } from 'services/RequestService';
+import { request, saveRequest, RequestService } from 'services/RequestService';
+import { STAFF_ASSIGNMENT_URL } from 'constants/APIConstants';
 
 import Immutable from 'immutable';
 
 import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
-
-const STAFF_ASSIGNMENT_URL = 'staff-assignments/';
 
 function _toJSON(staffAssignment) {
   return Immutable.Map(staffAssignment).merge({
@@ -19,34 +18,17 @@ function _toJSON(staffAssignment) {
 
 class StaffAssignmentService {
 
-  @request('staff-assignments/')
+  @request(STAFF_ASSIGNMENT_URL)
   getStaffAssignments() {}
 
-  @request('staff-assignments/not-available/?nested=true')
+  @request(STAFF_ASSIGNMENT_URL + 'not-available/?nested=true')
   getNotAvailable() {}
 
-  @request('staff-assignments/break-in-service/?nested=true')
+  @request(STAFF_ASSIGNMENT_URL + 'break-in-service/?nested=true')
   getBreakInService() {}
 
-  saveStaffAssignment(staffAssignment) {
-    const entity = _toJSON(staffAssignment);
-    console.log(entity);
-    if (staffAssignment.id) {
-      const url = Utils.getEntityURL(
-        STAFF_ASSIGNMENT_URL, staffAssignment.id);
-      return RequestService.put({
-        url: url,
-        params: entity,
-        key: 'saveStaffAssignment'
-      });
-    } else {
-      return RequestService.post({
-        url: STAFF_ASSIGNMENT_URL,
-        params: entity,
-        key: 'saveStaffAssignment'
-      });
-    }
-  }
+  @saveRequest(STAFF_ASSIGNMENT_URL, _toJSON)
+  saveStaffAssignment() {}
 }
 
 export default new StaffAssignmentService();

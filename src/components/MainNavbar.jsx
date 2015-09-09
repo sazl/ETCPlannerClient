@@ -6,6 +6,7 @@ import {
   Navbar,
   Nav,
   NavItem,
+  Button,
   Glyphicon,
   DropdownButton
 } from 'react-bootstrap';
@@ -16,6 +17,9 @@ import NotificationSystem from 'react-notification-system';
 
 import BaseComponent from 'components/BaseComponent';
 
+import AppActions from 'actions/AppActions';
+import AppStore from 'stores/AppStore';
+
 import NotificationActions from 'actions/NotificationActions';
 import NotificationStore from 'stores/NotificationStore';
 
@@ -24,15 +28,19 @@ import NotificationStore from 'stores/NotificationStore';
 export default class MainNavbar extends BaseComponent {
 
   static getStores() {
-    return [NotificationStore];
+    return [AppStore, NotificationStore];
   }
 
   static getPropsFromStores() {
-    return NotificationStore.getState();
+    return {
+      showSidebar: AppStore.getState().showSidebar,
+      notification: NotificationStore.getState().notification
+    };
   }
 
   constructor(props) {
     super(props);
+    this._bind('onCollapseSidebar');
     this.notificationSystem = null;
   }
 
@@ -46,6 +54,10 @@ export default class MainNavbar extends BaseComponent {
     }
   }
 
+  onCollapseSidebar() {
+    AppActions.collapseSidebar();
+  }
+
   render() {
     return (
       <Navbar brand="ETC Planner" className="card-shadow-small" fluid>
@@ -54,6 +66,14 @@ export default class MainNavbar extends BaseComponent {
           <NavItemLink to="planner">
             <span>Planner</span>
           </NavItemLink>
+        </Nav>
+        <Nav>
+          <p className="navbar-btn" style={{marginLeft: '20px'}}>
+            <Button bsSize="sm" onClick={this.onCollapseSidebar}>
+              <Glyphicon glyph={this.props.showSidebar ? "chevron-left" : "chevron-right"}/>
+              &nbsp; Menu
+            </Button>
+          </p>
         </Nav>
         <Nav right>
           <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>} />

@@ -25,19 +25,19 @@ export default class Sidebar extends React.Component {
       <ListGroup fill className="sidebar-nav">
         <ListGroupItemLink to="dashboard">
           <span>
-            <Glyphicon glyph="home" style={{paddingRight: 10}}/>
+            <Glyphicon glyph="home" style={{paddingRight: 5}}/>
             Dashboard
           </span>
         </ListGroupItemLink>
         <ListGroupItemLink to="planning">
           <span>
-            <Glyphicon glyph="time" style={{paddingRight: 10}}/>
+            <Glyphicon glyph="time" style={{paddingRight: 5}}/>
             Planning
           </span>
         </ListGroupItemLink>
         <ListGroupItemLink to="requirement">
           <span>
-            <Glyphicon glyph="check" style={{paddingRight: 10}}/>
+            <Glyphicon glyph="check" style={{paddingRight: 5}}/>
             Requirements
           </span>
         </ListGroupItemLink>

@@ -16,7 +16,6 @@ import StatusCard from 'components/dashboard/StatusCard';
 export default class DashboardView extends React.Component {
 
   render() {
-    console.log(this.props);
     let availableStaffCount = this.props.availableStaff.length,
         breakInServiceStaffCount = this.props.breakInServiceStaffAssignments.length,
         notAvailableStaffCount = this.props.notAvailableStaffAssignments.length,

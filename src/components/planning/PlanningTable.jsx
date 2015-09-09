@@ -21,6 +21,7 @@ import { GridLoader } from 'halogen';
 import BaseComponent from 'components/BaseComponent';
 
 import CollapseButton from 'components/CollapseButton';
+import ColorLabel from 'components/misc/ColorLabel';
 import ActionButtons from 'components/planning/ActionButtons';
 
 import MissionForm from 'components/forms/MissionForm';
@@ -174,7 +175,7 @@ export default class PlanningTable extends BaseComponent {
     const startDate = DateUtil.formatDate(staffAssignment.startDate);
     const endDate = DateUtil.formatDate(staffAssignment.endDate);
     const location = staffAssignment.location;
-    const confirmedType = staffAssignment.confirmedType.confirmedType;
+    const confirmedType = staffAssignment.confirmedType;
     const profileTypes = Utils.getField({
       data: staffAssignment.staff.profileTypes,
       many: true,
@@ -188,7 +189,12 @@ export default class PlanningTable extends BaseComponent {
         <td>{startDate}</td>
         <td>{endDate}</td>
         <td>{location}</td>
-        <td>{confirmedType}</td>
+        <td className="text-center">
+          <ColorLabel
+           text={confirmedType.confirmedType}
+           color={confirmedType.colorCode}
+          />
+        </td>
         <td>
           <ul className="list-unstyled">
             {profileTypes.map((x) => { return <li key={KeyUtil.getKey()}>{x}</li>; })}
@@ -352,7 +358,7 @@ export default class PlanningTable extends BaseComponent {
               <th>Location</th>
               <th>Confirmed Type</th>
               <th>Type</th>
-              <th></th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
