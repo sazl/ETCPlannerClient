@@ -7,6 +7,7 @@ class PlanningActions {
   collapseTimeline() {
     this.dispatch();
   }
+
 }
 
 module.exports = alt.createActions(PlanningActions);

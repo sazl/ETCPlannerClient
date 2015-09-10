@@ -19,6 +19,10 @@ class PlanningToolbarActions {
     this.dispatch(missions);
   }
 
+  appendMission(mission) {
+    this.dispatch(mission);
+  }
+
   profileTypesChange(profileTypes) {
     this.dispatch(profileTypes);
   }

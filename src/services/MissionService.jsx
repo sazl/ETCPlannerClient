@@ -1,9 +1,15 @@
+import Immutable from 'immutable';
+
 import { request, saveRequest, RequestService } from 'services/RequestService';
 import { MISSION_URL } from 'constants/APIConstants';
 
+import Utils from 'utils/utils';
+
 function _toJSON(mission) {
   return Immutable.Map(mission).merge({
-    mission
+    missionType: mission.get('missionType').id,
+    confirmedType: mission.get('confirmedType').id,
+    countries: Utils.getField({ data: mission.get('countries') })
   });
 }
 

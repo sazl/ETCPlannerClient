@@ -160,20 +160,20 @@ export default class StaffAssignmentForm extends BaseComponent {
     }, this._fetchAndClearStaffDurationError);
   }
 
-  handleLocationChange(location) {
+  handleLocationChange() {
     this.setState({
       staffAssignment: this.state.staffAssignment.set(
         'location',
-        location
+        this.refs.location.getValue()
       )
     });
   }
 
-  handleCommentsChange(comments) {
+  handleCommentsChange() {
     this.setState({
       staffAssignment: this.state.staffAssignment.set(
         'comments',
-        comments
+        this.refs.comments.getValue()
       )
     });
   }
@@ -309,6 +309,7 @@ export default class StaffAssignmentForm extends BaseComponent {
            value={this.state.staffAssignment.get('location')}
            placeholder="Location"
            label="Location"
+           ref="location"
            onChange={this.handleLocationChange}
            hasFeedback
           />
@@ -317,6 +318,7 @@ export default class StaffAssignmentForm extends BaseComponent {
            value={this.state.staffAssignment.get('comments')}
            placeholder="Comments"
            label="Comments"
+           ref="comments"
            onChange={this.handleCommentsChange}
            hasFeedback
           />

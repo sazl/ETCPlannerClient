@@ -14,6 +14,7 @@ import { Form, ValidatedInput } from 'react-bootstrap-validation';
 import { DropdownList, Multiselect } from 'react-widgets';
 
 import MissionActions from 'actions/MissionActions';
+import PlanningToolbarActions from 'components/planning/PlanningToolbarActions';
 
 import BaseComponent from 'components/BaseComponent';
 import ValidatedForm from 'components/inputs/ValidatedForm';
@@ -93,17 +94,17 @@ export default class MissionForm extends BaseComponent {
   }
 
   onSave() {
-    MissionActions.saveOrUpdateMission(this.state.mission);
+    MissionActions.saveMission(this.state.mission);
+    PlanningToolbarActions.appendMission(this.state.mission);
     this.props.onSave();
   }
 
   onValidSubmit(values) {
-    console.log(values);
+    this.onSave();
   }
 
   onInvalidSubmit(errors, values) {
-    console.log(errors);
-    console.log(values);
+    /* empty */
   }
 
   render() {
@@ -124,9 +125,8 @@ export default class MissionForm extends BaseComponent {
           onChange={this.handleDescriptionChange}
           hasFeedback
           />
-          <ValidatedInput
+          <Input
           name="etcServiceMap"
-          errorHelp="Must be a valid URL"
           type="text"
           placeholder="ETC Service Map"
           label="ETC Service Map"
@@ -179,7 +179,8 @@ export default class MissionForm extends BaseComponent {
             <Button onClick={this.props.onClose}>Close</Button>
             <Button
              bsStyle="primary"
-             type="submit">
+             type="submit"
+             onClick={this.props.onSave}>
               Save changes
             </Button>
           </div>

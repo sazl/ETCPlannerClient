@@ -34,8 +34,11 @@ class MissionActions {
     });
   }
 
-  saveOrUpdateMission(mission) {
-    this.dispatch();
+  saveMission(mission) {
+    MissionService.saveMission(mission).then((result) => {
+      this.actions.fetchMissions();
+      this.dispatch(result);
+    });
   }
 
   updateMissions(missions) {

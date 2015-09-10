@@ -13,6 +13,12 @@ class MissionRoleActions {
   updateMissionRoles(missionRoles) {
     this.dispatch(missionRoles);
   }
+
+  saveMissionRole(missionRole) {
+    MissionRoleService.saveMissionRole(missionRole).then((result) => {
+      this.dispatch(result);
+    });
+  }
 }
 
 module.exports = alt.createActions(MissionRoleActions);

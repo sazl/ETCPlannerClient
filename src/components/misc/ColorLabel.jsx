@@ -8,8 +8,13 @@ import { Label } from 'react-bootstrap';
 
 export default class ColorLabel extends BaseComponent {
   render() {
+    const style = {
+      backgroundColor: '#' + this.props.color,
+      borderRadius: '0.95em'
+    };
+
     return (
-      <Label style={{backgroundColor: '#' + this.props.color}}>
+      <Label style={style}>
         {this.props.text}
       </Label>
     );

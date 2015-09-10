@@ -1,4 +1,5 @@
 import React from 'react/addons';
+const ReactCSSTransitionGroup = React.addons.CSSTransitionGroup;
 let update = React.addons.update;
 
 import Immutable from 'immutable';
@@ -56,11 +57,14 @@ export default class PlanningTable extends BaseComponent {
       'collapseAll',
       'showMissionForm',
       'closeMissionForm',
+      'onSaveMissionForm',
       'showMissionRoleForm',
       'closeMissionRoleForm',
+      'onSaveMissionRoleForm',
       'showStaffAssignmentForm',
       'closeStaffAssignmentForm',
-      'onSaveStaffAssignmentForm'
+      'onSaveStaffAssignmentForm',
+      'filter'
     );
   }
 
@@ -111,6 +115,12 @@ export default class PlanningTable extends BaseComponent {
     });
   }
 
+
+  filter() {
+    PlanningToolbarActions.filter(
+      PlanningToolbarStore.getFilters());
+  }
+
   showMissionForm(mission) {
     this.setState({
       showMissionForm: true,
@@ -125,10 +135,9 @@ export default class PlanningTable extends BaseComponent {
     });
   }
 
-  onSaveStaffAssignmentForm() {
-    PlanningToolbarActions.filter(
-      PlanningToolbarStore.getFilters());
-    this.closeStaffAssignmentForm();
+  onSaveMissionForm() {
+    this.filter();
+    this.closeMissionForm();
   }
 
   showMissionRoleForm(missionRole, mission) {
@@ -148,6 +157,17 @@ export default class PlanningTable extends BaseComponent {
       selectedMission: null,
       selectedMissionRole: null
     });
+  }
+
+  onSaveMissionRoleForm() {
+    this.filter();
+    this.closeMissionRoleForm();
+  }
+
+  onSaveStaffAssignmentForm() {
+    PlanningToolbarActions.filter(
+      PlanningToolbarStore.getFilters());
+    this.closeStaffAssignmentForm();
   }
 
   showStaffAssignmentForm(staffAssignment, missionRole) {
@@ -234,7 +254,7 @@ export default class PlanningTable extends BaseComponent {
         <td>{profileType}</td>
         <td>{startDate}</td>
         <td>{endDate}</td>
-        <td></td>
+        <td>{location}</td>
         <td></td>
         <td></td>
         <td className="text-center">
@@ -253,7 +273,7 @@ export default class PlanningTable extends BaseComponent {
     const countries = mission.countries.map((country) => {
       return country.fullName;
     }).join(', ');
-    const confirmedType = mission.confirmedType.confirmedType;
+    const confirmedType = mission.confirmedType;
     const missionType = mission.missionType.missionType;
 
     return (
@@ -274,7 +294,12 @@ export default class PlanningTable extends BaseComponent {
         <td></td>
         <td></td>
         <td>{countries}</td>
-        <td>{confirmedType}</td>
+        <td className="text-center">
+          <ColorLabel
+           text={confirmedType.confirmedType}
+           color={confirmedType.colorCode}
+          />
+        </td>
         <td>{missionType}</td>
         <td className="text-center">
           <ActionButtons
@@ -343,6 +368,13 @@ export default class PlanningTable extends BaseComponent {
   render() {
     return (
       <div>
+        <Button
+         bsStyle="success"
+         bsSize="sm"
+         style={{marginBottom: 15}}
+         onClick={() => { this.showMissionForm(); }}>
+          <Glyphicon glyph="plus"/> New Mission
+        </Button>
         <Table bordered striped hover condensed className="card-shadow">
           <thead>
             <tr>
@@ -358,7 +390,7 @@ export default class PlanningTable extends BaseComponent {
               <th>Location</th>
               <th>Confirmed Type</th>
               <th>Type</th>
-              <th>Actions</th>
+              <th className="col-md-1">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -368,7 +400,7 @@ export default class PlanningTable extends BaseComponent {
 
         <Modal
          bsSize="small"
-         show={this.state.showMissionForm}
+         show={this.state.showMissionForm || this.props.showMissionForm}
          onHide={this.closeMissionForm}
          backdrop={false}>
           <Modal.Header closeButton>
@@ -377,6 +409,7 @@ export default class PlanningTable extends BaseComponent {
           <Modal.Body>
             <MissionForm
              onClose={this.closeMissionForm}
+             onSave={this.onSaveMissionForm}
              mission={this.state.selectedMission}
              confirmedTypes={this.props.confirmedTypes}
              missionTypes={this.props.missionTypes}
@@ -394,6 +427,7 @@ export default class PlanningTable extends BaseComponent {
           </Modal.Header>
           <Modal.Body>
             <MissionRoleForm
+            onSave={this.onSaveMissionRoleForm}
             onClose={this.closeMissionRoleForm}
             missionRole={this.state.selectedMissionRole}
             mission={this.state.selectedMission}
@@ -416,7 +450,7 @@ export default class PlanningTable extends BaseComponent {
             onClose={this.closeStaffAssignmentForm}
             staffAssignment={this.state.selectedStaffAssignment}
             missionRole={this.state.selectedMissionRole}
-            staffList={this.props.staffList}
+            staffList={this.props.staffListAll}
             missionRoles={this.props.missionRoles}
             confirmedTypes={this.props.confirmedTypes}
             profileTypes={this.props.profileTypes}

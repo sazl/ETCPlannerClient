@@ -14,7 +14,7 @@ class PlanningToolbarStore {
 
   constructor() {
     this.bindActions(PlanningToolbarActions);
-    this._initializeWithDefaultDates();
+    this._initialize();
     this.exportPublicMethods({
       getFilters: this.getFilters
     });
@@ -62,6 +62,12 @@ class PlanningToolbarStore {
   onMissionsChange(missions) {
     this.setState({
       missions: Immutable.List(missions)
+    });
+  }
+
+  onAppendMission(mission) {
+    this.setState({
+      missions: this.missions.push(mission.toJS())
     });
   }
 

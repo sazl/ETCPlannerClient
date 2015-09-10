@@ -66,7 +66,6 @@ export default class PlanningToolbar extends BaseComponent {
       showSort: false,
       showTimeline: false
     };
-    this.filter();
   }
 
   static getStores() {
@@ -97,6 +96,10 @@ export default class PlanningToolbar extends BaseComponent {
 
   onExportClick() {
     /* empty */
+  }
+
+  onNewMissionClick() {
+
   }
 
   onViewTimelineClick() {
