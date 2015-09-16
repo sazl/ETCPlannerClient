@@ -16,9 +16,13 @@ export default class ActionButtons extends BaseComponent {
     return (
       <ButtonToolbar>
         <ButtonGroup bsSize="xs">
+          {this.props.onNew
+          ?
           <Button bsStyle="success" onClick={this.props.onNew}>
-            <Glyphicon glyph="plus"/>
+            <Glyphicon glyph="collapse-down"/>
           </Button>
+          :
+          null}
           <Button bsStyle="default" onClick={this.props.onEdit}>
             <Glyphicon glyph="edit"/>
           </Button>

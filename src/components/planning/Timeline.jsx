@@ -4,7 +4,7 @@ import vis from 'vis';
 import KeyUtils from 'utils/keys';
 
 import 'vis/dist/vis.css';
-
+import 'styles/timeline.scss';
 
 export default class Timeline extends BaseComponent {
 
@@ -20,6 +20,8 @@ export default class Timeline extends BaseComponent {
     const items = new vis.DataSet(this.props.items);
     const container = React.findDOMNode(this.refs[this.state.identifier]);
     const timeline = new vis.Timeline(container, items, this.props.options);
+    timeline.addCustomTime(new Date(), 'timeline-start-date');
+    timeline.addCustomTime(new Date(), 'timeline-end-date');
     this.setState({ timeline: timeline, container: container });
   }
 
@@ -28,8 +30,18 @@ export default class Timeline extends BaseComponent {
     timeline.setItems(props.items);
     timeline.setGroups(props.groups);
     timeline.setOptions(props.options);
+    if (props.startDate) {
+      timeline.setCustomTime(props.startDate, 'timeline-start-date');
+    }
+    if (props.endDate) {
+      timeline.setCustomTime(props.endDate, 'timeline-end-date');
+    }
     timeline.redraw();
-    timeline.fit();
+    if (props.startDate && props.endDate) {
+      timeline.setWindow(props.startDate, props.endDate);
+    } else {
+      timeline.fit();
+    }
   }
 
   render() {

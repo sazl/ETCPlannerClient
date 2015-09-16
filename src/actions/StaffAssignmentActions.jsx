@@ -1,6 +1,8 @@
 import alt from '../alt';
 import StaffAssignmentService from 'services/StaffAssignmentService';
 
+import MissionActions from 'actions/MissionActions';
+
 import Utils from 'utils/utils';
 
 class StaffAssignmentActions {
@@ -44,6 +46,7 @@ class StaffAssignmentActions {
 
   saveStaffAssignment(staffAssignment) {
     StaffAssignmentService.saveStaffAssignment(staffAssignment).then((result) => {
+      MissionActions.fetchFilteredMissions();
       this.dispatch(result);
     });
   }

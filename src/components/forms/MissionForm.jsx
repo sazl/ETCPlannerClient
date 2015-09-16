@@ -95,8 +95,9 @@ export default class MissionForm extends BaseComponent {
 
   onSave() {
     MissionActions.saveMission(this.state.mission);
-    PlanningToolbarActions.appendMission(this.state.mission);
-    this.props.onSave();
+    if (this.props.onSave) {
+      this.props.onSave();
+    }
   }
 
   onValidSubmit(values) {
@@ -112,7 +113,7 @@ export default class MissionForm extends BaseComponent {
       <div className="modal-container">
         <ValidatedForm
          onValidSubmit={this.onValidSubmit}
-         onInvalidsubmit={this.onInvalidSubmit}>
+         onInvalidSubmit={this.onInvalidSubmit}>
           <ValidatedInput
           type="text"
           placeholder="Description"
@@ -179,8 +180,7 @@ export default class MissionForm extends BaseComponent {
             <Button onClick={this.props.onClose}>Close</Button>
             <Button
              bsStyle="primary"
-             type="submit"
-             onClick={this.props.onSave}>
+             type="submit">
               Save changes
             </Button>
           </div>

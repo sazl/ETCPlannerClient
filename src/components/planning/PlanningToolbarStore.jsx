@@ -67,7 +67,8 @@ class PlanningToolbarStore {
 
   onAppendMission(mission) {
     this.setState({
-      missions: this.missions.push(mission.toJS())
+      missions: this.missions.push(
+        Immutable.Map(mission).toJS())
     });
   }
 

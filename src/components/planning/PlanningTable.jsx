@@ -4,6 +4,8 @@ let update = React.addons.update;
 
 import Immutable from 'immutable';
 
+import NotificationActions from 'actions/NotificationActions';
+
 import {
   Row,
   Col,
@@ -36,6 +38,7 @@ import Utils from 'utils/utils';
 import KeyUtil from 'utils/keys';
 import DateUtil from 'utils/date';
 
+
 export default class PlanningTable extends BaseComponent {
 
   constructor(props) {
@@ -63,8 +66,7 @@ export default class PlanningTable extends BaseComponent {
       'onSaveMissionRoleForm',
       'showStaffAssignmentForm',
       'closeStaffAssignmentForm',
-      'onSaveStaffAssignmentForm',
-      'filter'
+      'onSaveStaffAssignmentForm'
     );
   }
 
@@ -74,14 +76,9 @@ export default class PlanningTable extends BaseComponent {
     const defaultCollapseState = false;
 
     props.detailedMissions.forEach((mission) => {
-      mission.key = KeyUtil.getKey();
       missionCollapse[mission.key] = defaultCollapseState;
       mission.missionRoles.forEach((missionRole) => {
-        missionRole.key = KeyUtil.getKey();
         missionRoleCollapse[missionRole.key] = defaultCollapseState;
-        missionRole.staffAssignments.forEach((staffAssignment) => {
-          staffAssignment.key = KeyUtil.getKey();
-        });
       });
     });
 
@@ -115,12 +112,6 @@ export default class PlanningTable extends BaseComponent {
     });
   }
 
-
-  filter() {
-    PlanningToolbarActions.filter(
-      PlanningToolbarStore.getFilters());
-  }
-
   showMissionForm(mission) {
     this.setState({
       showMissionForm: true,
@@ -136,8 +127,8 @@ export default class PlanningTable extends BaseComponent {
   }
 
   onSaveMissionForm() {
-    this.filter();
     this.closeMissionForm();
+    NotificationActions.notifySuccess('Saved mission');
   }
 
   showMissionRoleForm(missionRole, mission) {
@@ -160,14 +151,13 @@ export default class PlanningTable extends BaseComponent {
   }
 
   onSaveMissionRoleForm() {
-    this.filter();
     this.closeMissionRoleForm();
+    NotificationActions.notifySuccess('Saved mission role');
   }
 
   onSaveStaffAssignmentForm() {
-    PlanningToolbarActions.filter(
-      PlanningToolbarStore.getFilters());
     this.closeStaffAssignmentForm();
+    NotificationActions.notifySuccess('Saved staff assignment');
   }
 
   showStaffAssignmentForm(staffAssignment, missionRole) {
@@ -223,7 +213,7 @@ export default class PlanningTable extends BaseComponent {
         <td className="text-center">
           <ActionButtons
            onEdit={() => { this.showStaffAssignmentForm(staffAssignment, missionRole); }}
-           onNew={() => { this.showStaffAssignmentForm(null, missionRole); }} />
+           onNew={() => {}}/>
         </td>
       </tr>
     );
@@ -260,7 +250,7 @@ export default class PlanningTable extends BaseComponent {
         <td className="text-center">
           <ActionButtons
            onEdit={() => { this.showMissionRoleForm(missionRole, mission); }}
-           onNew={() => { this.showMissionRoleForm(null, mission); }}
+           onNew={() => { this.showStaffAssignmentForm(null, missionRole); }}
           />
         </td>
       </tr>
@@ -304,7 +294,7 @@ export default class PlanningTable extends BaseComponent {
         <td className="text-center">
           <ActionButtons
            onEdit={() => { this.showMissionForm(mission); }}
-           onNew={() => { this.showMissionForm(); }}/>
+           onNew={() => { this.showMissionRoleForm(null, mission); }}/>
         </td>
       </tr>
     );

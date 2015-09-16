@@ -13,8 +13,7 @@ export default class ErrorModalController extends BaseComponent {
 
   render() {
     const {staffAssignment, staffAssignmentsByStaffIndex, ...other } = this.props;
-    let showError = false,
-        staffAssignments = [];
+    let showError = false, staffAssignments = [];
 
     if (staffAssignment.get('staff') && staffAssignment.get('startDate') && staffAssignment.get('endDate')) {
       staffAssignments = staffAssignmentsByStaffIndex.get(

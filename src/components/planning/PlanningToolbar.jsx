@@ -98,10 +98,6 @@ export default class PlanningToolbar extends BaseComponent {
     /* empty */
   }
 
-  onNewMissionClick() {
-
-  }
-
   onViewTimelineClick() {
     this.setState({
       showTimeline: !this.state.showTimeline
@@ -109,8 +105,7 @@ export default class PlanningToolbar extends BaseComponent {
   }
 
   filter() {
-    PlanningToolbarActions.filter(
-      PlanningToolbarStore.getFilters());
+    MissionActions.fetchFilteredMissions();
   }
 
   onClearFilterClick() {
@@ -167,47 +162,23 @@ export default class PlanningToolbar extends BaseComponent {
                   &nbsp; Filter
                 </Button>
               </ButtonGroup>
-              {/*
-                  <ButtonGroup>
-                  <Button bsStyle={this.state.showSort ? "warning" : "default"}
-                  onClick={this.onSortClick}
-                  active={this.state.showSort}>
-                  <Glyphicon glyph={this.state.showSort ? "remove" : "sort-by-attributes"}/>
-                  &nbsp; Sort
-                  </Button>
-                  </ButtonGroup>
-                  <ButtonGroup>
-                  <Button bsStyle={this.state.showColumns ? "warning" : "grey"}
-                  onClick={this.onColumnClick}
-                  active={this.state.showColumns}>
-                  <Glyphicon glyph={this.state.showColumns ? "remove" : "th-list"}/>
-                  &nbsp; Columns
-                  </Button>
-                  </ButtonGroup>
-                */}
-                  <ButtonGroup bsSize="small">
-                    <Input type="text" placeholder="Search"/>
-                  </ButtonGroup>
-                  <ButtonGroup bsSize="small" className="pull-right">
-                    <Button bsStyle="success">
-                      <Glyphicon glyph="plus" />
-                      &nbsp; New Mission
-                    </Button>
-                  </ButtonGroup>
-                  <ButtonGroup bsSize="small" className="pull-right">
-                    <Button bsStyle="info" onClick={this.onExportClick}>
-                      <Glyphicon glyph="save"/>
-                      &nbsp; Export
-                    </Button>
-                  </ButtonGroup>
-                  <ButtonGroup bsSize="small" className="pull-right">
-                    <Button bsStyle={this.state.showTimeline ? "warning" : "primary"}
-                            onClick={this.onViewTimelineClick}
-                            active={this.state.showTimeline}>
-                      <Glyphicon glyph={this.state.showTimeline ? "remove" : "time"}/>
-                      &nbsp; Timeline
-                    </Button>
-                  </ButtonGroup>
+              <ButtonGroup bsSize="small">
+                <Input type="text" placeholder="Search"/>
+              </ButtonGroup>
+              <ButtonGroup bsSize="small" className="pull-right">
+                <Button bsStyle="info" onClick={this.onExportClick}>
+                  <Glyphicon glyph="save"/>
+                  &nbsp; Export
+                </Button>
+              </ButtonGroup>
+              <ButtonGroup bsSize="small" className="pull-right">
+                <Button bsStyle={this.state.showTimeline ? "warning" : "default"}
+                        onClick={this.onViewTimelineClick}
+                        active={this.state.showTimeline}>
+                  <Glyphicon glyph={this.state.showTimeline ? "remove" : "time"}/>
+                  &nbsp; Timeline
+                </Button>
+              </ButtonGroup>
             </ButtonToolbar>
           </div>
         </div>

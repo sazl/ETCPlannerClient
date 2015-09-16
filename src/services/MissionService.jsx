@@ -1,7 +1,15 @@
 import Immutable from 'immutable';
 
-import { request, saveRequest, RequestService } from 'services/RequestService';
 import { MISSION_URL } from 'constants/APIConstants';
+
+import {
+  request,
+  saveRequest,
+  deleteRequest,
+  RequestService
+} from 'services/RequestService';
+
+import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
 
 import Utils from 'utils/utils';
 
@@ -10,7 +18,7 @@ function _toJSON(mission) {
     missionType: mission.get('missionType').id,
     confirmedType: mission.get('confirmedType').id,
     countries: Utils.getField({ data: mission.get('countries') })
-  });
+  }).toJS();
 }
 
 class MissionService {
@@ -21,8 +29,21 @@ class MissionService {
   @request(MISSION_URL)
   getDetailedMissions() {}
 
+  getFilteredMissions() {
+    return RequestService.get({
+      url: MISSION_URL,
+      params: PlanningToolbarStore.getFilters().merge({
+        detailed: 'true'
+      }).toJS(),
+      key: 'getDetailedMissions'
+    });
+  }
+
   @saveRequest(MISSION_URL, _toJSON)
   saveMission() {}
+
+  @deleteRequest(MISSION_URL)
+  deleteMission() {}
 }
 
 export default new MissionService();

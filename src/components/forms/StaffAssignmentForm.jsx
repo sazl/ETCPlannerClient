@@ -215,7 +215,7 @@ export default class StaffAssignmentForm extends BaseComponent {
     this.setState({
       showProfileTypeError: false,
       profileTypeError: false
-    }, this._saveStaffAssignment);
+    });
   }
 
   handleStaffDurationError() {

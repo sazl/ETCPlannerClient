@@ -1,23 +1,22 @@
 /*jshint unused: false*/
 
 import alt from '../alt';
+
 import MissionActions from 'actions/MissionActions';
+
+import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
+
 
 class MissionStore {
 
   constructor() {
     this.loadingMissions = false;
     this.loadingDetailedMissions = false;
+
     this.missions = [];
     this.detailedMissions = [];
 
-    this.bindListeners({
-      onFetchMissions: MissionActions.FETCH_MISSIONS,
-      onUpdateMissions: MissionActions.UPDATE_MISSIONS,
-      onFetchDetailedMissions: MissionActions.FETCH_DETAILED_MISSIONS,
-      onUpdateDetailedMissions: MissionActions.UPDATE_DETAILED_MISSIONS
-    });
-
+    this.bindActions(MissionActions);
     this.exportPublicMethods({
       getMissions: this.getMissions,
       getDetailedMissions: this.getDetailedMissions
@@ -34,6 +33,11 @@ class MissionStore {
     this.detailedMissions = [];
   }
 
+  onFetchFilteredMissions() {
+    this.loadingDetailedMissions = true;
+    this.detailedMissions = [];
+  }
+
   onUpdateMissions(missions) {
     this.loadingMissions = true;
     this.missions = missions;
@@ -42,6 +46,10 @@ class MissionStore {
   onUpdateDetailedMissions(missions) {
     this.loadingDetailedMissions = false;
     this.detailedMissions = missions;
+  }
+
+  onSaveMission(mission) {
+    /* empty */
   }
 
   getMissions() {

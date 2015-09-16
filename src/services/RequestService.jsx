@@ -3,6 +3,7 @@ import request from 'reqwest';
 import { API_URL } from 'constants/APIConstants';
 import Utils from 'utils/utils';
 import DateUtils from 'utils/date';
+import KeyUtils from 'utils/keys';
 
 const _token = 'g3moM57ZbUCXsCNfNxkSClqutUywrI'; //debug token
 let _pendingRequests = {};
@@ -26,6 +27,9 @@ function _interceptObject(obj) {
     } else if (!Array.isArray(value) && (value instanceof Object)) {
       obj[key] = _interceptObject(value);
     }
+  }
+  if (!Array.isArray(obj) && (obj instanceof Object)) {
+    obj.key = KeyUtils.getKey();
   }
   return obj;
 }
@@ -88,10 +92,19 @@ class RequestService {
       key: key
     });
   }
+
+  static delete({ url='', params={}, key=false }) {
+    return _request({
+      url: url,
+      params: params,
+      method: 'DELETE',
+      key: key
+    });
+  }
 }
 
 const annotateRequest = (path, method='GET', abort=true) => {
-  return function (target, key, descriptor) {
+  return function(target, key, descriptor) {
     descriptor.value = (data) => {
       if (!abort) {
         key = false;
@@ -108,12 +121,11 @@ const annotateRequest = (path, method='GET', abort=true) => {
 };
 
 const annotateSaveRequest = (path, converter= (x) => { return x; }) => {
-  return function (target, key, descriptor) {
+  return function(target, key, descriptor) {
     descriptor.value = (data) => {
       const entity = converter(data);
       if (entity.id) {
-        const url = Utils.getEntityURL(
-          path, entity.id);
+        const url = Utils.getEntityURL(path, entity.id);
         return RequestService.put({
           url: url,
           params: entity
@@ -129,9 +141,23 @@ const annotateSaveRequest = (path, converter= (x) => { return x; }) => {
   };
 };
 
+const annotateDeleteRequest = (path) => {
+  return function(target, key, descriptor) {
+    descriptor.value = (data) => {
+      const url = Utils.getEntityURL(path, entity.id);
+      return Request.delete({
+        url: url,
+        key: key
+      });
+    };
+    return descriptor;
+  };
+};
 
 module.exports = {
   RequestService: RequestService,
   request: annotateRequest,
-  saveRequest: annotateSaveRequest
+  saveRequest: annotateSaveRequest,
+  deleteRequest: annotateDeleteRequest,
+  performRequest: _request
 };

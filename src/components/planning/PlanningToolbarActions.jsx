@@ -10,11 +10,6 @@ class PlanningToolbarActions {
     this.dispatch();
   }
 
-  filter(filters) {
-    MissionActions.fetchDetailedMissions(filters);
-    this.dispatch(filters);
-  }
-
   missionsChange(missions) {
     this.dispatch(missions);
   }

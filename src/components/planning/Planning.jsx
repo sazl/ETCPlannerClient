@@ -39,7 +39,10 @@ import StaffStore from 'stores/StaffStore';
 import PlanningStore from 'components/planning/PlanningStore';
 
 import BaseComponent from 'components/BaseComponent';
+
 import PlanningToolbar from 'components/planning/PlanningToolbar';
+import PlanningToolbarStore from 'components/planning/PlanningToolbarStore';
+
 import PlanningTable from 'components/planning/PlanningTable';
 import PlanningTimeline from 'components/planning/PlanningTimeline';
 
@@ -63,12 +66,12 @@ export default class Planning extends BaseComponent {
       MissionRoleStore,
       ConfirmedTypeStore,
       StaffStore,
-      PlanningStore
+      PlanningStore,
+      PlanningToolbarStore
     ];
   }
 
   static getPropsFromStores() {
-    const missionState = MissionStore.getState();
     return {
       loadingDetailedMissions: MissionStore.getState().loadingDetailedMissions,
       detailedMissions: MissionStore.getState().detailedMissions,
@@ -79,7 +82,9 @@ export default class Planning extends BaseComponent {
       missionTypes: MissionTypeStore.getState().missionTypes,
       missionRoles: MissionRoleStore.getState().missionRoles,
       staffList: StaffStore.getState().staff,
-      showTimeline: PlanningStore.getState().showTimeline
+      showTimeline: PlanningStore.getState().showTimeline,
+      startDate: PlanningToolbarStore.getState().startDate,
+      endDate: PlanningToolbarStore.getState().endDate
     };
   }
 
@@ -112,6 +117,8 @@ export default class Planning extends BaseComponent {
                 <hr/>
                 <PlanningTimeline
                  missions={this.props.detailedMissions}
+                 startDate={this.props.startDate}
+                 endDate={this.props.endDate}
                 />
               </div>
             </Collapse>

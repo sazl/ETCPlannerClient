@@ -63,6 +63,8 @@ export default class PlanningTimeline extends BaseComponent {
          items={items}
          groups={groups}
          options={this.props.options}
+         startDate={this.props.startDate}
+         endDate={this.props.endDate}
         />
       </div>
     );

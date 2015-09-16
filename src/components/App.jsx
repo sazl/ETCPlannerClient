@@ -14,6 +14,7 @@ import {
   Col
 } from 'react-bootstrap';
 
+
 import authenticatedComponent from 'components/AuthenticatedComponent';
 import BaseComponent from 'components/BaseComponent';
 import MainNavbar from 'components/MainNavbar';

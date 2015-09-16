@@ -3,7 +3,7 @@ import alt from '../alt';
 class NotificationActions {
 
   notify(notification) {
-    notification.position = 'tc';
+    notification.position = 'br';
     this.dispatch(notification);
     setTimeout(this.actions.clear, 500);
   }

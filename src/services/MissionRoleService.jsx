@@ -14,7 +14,7 @@ function _toJSON(missionRole) {
     startDate: startDate ? startDate : null,
     endDate: endDate ? endDate : null,
     profileType: missionRole.profileType.id
-  }).toJS();
+  }).delete('staffAssignments').toJS();
 }
 
 class MissionRoleService {

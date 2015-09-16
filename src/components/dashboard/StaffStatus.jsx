@@ -19,10 +19,24 @@ import DateUtils from 'utils/date';
 import 'styles/Griddle.scss';
 
 
+class BasicList extends React.Component {
+  render() {
+    return (
+      <ul className="list list-unstyled">
+        {this.props.data.map((item) => {
+          return (
+            <li key={item}>{item}</li>
+          );
+        })}
+      </ul>
+    );
+  }
+}
+
 export default class StaffStatus extends BaseComponent {
   render() {
     const statusCount = this.props.staffList.length.toString();
-    const columns = ['firstName', 'lastName', 'profileTypes'];
+    const columns = ['firstName', 'lastName', 'profileTypes', 'title'];
 
     const staffList = this.props.staffList.map((staff) => {
       staff.profileTypes = Utils.getField({
@@ -41,7 +55,11 @@ export default class StaffStatus extends BaseComponent {
       displayName: 'Last Name'
     }, {
       columnName: 'profileTypes',
-      displayName: 'Profile Type'
+      displayName: 'Profile Type',
+      customComponent: BasicList
+    }, {
+      columnName: 'title',
+      displayName: 'Title'
     }];
 
     return (

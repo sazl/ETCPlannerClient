@@ -2,8 +2,12 @@ import DateUtils from 'utils/date';
 
 export default class Util {
   static commaJoin(arr) {
-    const strArr = arr.map(String);
-    return strArr.join(',');
+    if (arr) {
+      const strArr = arr.map(String);
+      return strArr.join(',');
+    } else {
+      return '';
+    }
   }
 
   static commaJoinField(arr, field='id') {

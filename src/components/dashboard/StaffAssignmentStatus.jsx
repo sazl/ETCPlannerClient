@@ -22,7 +22,7 @@ export default class StaffStatus extends BaseComponent {
   render() {
     const statusCount = this.props.staffAssignments.length.toString();
     const columns = ['firstName', 'lastName', 'mission', 'profileType',
-                     'startDate', 'endDate'];
+                     'startDate', 'endDate', 'comments'];
 
     const staffAssignments = this.props.staffAssignments.map((staff) => {
       staff.firstName = staff.staff.firstName;
@@ -41,9 +41,6 @@ export default class StaffStatus extends BaseComponent {
       columnName: 'lastName',
       displayName: 'Last Name'
     }, {
-      columnName: 'profileType',
-      displayName: 'Profile Type'
-    }, {
       columnName: 'mission',
       displayName: 'Mission'
     }, {
@@ -52,6 +49,12 @@ export default class StaffStatus extends BaseComponent {
     }, {
       columnName: 'endDate',
       displayName: 'End Date'
+    }, {
+      columnName: 'profileType',
+      displayName: 'Profile Type'
+    }, {
+      columnName: 'comments',
+      displayName: 'Comments'
     }];
 
     return (
