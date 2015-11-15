@@ -36,7 +36,7 @@ class StaffAssignmentActions {
     });
   }
 
-  fetchStaffAssignmentsByIndex(data={}) {
+  fetchStaffAssignmentsByStaffIndex(data={}) {
     this.dispatch();
     data.detailed = true;
     StaffAssignmentService.getStaffAssignments(data).then((staffAssignments) => {

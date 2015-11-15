@@ -80,9 +80,15 @@ export default class StaffAssignmentForm extends BaseComponent {
     };
   }
 
+  componentWillMount() {
+    if (this.state.staffAssignment.staff) {
+      this.fetchStaffAssignmentsForDurationError();
+    }
+  }
+
   fetchStaffAssignmentsForDurationError() {
     const staffAssignment = this.state.staffAssignment;
-    StaffAssignmentActions.fetchStaffAssignmentsByIndex({
+    StaffAssignmentActions.fetchStaffAssignmentsByStaffIndex({
       'staff_index': staffAssignment.get('staff').index,
       'start_date_lte': DateUtils.formatISO(staffAssignment.get('endDate')),
       'end_date_gte': DateUtils.formatISO(staffAssignment.get('startDate')),

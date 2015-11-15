@@ -23,7 +23,7 @@ export default class ToolbarPanel extends BaseComponent {
        header={<div>
                {this.props.header}
                <span className={classes}>
-               {this.props.size}
+               {this.props.size || this.props.label}
                </span>
                </div>}
        collapsible>
@@ -36,5 +36,6 @@ export default class ToolbarPanel extends BaseComponent {
 ToolbarPanel.propTypes = {
   header: React.PropTypes.string,
   size: React.PropTypes.number,
+  label: React.PropTypes.string,
   active: React.PropTypes.bool
 };

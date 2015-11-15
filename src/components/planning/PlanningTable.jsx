@@ -184,6 +184,8 @@ export default class PlanningTable extends BaseComponent {
     const staffName = staffAssignment.staff.fullName;
     const startDate = DateUtil.formatDate(staffAssignment.startDate);
     const endDate = DateUtil.formatDate(staffAssignment.endDate);
+    const plannedStartDate = DateUtil.formatDate(staffAssignment.plannedStartDate);
+    const plannedEndDate = DateUtil.formatDate(staffAssignment.plannedEndDate);
     const location = staffAssignment.location;
     const confirmedType = staffAssignment.confirmedType;
     const profileTypes = Utils.getField({
@@ -198,6 +200,8 @@ export default class PlanningTable extends BaseComponent {
         <td>{staffName}</td>
         <td>{startDate}</td>
         <td>{endDate}</td>
+        <td>{plannedStartDate}</td>
+        <td>{plannedEndDate}</td>
         <td>{location}</td>
         <td className="text-center">
           <ColorLabel
@@ -224,6 +228,8 @@ export default class PlanningTable extends BaseComponent {
     const profileType = missionRole.profileType.profileType;
     const startDate = DateUtil.formatDate(missionRole.startDate);
     const endDate = DateUtil.formatDate(missionRole.endDate);
+    const plannedStartDate = DateUtil.formatDate(missionRole.plannedStartDate);
+    const plannedEndDate = DateUtil.formatDate(missionRole.plannedEndDate);
     const location = missionRole.location;
 
     return (
@@ -244,6 +250,8 @@ export default class PlanningTable extends BaseComponent {
         <td>{profileType}</td>
         <td>{startDate}</td>
         <td>{endDate}</td>
+        <td>{plannedStartDate}</td>
+        <td>{plannedEndDate}</td>
         <td>{location}</td>
         <td></td>
         <td></td>
@@ -265,6 +273,8 @@ export default class PlanningTable extends BaseComponent {
     }).join(', ');
     const confirmedType = mission.confirmedType;
     const missionType = mission.missionType.missionType;
+    const startDate = DateUtil.formatDate(mission.startDate);
+    const endDate = DateUtil.formatDate(mission.endDate);
 
     return (
       <tr className="info" key={key}>
@@ -281,6 +291,8 @@ export default class PlanningTable extends BaseComponent {
            null}
         </td>
         <td>{description}</td>
+        <td>{startDate}</td>
+        <td>{endDate}</td>
         <td></td>
         <td></td>
         <td>{countries}</td>
@@ -326,7 +338,7 @@ export default class PlanningTable extends BaseComponent {
   renderEmptyRow(body) {
     return (
       <tr>
-        <td colSpan="8">
+        <td colSpan="10">
           <div className="absolute-center">
             {body}
           </div>
@@ -377,6 +389,8 @@ export default class PlanningTable extends BaseComponent {
               <th>Name</th>
               <th className="col-md-1">Start Date</th>
               <th className="col-md-1">End Date</th>
+              <th className="col-md-1">Planned Start Date</th>
+              <th className="col-md-1">Planned End Date</th>
               <th>Location</th>
               <th>Confirmed Type</th>
               <th>Type</th>

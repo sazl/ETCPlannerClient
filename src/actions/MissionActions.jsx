@@ -11,7 +11,6 @@ class MissionActions {
     const plainData = data.toJS();
     const getMissions = method ? method : MissionService.getMissions;
     getMissions(plainData).then((missions) => {
-      console.log(missions);
       action(missions);
     });
   }

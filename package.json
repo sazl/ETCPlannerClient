@@ -18,7 +18,7 @@
     "immutable": "^3.7.4",
     "moment": "^2.10.6",
     "normalize.css": "~3.0.3",
-    "react": "0.13.x",
+    "react": "^0.13.3",
     "react-bootstrap": "^0.24.3",
     "react-bootstrap-multiselect": "^0.2.2",
     "react-bootstrap-validation": "^0.1.7",

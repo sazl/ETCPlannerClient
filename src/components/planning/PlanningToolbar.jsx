@@ -26,6 +26,7 @@ import { Multiselect, DateTimePicker } from 'react-widgets';
 
 import BaseComponent from 'components/BaseComponent';
 import MultiselectPanel from 'components/planning/MultiselectPanel';
+import DurationPanel from 'components/planning/DurationPanel';
 
 import PlanningActions from 'components/planning/PlanningActions';
 import PlanningToolbarActions from 'components/planning/PlanningToolbarActions';
@@ -233,35 +234,13 @@ export default class PlanningToolbar extends BaseComponent {
                 </div>
                 <div className="col-xs-6">
                   <PanelGroup className="card-shadow-small" >
-                    <Panel header={<div>
-                                   Duration
-                                   <span className="label label-default medium pull-right">
-                                   -
-                                   </span>
-                                   </div>} collapsible >
-                      <form>
-                        <div className="form-group">
-                          <label className="control-label">Start Date</label>
-                          <div>
-                            <DateTimePicker
-                             format="dd/MM/yyyy"
-                             value={this.props.startDate}
-                             time={false}
-                             onChange={this.onStartDateChange} />
-                          </div>
-                        </div>
-                        <div>
-                          <label className="control-label">End Date</label>
-                          <div>
-                            <DateTimePicker
-                             format="dd/MM/yyyy"
-                             value={this.props.endDate}
-                             time={false}
-                             onChange={this.onEndDateChange} />
-                          </div>
-                        </div>
-                      </form>
-                    </Panel>
+                    <DurationPanel
+                     header="Duration"
+                     startDate={this.props.startDate}
+                     endDate={this.props.endDate}
+                     onStartDateChange={this.onStartDateChange}
+                     onEndDateChange={this.onEndDateChange}
+                    />
                     <MultiselectPanel
                        header="Staff"
                        placeholder="Staff"

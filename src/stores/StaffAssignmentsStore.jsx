@@ -46,8 +46,9 @@ class StaffAssignmentsStore {
       return values;
     }, {});
     const staffAssignmentsUpdate = Immutable.Map(mapping);
-    this.staffAssignmentsByStaffIndex = this.staffAssignmentsByStaffIndex.merge(
-      staffAssignmentsUpdate);
+    console.log('update', staffAssignmentsUpdate.toJS());
+    this.staffAssignmentsByStaffIndex = staffAssignmentsUpdate;
+    //this.staffAssignmentsByStaffIndex.merge(staffAssignmentsUpdate);
   }
 }
 

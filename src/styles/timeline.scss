@@ -10,3 +10,18 @@
 .timeline-end-date {
   border: 1px red solid;
 }
+
+.timeline-background-group {
+  color: black !important;
+  background-color: rgba(0, 0, 255, 0.10) !important;
+  border: 1.2px dashed black !important;
+  z-index: 1 !important;
+}
+
+.vis-item.vis-selected {
+  color: black !important;
+  border-color: #FFC200 !important;
+  background-color: #FFF785 !important;
+  z-index: 2 !important;
+  text-align: center !important;
+}

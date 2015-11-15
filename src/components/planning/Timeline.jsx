@@ -4,7 +4,6 @@ import vis from 'vis';
 import KeyUtils from 'utils/keys';
 
 import 'vis/dist/vis.css';
-import 'styles/timeline.scss';
 
 export default class Timeline extends BaseComponent {
 

@@ -68,15 +68,15 @@ export default class MainNavbar extends BaseComponent {
           </NavItemLink>
         </Nav>
         <Nav>
-          <p className="navbar-btn" style={{marginLeft: '20px'}}>
-            <Button bsSize="sm" onClick={this.onCollapseSidebar}>
+          <p className="navbar-btn" style={{marginLeft: '10px'}}>
+            <Button bsSize="sm"
+                    bsStyle={this.props.showSidebar ? "danger" : "success"}
+                    onClick={this.onCollapseSidebar}>
               <Glyphicon glyph={this.props.showSidebar ? "chevron-left" : "chevron-right"}/>
-              &nbsp; Menu
             </Button>
           </p>
         </Nav>
         <Nav right>
-          <DropdownButton title={<span><Glyphicon glyph="flag"/> Mission</span>} />
           <DropdownButton title={<span><Glyphicon glyph="user"/> Account</span>} />
         </Nav>
       </Navbar>
